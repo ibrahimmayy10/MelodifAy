@@ -14,7 +14,7 @@ protocol EditPostViewControllerDelegate: AnyObject {
 
 class EditPostViewController: UIViewController {
     
-    private let optionsLabel = Labels(textLabel: "Seçenekler", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
+    private let optionsLabel = Labels(textLabel: "options", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
     private let skipSilenceLabel = Labels(textLabel: "Sessiz Anları Atla", fontLabel: .systemFont(ofSize: 17), textColorLabel: .black)
     private let enhanceRecordingLabel = Labels(textLabel: "Kayıt İyileştirme", fontLabel: .systemFont(ofSize: 17), textColorLabel: .black)
     
