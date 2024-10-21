@@ -10,7 +10,7 @@ import AVFoundation
 class AudioProcessor {
     
     var asset: AVAsset
-    var silenceThreshold: Float = -40.0
+    var silenceThreshold: Float = 0.0
     
     var assetWriter: AVAssetWriter!
     var assetWriterInput: AVAssetWriterInput!
@@ -55,10 +55,9 @@ class AudioProcessor {
             assetReader.add(readerOutput)
             assetReader.startReading()
             
-            let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent("processed_audio.m4a")
+            let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString).appendingPathExtension("m4a")
             let writer = try AVAssetWriter(outputURL: outputURL, fileType: .m4a)
 
-            // writerInput için ayarları belirtin
             let audioSettings: [String: Any] = [
                 AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
                 AVEncoderBitRateKey: 128000,
@@ -73,19 +72,33 @@ class AudioProcessor {
             writer.startSession(atSourceTime: .zero)
             
             while assetReader.status == .reading {
-                if let sampleBuffer = readerOutput.copyNextSampleBuffer(), let blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer) {
-                    let bufferLength = CMBlockBufferGetDataLength(blockBuffer)
-                    var data = Data(count: bufferLength)
-                    data.withUnsafeMutableBytes { rawBufferPointer in
-                        CMBlockBufferCopyDataBytes(blockBuffer, atOffset: 0, dataLength: bufferLength, destination: rawBufferPointer.bindMemory(to: UInt8.self).baseAddress!)
-                    }
-                    
-                    if skipSilence {
-                        let audioLevel = self.getAudioLevel(from: data)
-                        if audioLevel > self.silenceThreshold {
+                guard let sampleBuffer = readerOutput.copyNextSampleBuffer() else {
+                    print("Sample buffer alınamadı, Reader durumu: \(assetReader.status.rawValue), hata: \(assetReader.error?.localizedDescription ?? "Yok")")
+                    break
+                }
+                
+                guard let blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer) else {
+                    print("Block buffer alınamadı")
+                    continue
+                }
+                
+                let bufferLength = CMBlockBufferGetDataLength(blockBuffer)
+                var data = Data(count: bufferLength)
+                data.withUnsafeMutableBytes { rawBufferPointer in
+                    CMBlockBufferCopyDataBytes(blockBuffer, atOffset: 0, dataLength: bufferLength, destination: rawBufferPointer.bindMemory(to: UInt8.self).baseAddress!)
+                }
+                
+                let audioLevel = self.getAudioLevel(from: data)
+                if skipSilence {
+                    if audioLevel > self.silenceThreshold {
+                        if writerInput.isReadyForMoreMediaData {
                             writerInput.append(sampleBuffer)
                         }
                     } else {
+                        print("Sessiz kısım atlandı")
+                    }
+                } else {
+                    if writerInput.isReadyForMoreMediaData {
                         writerInput.append(sampleBuffer)
                     }
                 }
@@ -95,6 +108,7 @@ class AudioProcessor {
                 if writer.status == .completed {
                     completion(outputURL)
                 } else {
+                    print("Yazma işlemi tamamlanamadı: \(writer.error?.localizedDescription ?? "Bilinmeyen hata")")
                     completion(nil)
                 }
             }
