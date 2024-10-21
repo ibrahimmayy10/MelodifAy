@@ -10,21 +10,22 @@ import AVFoundation
 
 protocol EditPostViewControllerDelegate: AnyObject {
     func didUpdatePlaybackSpeed(to speed: Float)
+    func didSkipSilenceSwitchValueChanged(to url: URL)
 }
 
 class EditPostViewController: UIViewController {
     
-    private let optionsLabel = Labels(textLabel: "options", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
+    private let optionsLabel = Labels(textLabel: "Seçenekler", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
     private let skipSilenceLabel = Labels(textLabel: "Sessiz Anları Atla", fontLabel: .systemFont(ofSize: 17), textColorLabel: .black)
     private let enhanceRecordingLabel = Labels(textLabel: "Kayıt İyileştirme", fontLabel: .systemFont(ofSize: 17), textColorLabel: .black)
     
     private let speedSlider: UISlider = {
         let slider = UISlider()
         slider.tintColor = .gray
-        slider.minimumValue = 0
-        slider.maximumValue = 5
-        slider.value = 2
         slider.isContinuous = true
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .bold)
+        let largeCircleImage = UIImage(systemName: "circle.fill", withConfiguration: largeConfig)?.withTintColor(.gray, renderingMode: .alwaysOriginal)
+        slider.setThumbImage(largeCircleImage, for: .normal)
         slider.translatesAutoresizingMaskIntoConstraints = false
         return slider
     }()
@@ -66,12 +67,16 @@ class EditPostViewController: UIViewController {
         
         configureWithExt()
         addTarget()
+        setupSlider()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
-        guard let audioURL = audioURL else { return }
-        configureAudioEngine(with: audioURL)
-        
-        addTickMarks()
-        
+        for (index, tickView) in tickMarkViews.enumerated() {
+            let stepWidth = speedSlider.bounds.width / CGFloat(sliderSteps.count - 1)
+            tickView.center.x = speedSlider.frame.minX + CGFloat(index) * stepWidth
+        }
     }
     
     @objc func dismissButtonTapped() {
@@ -82,35 +87,90 @@ class EditPostViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    func setupSlider() {
+        speedSlider.minimumTrackTintColor = .clear
+        speedSlider.maximumTrackTintColor = .clear
+        
+        let trackView = UIView()
+        trackView.backgroundColor = .gray
+        trackView.translatesAutoresizingMaskIntoConstraints = false
+        view.insertSubview(trackView, belowSubview: speedSlider)
+        
+        trackView.anchor(left: speedSlider.leftAnchor, right: speedSlider.rightAnchor, centerY: speedSlider.centerYAnchor, height: 2)
+        
+        addTickMarks()
+    }
+    
     func addTickMarks() {
         let numberOfSteps = sliderSteps.count
-        let sliderWidth = UIScreen.main.bounds.width - 40
         
         for i in 0..<numberOfSteps {
             let tickView = UIView()
             tickView.backgroundColor = .gray
             tickView.translatesAutoresizingMaskIntoConstraints = false
-            tickView.widthAnchor.constraint(equalToConstant: 2).isActive = true
-            tickView.heightAnchor.constraint(equalToConstant: 15).isActive = true
             view.addSubview(tickView)
             tickMarkViews.append(tickView)
             
-            let xPosition = CGFloat(i) * (sliderWidth / CGFloat(numberOfSteps - 1)) + 21
-            tickView.centerXAnchor.constraint(equalTo: view.leftAnchor, constant: xPosition).isActive = true
-            tickView.centerYAnchor.constraint(equalTo: speedSlider.centerYAnchor).isActive = true
+            tickView.centerXAnchor.constraint(equalTo: speedSlider.leftAnchor, constant: speedSlider.frame.width * CGFloat(i) / CGFloat(numberOfSteps - 1)).isActive = true
+            tickView.anchor(centerY: speedSlider.centerYAnchor, width: 2, height: 15)
         }
     }
     
     func addTarget() {
         speedSlider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
         dismissButton.addTarget(self, action: #selector(dismissButtonTapped), for: .touchUpInside)
+        skipSilenceSwitch.addTarget(self, action: #selector(skipSilenceSwitchValueChanged(_:)), for: .valueChanged)
+    }
+    
+    @objc private func skipSilenceSwitchValueChanged(_ sender: UISwitch) {
+        if sender.isOn {
+            processAudioWithSkippingSilence()
+        } else {
+            processAudioWithoutSkippingSilence()
+        }
+    }
+    
+    func processAudioWithSkippingSilence() {
+        guard let audioURL = audioURL else { return }
+        
+        let asset = AVAsset(url: audioURL)
+        let processor = AudioProcessor(outputURL: audioURL, asset: asset)
+        
+        processor.processAudio(skipSilence: true) { processedURL in
+            if let processedURL = processedURL {
+                print("Sessiz kısımlar atlanarak işlenmiş ses dosyası: \(processedURL)")
+                self.delegate?.didSkipSilenceSwitchValueChanged(to: processedURL)
+            } else {
+                print("Sessiz kısımları atlama işlemi başarısız oldu.")
+            }
+        }
+    }
+    
+    func processAudioWithoutSkippingSilence() {
+        guard let audioURL = audioURL else { return }
+        
+        let asset = AVAsset(url: audioURL)
+        let processor = AudioProcessor(outputURL: audioURL, asset: asset)
+        
+        processor.processAudio(skipSilence: false) { processedURL in
+            if let processedURL = processedURL {
+                print("Normal ses dosyası: \(processedURL)")
+                self.delegate?.didSkipSilenceSwitchValueChanged(to: processedURL)
+            } else {
+                print("Ses işleme başarısız oldu.")
+            }
+        }
     }
     
     @objc func sliderValueChanged(_ sender: UISlider) {
         let index = Int(round(sender.value))
-        let selectedSpeed = sliderSteps[index]
-        
         sender.value = Float(index)
+        let selectedSpeed = sliderSteps[index]
+        playbackSpeed = selectedSpeed
+        
+        UIView.animate(withDuration: 0.1) {
+            self.speedSlider.setValue(Float(index), animated: true)
+        }
     }
     
     func configureAudioEngine(with url: URL) {
@@ -137,53 +197,6 @@ class EditPostViewController: UIViewController {
             print("Audio engine hatası: \(error.localizedDescription)")
         }
     }
-    
-    func saveModifiedAudio(completion: @escaping (URL?) -> Void) {
-        guard let engine = audioEngine,
-              let playerNode = audioPlayerNode,
-              let file = audioFile else {
-            completion(nil)
-            return
-        }
-        
-        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let outputURL = documentsPath.appendingPathComponent("modified_audio.m4a")
-        
-        let outputFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: file.fileFormat.sampleRate, channels: file.fileFormat.channelCount, interleaved: false)
-        
-        guard let outputFile = try? AVAudioFile(forWriting: outputURL, settings: outputFormat!.settings) else {
-            completion(nil)
-            return
-        }
-        
-        engine.stop()
-        playerNode.stop()
-        
-        playerNode.scheduleFile(file, at: nil)
-        playerNode.rate = playbackSpeed
-        
-        engine.mainMixerNode.installTap(onBus: 0, bufferSize: 4096, format: outputFormat) { (buffer, time) in
-            try? outputFile.write(from: buffer)
-        }
-        
-        playerNode.play()
-        engine.prepare()
-        
-        do {
-            try engine.start()
-        } catch {
-            print("Engine başlatma hatası: \(error)")
-            completion(nil)
-            return
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + Double(file.length) / file.fileFormat.sampleRate / Double(playbackSpeed)) {
-            engine.mainMixerNode.removeTap(onBus: 0)
-            engine.stop()
-            playerNode.stop()
-            completion(outputURL)
-        }
-    }
 }
 
 extension EditPostViewController {
@@ -191,6 +204,10 @@ extension EditPostViewController {
         view.backgroundColor = .white
         view.layer.cornerRadius = 16
         view.clipsToBounds = true
+        
+        speedSlider.minimumValue = 0
+        speedSlider.maximumValue = Float(sliderSteps.count - 1)
+        speedSlider.value = 2
         
         speedSlider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
         
@@ -203,5 +220,11 @@ extension EditPostViewController {
         skipSilenceSwitch.anchor(top: speedSlider.bottomAnchor, right: view.rightAnchor, paddingTop: 20, paddingRight: 20)
         enhanceRecordingLabel.anchor(top: skipSilenceLabel.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
         enhanceRecordingSwitch.anchor(top: skipSilenceSwitch.bottomAnchor, right: view.rightAnchor, paddingTop: 20, paddingRight: 20)
+    }
+}
+
+extension EditPostViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return BottomSheetPresentationController(presentedViewController: presented, presenting: presenting)
     }
 }

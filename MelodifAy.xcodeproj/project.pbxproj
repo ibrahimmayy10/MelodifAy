@@ -26,6 +26,7 @@
 		17A436632CAEE305001DEF62 /* RegisterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A436622CAEE305001DEF62 /* RegisterService.swift */; };
 		17A436652CAEE4FC001DEF62 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A436642CAEE4FC001DEF62 /* RegisterViewModel.swift */; };
 		17A601A72CB6BA7C0047A0B5 /* micAnimations.json in Resources */ = {isa = PBXBuildFile; fileRef = 17A601A62CB6BA7C0047A0B5 /* micAnimations.json */; };
+		17B1B03C2CC6B403004488BF /* AudioProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B1B03B2CC6B403004488BF /* AudioProcessor.swift */; };
 		17D8E1782CAEC119008F06CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17D8E16E2CAEC119008F06CD /* Assets.xcassets */; };
 		17D8E1792CAEC119008F06CD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 17D8E16F2CAEC119008F06CD /* GoogleService-Info.plist */; };
 		17D8E17B2CAEC119008F06CD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17D8E1722CAEC119008F06CD /* LaunchScreen.storyboard */; };
@@ -59,6 +60,7 @@
 		17A436622CAEE305001DEF62 /* RegisterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterService.swift; sourceTree = "<group>"; };
 		17A436642CAEE4FC001DEF62 /* RegisterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewModel.swift; sourceTree = "<group>"; };
 		17A601A62CB6BA7C0047A0B5 /* micAnimations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = micAnimations.json; sourceTree = "<group>"; };
+		17B1B03B2CC6B403004488BF /* AudioProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioProcessor.swift; sourceTree = "<group>"; };
 		17D8E1412CAEC078008F06CD /* MelodifAy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MelodifAy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17D8E16D2CAEC119008F06CD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		17D8E16E2CAEC119008F06CD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				177282D42CB6848900247853 /* NewSongViewModel.swift */,
 				171DF00A2CC1333600523459 /* EditPostViewController.swift */,
 				17912D032CC5529200ED572B /* BottomSheetPresentationController.swift */,
+				17B1B03B2CC6B403004488BF /* AudioProcessor.swift */,
 			);
 			path = NewPost;
 			sourceTree = "<group>";
@@ -404,6 +407,7 @@
 				177EF6512CAEF6530015F3CB /* HomePageViewController.swift in Sources */,
 				17A32AB12CAFF0510010A7DC /* SearchViewController.swift in Sources */,
 				1746CD4E2CB0346E00B3701A /* CreateSongWithAIViewModel.swift in Sources */,
+				17B1B03C2CC6B403004488BF /* AudioProcessor.swift in Sources */,
 				17D8E1882CAEC950008F06CD /* ViewExtensions.swift in Sources */,
 				177EF64E2CAEF1680015F3CB /* SignInViewModel.swift in Sources */,
 				17A436632CAEE305001DEF62 /* RegisterService.swift in Sources */,
