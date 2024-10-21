@@ -316,6 +316,7 @@ class NewSongViewController: UIViewController {
             let optionsVC = EditPostViewController()
             optionsVC.modalPresentationStyle = .custom
             optionsVC.transitioningDelegate = self
+            optionsVC.playbackSpeed = self.playbackSpeed
             optionsVC.audioURL = self.recordedAudioURL
             optionsVC.delegate = self
             self.present(optionsVC, animated: true, completion: nil)
@@ -792,6 +793,9 @@ extension NewSongViewController: UIDocumentPickerDelegate {
                 
                 audioPlayer = try AVAudioPlayer(contentsOf: url)
                 audioPlayer?.delegate = self
+                audioPlayer?.enableRate = true
+                audioPlayer?.rate = playbackSpeed
+                audioPlayer?.prepareToPlay()
                 audioPlayer?.play()
                 
                 startUpdatingProgress()
@@ -862,5 +866,10 @@ extension NewSongViewController: EditPostViewControllerDelegate {
             audioPlayer.enableRate = true
             audioPlayer.rate = speed
         }
+    }
+    
+    func didSkipSilenceSwitchValueChanged(to url: URL) {
+        self.recordedAudioURL = url
+        print("Sessiz kısımaların atıldığı ses urli: \(self.recordedAudioURL)")
     }
 }

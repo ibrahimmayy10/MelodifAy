@@ -10,7 +10,7 @@ import UIKit
 
 class BottomSheetPresentationController: UIPresentationController {
     
-    private var dimmingView: UIView!
+    var dimmingView: UIView!
     
     override var frameOfPresentedViewInContainerView: CGRect {
         guard let containerView = containerView else { return .zero }
@@ -23,9 +23,6 @@ class BottomSheetPresentationController: UIPresentationController {
         dimmingView = UIView(frame: containerView.bounds)
         dimmingView.backgroundColor = UIColor(white: 0.0, alpha: 0.5)
         dimmingView.alpha = 0.0
-        
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPresentedController))
-        dimmingView.addGestureRecognizer(tapGestureRecognizer)
         
         containerView.addSubview(dimmingView)
         
@@ -40,9 +37,5 @@ class BottomSheetPresentationController: UIPresentationController {
         }, completion: { _ in
             self.dimmingView.removeFromSuperview()
         })
-    }
-    
-    @objc func dismissPresentedController() {
-        presentedViewController.dismiss(animated: true, completion: nil)
     }
 }
