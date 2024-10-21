@@ -1,0 +1,6 @@
+framework module Pods_MelodifAy {
+  umbrella header "Pods-MelodifAy-umbrella.h"
+
+  export *
+  module * { export * }
+}

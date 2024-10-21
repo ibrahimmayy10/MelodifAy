@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyAlRw5xhldFdXgHL_hOCqB7hNWgtBJEpqA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>268421415783</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ibrahimay.MelodifAy</string>
+	<key>PROJECT_ID</key>
+	<string>melodifay-15da7</string>
+	<key>STORAGE_BUCKET</key>
+	<string>melodifay-15da7.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:268421415783:ios:d6dd0da4d13b555d8725c2</string>
+</dict>
+</plist>
