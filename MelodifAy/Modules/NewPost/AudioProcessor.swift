@@ -10,7 +10,7 @@ import AVFoundation
 class AudioProcessor {
     
     var asset: AVAsset
-    var silenceThreshold: Float = 0.0
+    var silenceThreshold: Float = -50.0
     
     var assetWriter: AVAssetWriter!
     var assetWriterInput: AVAssetWriterInput!
