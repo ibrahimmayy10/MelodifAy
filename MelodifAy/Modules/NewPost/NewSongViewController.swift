@@ -872,4 +872,23 @@ extension NewSongViewController: EditPostViewControllerDelegate {
         self.recordedAudioURL = url
         print("Sessiz kısımaların atıldığı ses urli: \(self.recordedAudioURL)")
     }
+    
+    func enhanceAudio(enabled: Bool) {
+        if enabled {
+            enhanceAudioSettings()
+        } else {
+            resetAudioSettings()
+        }
+    }
+    
+    private func enhanceAudioSettings() {
+        audioPlayer?.volume = 1.2
+        print("Ses ayarları iyileştirildi")
+    }
+    
+    private func resetAudioSettings() {
+        audioPlayer?.volume = 1.0
+        
+        print("Ses ayarları sıfırlandı.")
+    }
 }
