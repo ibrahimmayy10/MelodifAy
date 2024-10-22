@@ -228,9 +228,6 @@ class NewSongViewController: UIViewController {
     
     private var audioRecorder: AVAudioRecorder?
     private var audioPlayer: AVAudioPlayer?
-    var audioEngine: AVAudioEngine?
-    var audioPlayerNode: AVAudioPlayerNode?
-    var eqNode: AVAudioUnitEQ?
     var recordedAudioURL: URL?
     var selectedAudioURL: URL?
     
