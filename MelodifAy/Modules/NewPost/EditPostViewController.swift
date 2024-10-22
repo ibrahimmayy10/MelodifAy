@@ -11,6 +11,7 @@ import AVFoundation
 protocol EditPostViewControllerDelegate: AnyObject {
     func didUpdatePlaybackSpeed(to speed: Float)
     func didSkipSilenceSwitchValueChanged(to url: URL)
+    func enhanceAudio(enabled: Bool)
 }
 
 class EditPostViewController: UIViewController {
@@ -18,6 +19,7 @@ class EditPostViewController: UIViewController {
     private let optionsLabel = Labels(textLabel: "Seçenekler", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
     private let skipSilenceLabel = Labels(textLabel: "Sessiz Anları Atla", fontLabel: .systemFont(ofSize: 17), textColorLabel: .black)
     private let enhanceRecordingLabel = Labels(textLabel: "Kayıt İyileştirme", fontLabel: .systemFont(ofSize: 17), textColorLabel: .black)
+    private let speedLabel = Labels(textLabel: "OYNATMA HIZI", fontLabel: .systemFont(ofSize: 14), textColorLabel: .darkGray)
     
     private let speedSlider: UISlider = {
         let slider = UISlider()
@@ -49,6 +51,40 @@ class EditPostViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+    private let speedView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemGray5
+        view.layer.cornerRadius = 10
+        return view
+    }()
+    
+    private let enhanceRecordingView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemGray5
+        view.layer.cornerRadius = 10
+        return view
+    }()
+    
+    private let turtleImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(systemName: "tortoise")
+        imageView.tintColor = .gray
+        return imageView
+    }()
+    
+    private let rabbitImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(systemName: "hare")
+        imageView.tintColor = .gray
+        return imageView
+    }()
+    
+    private let seperatorView = SeperatorView(color: .lightGray)
     
     var audioPlayer: AVAudioPlayer?
     var audioEngine: AVAudioEngine?
@@ -108,10 +144,9 @@ class EditPostViewController: UIViewController {
             let tickView = UIView()
             tickView.backgroundColor = .gray
             tickView.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(tickView)
+            speedView.addSubview(tickView)
             tickMarkViews.append(tickView)
             
-            tickView.centerXAnchor.constraint(equalTo: speedSlider.leftAnchor, constant: speedSlider.frame.width * CGFloat(i) / CGFloat(numberOfSteps - 1)).isActive = true
             tickView.anchor(centerY: speedSlider.centerYAnchor, width: 2, height: 15)
         }
     }
@@ -120,6 +155,11 @@ class EditPostViewController: UIViewController {
         speedSlider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
         dismissButton.addTarget(self, action: #selector(dismissButtonTapped), for: .touchUpInside)
         skipSilenceSwitch.addTarget(self, action: #selector(skipSilenceSwitchValueChanged(_:)), for: .valueChanged)
+        enhanceRecordingSwitch.addTarget(self, action: #selector(enhanceRecordingSwitchValueChanged(_:)), for: .valueChanged)
+    }
+    
+    @objc private func enhanceRecordingSwitchValueChanged(_ sender: UISwitch) {
+        delegate?.enhanceAudio(enabled: sender.isOn)
     }
     
     @objc private func skipSilenceSwitchValueChanged(_ sender: UISwitch) {
@@ -135,6 +175,8 @@ class EditPostViewController: UIViewController {
         
         let asset = AVAsset(url: audioURL)
         let processor = AudioProcessor(outputURL: audioURL, asset: asset)
+        processor.silenceThreshold = -40.0
+        processor.minimumSilenceDuration = 0.5
         
         processor.processAudio(skipSilence: true) { processedURL in
             if let processedURL = processedURL {
@@ -211,20 +253,22 @@ extension EditPostViewController {
         
         speedSlider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
         
-        view.addViews(optionsLabel, speedSlider, skipSilenceSwitch, skipSilenceLabel, enhanceRecordingSwitch, enhanceRecordingLabel, dismissButton)
+        view.addViews(optionsLabel, speedView, speedLabel, enhanceRecordingView, dismissButton)
+        speedView.addViews(speedSlider, skipSilenceSwitch, skipSilenceLabel, seperatorView, turtleImageView, rabbitImageView)
+        enhanceRecordingView.addViews(enhanceRecordingSwitch, enhanceRecordingLabel)
         
         optionsLabel.anchor(top: view.topAnchor, centerX: view.centerXAnchor, paddingTop: 20)
         dismissButton.anchor(top: view.topAnchor, right: view.rightAnchor, paddingTop: 20, paddingRight: 20)
-        speedSlider.anchor(top: optionsLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20)
-        skipSilenceLabel.anchor(top: speedSlider.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
-        skipSilenceSwitch.anchor(top: speedSlider.bottomAnchor, right: view.rightAnchor, paddingTop: 20, paddingRight: 20)
-        enhanceRecordingLabel.anchor(top: skipSilenceLabel.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
-        enhanceRecordingSwitch.anchor(top: skipSilenceSwitch.bottomAnchor, right: view.rightAnchor, paddingTop: 20, paddingRight: 20)
-    }
-}
-
-extension EditPostViewController: UIViewControllerTransitioningDelegate {
-    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        return BottomSheetPresentationController(presentedViewController: presented, presenting: presenting)
+        speedLabel.anchor(top: optionsLabel.bottomAnchor, left: view.leftAnchor, paddingTop: 10, paddingLeft: 30)
+        speedView.anchor(top: speedLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15, height: 105)
+        turtleImageView.anchor(top: speedView.topAnchor, left: speedView.leftAnchor, paddingTop: 15, paddingLeft: 10)
+        rabbitImageView.anchor(top: speedView.topAnchor, right: speedView.rightAnchor, paddingTop: 15, paddingRight: 10)
+        speedSlider.anchor(top: speedView.topAnchor, left: turtleImageView.rightAnchor, right: rabbitImageView.leftAnchor, paddingTop: 10, paddingLeft: 20, paddingRight: 20)
+        seperatorView.anchor(top: speedSlider.bottomAnchor, left: speedView.leftAnchor, right: speedView.rightAnchor, paddingTop: 15, height: 1)
+        skipSilenceLabel.anchor(top: seperatorView.bottomAnchor, left: speedView.leftAnchor, paddingTop: 15, paddingLeft: 10)
+        skipSilenceSwitch.anchor(top: seperatorView.bottomAnchor, right: speedView.rightAnchor, paddingTop: 10, paddingRight: 10)
+        enhanceRecordingView.anchor(top: speedView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15, height: 50)
+        enhanceRecordingLabel.anchor(left: enhanceRecordingView.leftAnchor, centerY: enhanceRecordingView.centerYAnchor, paddingLeft: 10)
+        enhanceRecordingSwitch.anchor(right: enhanceRecordingView.rightAnchor, centerY: enhanceRecordingView.centerYAnchor, paddingRight: 10)
     }
 }
