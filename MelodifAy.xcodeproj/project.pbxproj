@@ -20,6 +20,7 @@
 		177EF64E2CAEF1680015F3CB /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177EF64D2CAEF1680015F3CB /* SignInViewModel.swift */; };
 		177EF6512CAEF6530015F3CB /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177EF6502CAEF6530015F3CB /* HomePageViewController.swift */; };
 		17912D042CC5529200ED572B /* BottomSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17912D032CC5529200ED572B /* BottomSheetPresentationController.swift */; };
+		179F94CB2CCA9BBF00D05AF7 /* EditVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179F94CA2CCA9BBF00D05AF7 /* EditVideoViewController.swift */; };
 		17A32AAC2CAFEF680010A7DC /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A32AAB2CAFEF680010A7DC /* AccountViewController.swift */; };
 		17A32AAE2CAFF0030010A7DC /* BottomBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A32AAD2CAFF0030010A7DC /* BottomBarView.swift */; };
 		17A32AB12CAFF0510010A7DC /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A32AB02CAFF0510010A7DC /* SearchViewController.swift */; };
@@ -54,6 +55,7 @@
 		177EF64D2CAEF1680015F3CB /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		177EF6502CAEF6530015F3CB /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
 		17912D032CC5529200ED572B /* BottomSheetPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentationController.swift; sourceTree = "<group>"; };
+		179F94CA2CCA9BBF00D05AF7 /* EditVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditVideoViewController.swift; sourceTree = "<group>"; };
 		17A32AAB2CAFEF680010A7DC /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		17A32AAD2CAFF0030010A7DC /* BottomBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBarView.swift; sourceTree = "<group>"; };
 		17A32AB02CAFF0510010A7DC /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -147,6 +149,14 @@
 			path = HomePage;
 			sourceTree = "<group>";
 		};
+		179F94C92CCA9B9000D05AF7 /* VideoOperations */ = {
+			isa = PBXGroup;
+			children = (
+				179F94CA2CCA9BBF00D05AF7 /* EditVideoViewController.swift */,
+			);
+			path = VideoOperations;
+			sourceTree = "<group>";
+		};
 		17A32AAA2CAFEF510010A7DC /* PersonInfo */ = {
 			isa = PBXGroup;
 			children = (
@@ -229,6 +239,7 @@
 		17D8E1832CAEC881008F06CD /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				179F94C92CCA9B9000D05AF7 /* VideoOperations */,
 				177282D12CB6834F00247853 /* CreateSongWithAI */,
 				1746CD4F2CB034AB00B3701A /* Models */,
 				1746CD462CB0244400B3701A /* NewPost */,
@@ -413,6 +424,7 @@
 				17A436632CAEE305001DEF62 /* RegisterService.swift in Sources */,
 				17D8E1862CAEC8C1008F06CD /* SignInViewController.swift in Sources */,
 				17D8E18C2CAECC30008F06CD /* TextFields.swift in Sources */,
+				179F94CB2CCA9BBF00D05AF7 /* EditVideoViewController.swift in Sources */,
 				1746CD482CB0245A00B3701A /* CreateSongWithAIViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -443,6 +455,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MelodifAy/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Uygulamanın ses kaydı yapabilmesi için mikrofon izni gerekiyor.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "MelodifAy videolarınıza erişmek istiyor.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -472,6 +485,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MelodifAy/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Uygulamanın ses kaydı yapabilmesi için mikrofon izni gerekiyor.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "MelodifAy videolarınıza erişmek istiyor.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
