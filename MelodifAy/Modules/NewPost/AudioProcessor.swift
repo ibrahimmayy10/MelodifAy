@@ -7,11 +7,9 @@
 
 import AVFoundation
 
-import AVFoundation
-
 class AudioProcessor {
     var asset: AVAsset
-    var silenceThreshold: Float = -45.0
+    var silenceThreshold: Float = -50.0
     var minimumSilenceDuration: Double = 0.3
     
     init(outputURL: URL, asset: AVAsset) {

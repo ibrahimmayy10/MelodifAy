@@ -12,13 +12,14 @@ class NewSongViewController: UIViewController {
     
     private let backButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "xmark"), for: .normal)
+        button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
         button.tintColor = .black
         return button
     }()
     
     private let newPostLabel = Labels(textLabel: "Yeni Gönderi", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
     private let timerLabel = Labels(textLabel: "00.00", fontLabel: .boldSystemFont(ofSize: 32), textColorLabel: .black)
+    private let videoLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 30), textColorLabel: .black)
     
     let segmentedControl: UISegmentedControl = {
         let items = ["Video", "Ses"]
@@ -141,7 +142,7 @@ class NewSongViewController: UIViewController {
         return button
     }()
         
-    private let uploadRecordedAudioButton: UIButton = {
+    private let uploadRecordedButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "link"), for: .normal)
         button.tintColor = .black
@@ -217,6 +218,16 @@ class NewSongViewController: UIViewController {
         return view
     }()
     
+    private let cameraButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 40, weight: .bold, scale: .large)
+        let largeImage = UIImage(systemName: "camera.circle.fill", withConfiguration: largeConfig)
+        button.setImage(largeImage, for: .normal)
+        button.tintColor = .systemOrange
+        return button
+    }()
+    
     private var progressDotLeadingConstraint: NSLayoutConstraint!
     
     private let seperatorView = SeperatorView(color: .lightGray)
@@ -242,7 +253,12 @@ class NewSongViewController: UIViewController {
     private var isSeeking: Bool = false
     private var isRecordingPaused = false
     
+    private var videoPlayer: AVPlayer?
+    var selectedVideoURL: URL?
+    
     var playbackSpeed: Float = 1.0
+    
+    let viewModel = NewSongViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -253,6 +269,7 @@ class NewSongViewController: UIViewController {
         configureTimerLabel()
         configureWaveformView()
         configureAudioPlayerView()
+        configureVideoView()
         addTargetButtons()
         setupProgressGesture()
         setupCircularProgress()
@@ -293,7 +310,7 @@ class NewSongViewController: UIViewController {
     func addTargetButtons() {
         backButton.addTarget(self, action: #selector(backButton_Clicked), for: .touchUpInside)
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
-        uploadRecordedAudioButton.addTarget(self, action: #selector(uploadRecordedAudioButton_Clicked), for: .touchUpInside)
+        uploadRecordedButton.addTarget(self, action: #selector(uploadRecordedButton_Clicked), for: .touchUpInside)
         audioRecordingStartButton.addTarget(self, action: #selector(audioRecordingButton_Clicked), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(playButton_Clicked), for: .touchUpInside)
         forwardButton.addTarget(self, action: #selector(forwardButton_Clicked), for: .touchUpInside)
@@ -310,7 +327,35 @@ class NewSongViewController: UIViewController {
             self.shareAudio()
         }))
         
-        alert.addAction(UIAlertAction(title: "Taslağı Kaydet", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Taslağı Kaydet", style: .default, handler: { action in
+            guard let recordedAudioURL = self.recordedAudioURL else { return }
+            
+            let audioUrl = self.convertUrlToString(url: recordedAudioURL)
+            
+            self.viewModel.saveAudioSketch(audioUrl: audioUrl) { success in
+                if success {
+                    let successImageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
+                    successImageView.tintColor = .systemOrange
+                    successImageView.alpha = 0.0
+                    successImageView.translatesAutoresizingMaskIntoConstraints = false
+                    self.soundView.addSubview(successImageView)
+                    
+                    successImageView.anchor(centerX: self.soundView.centerXAnchor, centerY: self.soundView.centerYAnchor, width: 150, height: 150)
+                    
+                    UIView.animate(withDuration: 0.5, animations: {
+                        successImageView.alpha = 1.0
+                    }) { _ in
+                        UIView.animate(withDuration: 0.5, delay: 1.0, options: [], animations: {
+                            successImageView.alpha = 0.0
+                        }, completion: { _ in
+                            successImageView.removeFromSuperview()
+                        })
+                    }
+                } else {
+                    self.makeAlert(message: "Ses taslağı kaydedilirken bir hata oluştu.")
+                }
+            }
+        }))
         
         alert.addAction(UIAlertAction(title: "Seçenekler", style: .default, handler: { action in
             let optionsVC = EditPostViewController()
@@ -331,6 +376,10 @@ class NewSongViewController: UIViewController {
         }
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    func convertUrlToString(url: URL) -> String {
+        return url.absoluteString
     }
     
     func shareAudio() {
@@ -356,7 +405,7 @@ class NewSongViewController: UIViewController {
     }
     
     @objc func backButton_Clicked() {
-        dismiss(animated: true)
+        navigationController?.popViewController(animated: true)
     }
     
     @objc func segmentChanged(_ sender: UISegmentedControl) {
@@ -396,10 +445,88 @@ class NewSongViewController: UIViewController {
     }
     
     @objc func audioRecordingButton_Clicked() {
+        if audioPlayer != nil {
+            stopAndResetPlayback()
+        }
+        
         if audioRecorder?.isRecording == true {
             stopRecording()
         } else {
             startRecording()
+        }
+    }
+    
+    func stopAndResetPlayback() {
+        audioPlayer?.stop()
+        audioPlayer = nil
+        progressUpdateTimer?.invalidate()
+        progressUpdateTimer = nil
+        
+        progressView.progress = 0
+        progressDotLeadingConstraint.constant = 0
+        
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
+        let largeImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
+        playButton.setImage(largeImage, for: .normal)
+        playButton.tag = 0
+    }
+    
+    @objc func playButton_Clicked() {
+        if playButton.tag == 0 {
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
+            let largeImage = UIImage(systemName: "pause.fill", withConfiguration: largeConfig)
+            playButton.setImage(largeImage, for: .normal)
+            playButton.tag = 1
+            
+            guard let url = recordedAudioURL else { return }
+            
+            do {
+                if audioPlayer == nil {
+                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+                    try AVAudioSession.sharedInstance().setActive(true)
+                    
+                    audioPlayer = try AVAudioPlayer(contentsOf: url)
+                    audioPlayer?.delegate = self
+                    audioPlayer?.enableRate = true
+                    audioPlayer?.rate = playbackSpeed
+                    audioPlayer?.prepareToPlay()
+                }
+                
+                audioPlayer?.play()
+                
+                startUpdatingProgress()
+                print("Ses çalınıyor.")
+            } catch {
+                print("DEBUG: Ses çalma hatası: \(error)")
+            }
+        } else {
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
+            let largeImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
+            playButton.setImage(largeImage, for: .normal)
+            playButton.tag = 0
+            
+            pausePlayback()
+        }
+    }
+    
+    func pausePlayback() {
+        audioPlayer?.pause()
+        progressUpdateTimer?.invalidate()
+        progressUpdateTimer = nil
+    }
+    
+    @objc func uploadRecordedButton_Clicked() {
+        if segmentedControl.selectedSegmentIndex == 0 {
+            let videoPicker = UIImagePickerController()
+            videoPicker.delegate = self
+            videoPicker.sourceType = .photoLibrary
+            videoPicker.mediaTypes = [UTType.movie.identifier]
+            present(videoPicker, animated: true)
+        } else {
+            let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.audio])
+            documentPicker.delegate = self
+            documentPicker.allowsMultipleSelection = false
+            present(documentPicker, animated: true)
         }
     }
     
@@ -662,10 +789,33 @@ class NewSongViewController: UIViewController {
         return String(format: "%02d:%02d", minutes, seconds)
     }
     
-    func stopPlayback() {
-        audioPlayer?.stop()
-        progressUpdateTimer?.invalidate()
-        progressUpdateTimer = nil
+    private func startAnimatingText() {
+        let text = "Hemen video çekmeye başlayabilir ya da mevcut videonuzu yükleyebilirsiniz."
+        animateTextInLabel(text: text) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                self.startAnimatingText()
+            }
+        }
+    }
+    
+    private func animateTextInLabel(text: String, completion: @escaping () -> Void) {
+        let totalCharacters = text.count
+        
+        videoLabel.text = ""
+        
+        let delayMultiplier = 0.05
+        for (index, char) in text.enumerated() {
+            let delay = Double(index) * delayMultiplier
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                self.videoLabel.text?.append(char)
+                
+                if index == totalCharacters - 1 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delayMultiplier) {
+                        completion()
+                    }
+                }
+            }
+        }
     }
     
 }
@@ -673,12 +823,12 @@ class NewSongViewController: UIViewController {
 extension NewSongViewController {
     func configureTopBar() {
         view.backgroundColor = .systemGray5
-        view.addViews(backButton, newPostLabel, seperatorView, uploadRecordedAudioButton, nextButton)
+        view.addViews(backButton, newPostLabel, seperatorView, uploadRecordedButton, nextButton)
         
         backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 10, paddingLeft: 10)
         newPostLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10)
         nextButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, right: view.rightAnchor, paddingTop: 10, paddingRight: 10)
-        uploadRecordedAudioButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, right: nextButton.leftAnchor, paddingTop: 10, paddingRight: 20)
+        uploadRecordedButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, right: nextButton.leftAnchor, paddingTop: 10, paddingRight: 20)
         seperatorView.anchor(top: newPostLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, height: 1)
     }
     
@@ -768,6 +918,17 @@ extension NewSongViewController {
         progressDotLeadingConstraint = progressDot.leadingAnchor.constraint(equalTo: progressView.leadingAnchor)
         progressDotLeadingConstraint.isActive = true
     }
+    
+    func configureVideoView() {
+        videoView.addViews(cameraButton, videoLabel)
+        
+        videoLabel.numberOfLines = 0
+        
+        videoLabel.anchor(top: videoView.topAnchor, left: videoView.leftAnchor, right: videoView.rightAnchor, paddingTop: 10, paddingLeft: 10, paddingRight: 10)
+        cameraButton.anchor(bottom: videoView.safeAreaLayoutGuide.bottomAnchor, centerX: videoView.centerXAnchor, paddingBottom: 10)
+        
+        startAnimatingText()
+    }
 }
 
 extension NewSongViewController: UIDocumentPickerDelegate {
@@ -776,48 +937,6 @@ extension NewSongViewController: UIDocumentPickerDelegate {
         self.selectedAudioURL = selectedFileUrl
         self.selectedAudioURL = getDocumentsDirectory().appendingPathComponent("recording.m4a")
         navigationController?.pushViewController(CreateSongWithAIViewController(), animated: false)
-    }
-    
-    @objc func playButton_Clicked() {
-        if playButton.tag == 0 {
-            let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
-            let largeImage = UIImage(systemName: "pause.fill", withConfiguration: largeConfig)
-            playButton.setImage(largeImage, for: .normal)
-            playButton.tag = 1
-            
-            guard let url = recordedAudioURL else { return }
-            
-            do {
-                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-                try AVAudioSession.sharedInstance().setActive(true)
-                
-                audioPlayer = try AVAudioPlayer(contentsOf: url)
-                audioPlayer?.delegate = self
-                audioPlayer?.enableRate = true
-                audioPlayer?.rate = playbackSpeed
-                audioPlayer?.prepareToPlay()
-                audioPlayer?.play()
-                
-                startUpdatingProgress()
-                print("Ses çalınıyor.")
-            } catch {
-                print("DEBUG: Ses çalma hatası: \(error)")
-            }
-        } else {
-            let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
-            let largeImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
-            playButton.setImage(largeImage, for: .normal)
-            playButton.tag = 0
-            
-            stopPlayback()
-        }
-    }
-    
-    @objc func uploadRecordedAudioButton_Clicked() {
-        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.audio])
-        documentPicker.delegate = self
-        documentPicker.allowsMultipleSelection = false
-        present(documentPicker, animated: true)
     }
     
     func getDocumentsDirectory() -> URL {
@@ -838,7 +957,7 @@ extension NewSongViewController: AVAudioRecorderDelegate {
 
 extension NewSongViewController: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        stopPlayback()
+        stopAndResetPlayback()
         progressView.progress = 0
         progressDotLeadingConstraint.constant = 0
         
@@ -890,5 +1009,27 @@ extension NewSongViewController: EditPostViewControllerDelegate {
         audioPlayer?.volume = 1.0
         
         print("Ses ayarları sıfırlandı.")
+    }
+}
+
+extension NewSongViewController {
+    func makeAlert(message: String) {
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Tamam", style: .default))
+        present(alert, animated: true)
+    }
+}
+
+extension NewSongViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedVideoURL = info[.mediaURL] as? URL {
+            self.selectedVideoURL = selectedVideoURL
+        }
+        
+        dismiss(animated: true) {
+            let vc = EditVideoViewController()
+            vc.videoURL = self.selectedVideoURL
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

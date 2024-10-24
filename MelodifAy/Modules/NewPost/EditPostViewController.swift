@@ -175,7 +175,7 @@ class EditPostViewController: UIViewController {
         
         let asset = AVAsset(url: audioURL)
         let processor = AudioProcessor(outputURL: audioURL, asset: asset)
-        processor.silenceThreshold = -40.0
+        processor.silenceThreshold = -45.0
         processor.minimumSilenceDuration = 0.5
         
         processor.processAudio(skipSilence: true) { processedURL in
