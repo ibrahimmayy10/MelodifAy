@@ -156,6 +156,7 @@ class EditPostViewController: UIViewController {
         dismissButton.addTarget(self, action: #selector(dismissButtonTapped), for: .touchUpInside)
         skipSilenceSwitch.addTarget(self, action: #selector(skipSilenceSwitchValueChanged(_:)), for: .valueChanged)
         enhanceRecordingSwitch.addTarget(self, action: #selector(enhanceRecordingSwitchValueChanged(_:)), for: .valueChanged)
+        speedSlider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
     }
     
     @objc private func enhanceRecordingSwitchValueChanged(_ sender: UISwitch) {
@@ -250,8 +251,6 @@ extension EditPostViewController {
         speedSlider.minimumValue = 0
         speedSlider.maximumValue = Float(sliderSteps.count - 1)
         speedSlider.value = 2
-        
-        speedSlider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
         
         view.addViews(optionsLabel, speedView, speedLabel, enhanceRecordingView, dismissButton)
         speedView.addViews(speedSlider, skipSilenceSwitch, skipSilenceLabel, seperatorView, turtleImageView, rabbitImageView)

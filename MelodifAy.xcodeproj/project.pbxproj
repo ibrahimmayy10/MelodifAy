@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		171DF00B2CC1333600523459 /* EditPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171DF00A2CC1333600523459 /* EditPostViewController.swift */; };
+		17379D302CCBDF5000D4A1CD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17379D2F2CCBDF5000D4A1CD /* CameraViewController.swift */; };
 		1746CD482CB0245A00B3701A /* CreateSongWithAIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD472CB0245A00B3701A /* CreateSongWithAIViewController.swift */; };
 		1746CD4A2CB029A700B3701A /* SeperatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD492CB029A700B3701A /* SeperatorView.swift */; };
 		1746CD4E2CB0346E00B3701A /* CreateSongWithAIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */; };
@@ -44,6 +45,7 @@
 
 /* Begin PBXFileReference section */
 		171DF00A2CC1333600523459 /* EditPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPostViewController.swift; sourceTree = "<group>"; };
+		17379D2F2CCBDF5000D4A1CD /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		1746CD472CB0245A00B3701A /* CreateSongWithAIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSongWithAIViewController.swift; sourceTree = "<group>"; };
 		1746CD492CB029A700B3701A /* SeperatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeperatorView.swift; sourceTree = "<group>"; };
 		1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSongWithAIViewModel.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				179F94CA2CCA9BBF00D05AF7 /* EditVideoViewController.swift */,
+				17379D2F2CCBDF5000D4A1CD /* CameraViewController.swift */,
 			);
 			path = VideoOperations;
 			sourceTree = "<group>";
@@ -417,6 +420,7 @@
 				17D8E18E2CAED1ED008F06CD /* Labels.swift in Sources */,
 				177EF6512CAEF6530015F3CB /* HomePageViewController.swift in Sources */,
 				17A32AB12CAFF0510010A7DC /* SearchViewController.swift in Sources */,
+				17379D302CCBDF5000D4A1CD /* CameraViewController.swift in Sources */,
 				1746CD4E2CB0346E00B3701A /* CreateSongWithAIViewModel.swift in Sources */,
 				17B1B03C2CC6B403004488BF /* AudioProcessor.swift in Sources */,
 				17D8E1882CAEC950008F06CD /* ViewExtensions.swift in Sources */,
@@ -454,6 +458,7 @@
 				DEVELOPMENT_TEAM = J57UX88LR4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MelodifAy/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "MelodifAy kameraya erişmek istiyor.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Uygulamanın ses kaydı yapabilmesi için mikrofon izni gerekiyor.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "MelodifAy videolarınıza erişmek istiyor.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -484,6 +489,7 @@
 				DEVELOPMENT_TEAM = J57UX88LR4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MelodifAy/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "MelodifAy kameraya erişmek istiyor.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Uygulamanın ses kaydı yapabilmesi için mikrofon izni gerekiyor.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "MelodifAy videolarınıza erişmek istiyor.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
