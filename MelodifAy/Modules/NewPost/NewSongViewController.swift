@@ -171,7 +171,7 @@ class NewSongViewController: UIViewController {
     
     private let forwardButton: UIButton = {
         let button = UIButton()
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .bold, scale: .large)
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)
         let largeImage = UIImage(systemName: "goforward.15", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
         button.isHidden = true
@@ -182,7 +182,7 @@ class NewSongViewController: UIViewController {
     
     private let backwardButton: UIButton = {
         let button = UIButton()
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .bold, scale: .large)
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)
         let largeImage = UIImage(systemName: "gobackward.15", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
         button.isHidden = true
@@ -191,22 +191,16 @@ class NewSongViewController: UIViewController {
         return button
     }()
     
-    private let progressView: UIProgressView = {
-        let progressView = UIProgressView(progressViewStyle: .default)
-        progressView.trackTintColor = .gray
-        progressView.progressTintColor = .black
-        progressView.isHidden = true
-        progressView.translatesAutoresizingMaskIntoConstraints = false
-        return progressView
-    }()
-    
-    private let progressDot: UIView = {
-        let view = UIView()
-        view.backgroundColor = .black
-        view.layer.cornerRadius = 5
-        view.isHidden = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    private let audioSlider: UISlider = {
+        let slider = UISlider()
+        slider.translatesAutoresizingMaskIntoConstraints = false
+        slider.isHidden = true
+        slider.minimumValue = 0
+        slider.tintColor = .gray
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 14, weight: .bold)
+        let largeCircleImage = UIImage(systemName: "circle.fill", withConfiguration: largeConfig)?.withTintColor(.black, renderingMode: .alwaysOriginal)
+        slider.setThumbImage(largeCircleImage, for: .normal)
+        return slider
     }()
     
     private let waveformView: UIView = {
@@ -227,8 +221,6 @@ class NewSongViewController: UIViewController {
         button.tintColor = .systemOrange
         return button
     }()
-    
-    private var progressDotLeadingConstraint: NSLayoutConstraint!
     
     private let seperatorView = SeperatorView(color: .lightGray)
     
@@ -271,7 +263,6 @@ class NewSongViewController: UIViewController {
         configureAudioPlayerView()
         configureVideoView()
         addTargetButtons()
-        setupProgressGesture()
         setupCircularProgress()
         
     }
@@ -290,7 +281,7 @@ class NewSongViewController: UIViewController {
         progressLayer.lineCap = .round
         timerView.layer.addSublayer(progressLayer)
     }
-
+    
     func updateCircularProgressFrame() {
         let center = CGPoint(x: timerView.bounds.midX, y: timerView.bounds.midY)
         let radius = min(timerView.bounds.width, timerView.bounds.height) / 2 - progressLayer.lineWidth / 2
@@ -305,7 +296,30 @@ class NewSongViewController: UIViewController {
         
         progressLayer.path = circularPath.cgPath
     }
+    
+    @objc func audioSliderValueChanged(_ slider: UISlider) {
+        guard let player = audioPlayer else { return }
+        player.currentTime = TimeInterval(slider.value)
+        updateProgress()
+    }
+    
+    func startUpdatingProgress() {
+        progressUpdateTimer?.invalidate()
 
+        progressUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 60.0, repeats: true) { [weak self] _ in
+            self?.updateProgress()
+        }
+    }
+
+    func updateProgress() {
+        guard let player = audioPlayer else { return }
+        
+        audioSlider.value = Float(player.currentTime)
+        
+        let minutes = Int(player.currentTime) / 60
+        let seconds = Int(player.currentTime) % 60
+        timerLabel.text = String(format: "%02d:%02d", minutes, seconds)
+    }
     
     func addTargetButtons() {
         backButton.addTarget(self, action: #selector(backButton_Clicked), for: .touchUpInside)
@@ -318,6 +332,14 @@ class NewSongViewController: UIViewController {
         audioRecordingPlayButton.addTarget(self, action: #selector(audioRecordingPlayButton_Clicked), for: .touchUpInside)
         audioRecordingPauseButton.addTarget(self, action: #selector(audioRecordingPauseButton_Clicked), for: .touchUpInside)
         optionsButton.addTarget(self, action: #selector(optionsButton_Clicked), for: .touchUpInside)
+        audioSlider.addTarget(self, action: #selector(audioSliderValueChanged(_:)), for: .valueChanged)
+        cameraButton.addTarget(self, action: #selector(cameraButton_Clicked), for: .touchUpInside)
+    }
+    
+    @objc func cameraButton_Clicked() {
+        let vc = CameraViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true)
     }
     
     @objc func optionsButton_Clicked() {
@@ -461,9 +483,7 @@ class NewSongViewController: UIViewController {
         audioPlayer = nil
         progressUpdateTimer?.invalidate()
         progressUpdateTimer = nil
-        
-        progressView.progress = 0
-        progressDotLeadingConstraint.constant = 0
+        audioSlider.value = 0
         
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
         let largeImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
@@ -473,7 +493,7 @@ class NewSongViewController: UIViewController {
     
     @objc func playButton_Clicked() {
         if playButton.tag == 0 {
-            let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .bold, scale: .large)
             let largeImage = UIImage(systemName: "pause.fill", withConfiguration: largeConfig)
             playButton.setImage(largeImage, for: .normal)
             playButton.tag = 1
@@ -490,6 +510,7 @@ class NewSongViewController: UIViewController {
                     audioPlayer?.enableRate = true
                     audioPlayer?.rate = playbackSpeed
                     audioPlayer?.prepareToPlay()
+                    audioSlider.maximumValue = Float(audioPlayer?.duration ?? 0)
                 }
                 
                 audioPlayer?.play()
@@ -500,7 +521,7 @@ class NewSongViewController: UIViewController {
                 print("DEBUG: Ses çalma hatası: \(error)")
             }
         } else {
-            let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .bold, scale: .large)
             let largeImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
             playButton.setImage(largeImage, for: .normal)
             playButton.tag = 0
@@ -539,11 +560,10 @@ class NewSongViewController: UIViewController {
         audioRecordingPauseButton.isHidden = false
         optionsButton.isHidden = true
         playView.isHidden = true
+        audioSlider.isHidden = true
         playButton.isHidden = true
         forwardButton.isHidden = true
         backwardButton.isHidden = true
-        progressView.isHidden = true
-        progressDot.isHidden = true
         isRecordingPaused = false
         
         UIView.animate(withDuration: 0.5, animations: {
@@ -683,12 +703,11 @@ class NewSongViewController: UIViewController {
         timer = nil
                 
         playView.isHidden = false
+        audioSlider.isHidden = false
         playButton.isHidden = false
         forwardButton.isHidden = false
         backwardButton.isHidden = false
         optionsButton.isHidden = false
-        progressView.isHidden = false
-        progressDot.isHidden = false
         waveformView.isHidden = true
         waveformContentView.isHidden = true
         audioRecordingPlayButton.isHidden = true
@@ -717,70 +736,6 @@ class NewSongViewController: UIViewController {
         scrollView.contentSize = CGSize(width: 0, height: 50)
         
         waveformContentView.subviews.forEach { $0.removeFromSuperview() }
-    }
-    
-    func startUpdatingProgress() {
-        progressUpdateTimer?.invalidate()
-        
-        progressUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0/60.0, repeats: true) { [weak self] _ in
-            self?.updateProgress()
-        }
-    }
-    
-    func setupProgressGesture() {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handleProgressPan(_:)))
-        progressDot.addGestureRecognizer(panGesture)
-        progressDot.isUserInteractionEnabled = true
-    }
-
-    @objc func handleProgressPan(_ gesture: UIPanGestureRecognizer) {
-        let touchPoint = gesture.location(in: progressView)
-        let progressPercentage = touchPoint.x / progressView.bounds.width
-        
-        switch gesture.state {
-        case .began:
-            isSeeking = true
-            audioPlayer?.pause()
-        case .changed:
-            updateProgressUI(progress: progressPercentage)
-        case .ended:
-            isSeeking = false
-            seek(to: progressPercentage)
-        default:
-            break
-        }
-    }
-
-    func updateProgressUI(progress: CGFloat) {
-        let clampedProgress = max(0, min(1, progress))
-        progressView.progress = Float(clampedProgress)
-        progressDotLeadingConstraint.constant = clampedProgress * progressView.bounds.width
-        
-        if let duration = audioPlayer?.duration {
-            let currentTime = duration * Double(clampedProgress)
-            timerLabel.text = formatTime(Int(currentTime))
-        }
-    }
-
-    func seek(to percentage: CGFloat) {
-        guard let player = audioPlayer, player.duration > 0 else { return }
-        
-        let seekTime = Double(percentage) * player.duration
-        player.currentTime = seekTime
-        
-        if playButton.tag == 1 {
-            player.play()
-            startUpdatingProgress()
-        } else {
-            updateProgress()
-        }
-    }
-    
-    func updateProgress() {
-        guard let player = audioPlayer, player.duration > 0, !isSeeking else { return }
-        
-        let progress = player.currentTime / player.duration
-        updateProgressUI(progress: CGFloat(progress))
     }
 
     func formatTime(_ timeInSeconds: Int) -> String {
@@ -899,7 +854,7 @@ extension NewSongViewController {
     
     func configureAudioPlayerView() {
         soundView.addViews(playView)
-        playView.addViews(playButton, forwardButton, backwardButton, progressView, progressDot, optionsButton)
+        playView.addViews(playButton, forwardButton, backwardButton, audioSlider, optionsButton)
         
         playView.layer.cornerRadius = 10
         playView.layer.shadowColor = UIColor.black.cgColor
@@ -912,11 +867,7 @@ extension NewSongViewController {
         playButton.anchor(centerX: playView.centerXAnchor, centerY: playView.centerYAnchor)
         forwardButton.anchor(left: playButton.rightAnchor, centerY: playView.centerYAnchor, paddingLeft: 30)
         backwardButton.anchor(right: playButton.leftAnchor, centerY: playView.centerYAnchor, paddingRight: 30)
-
-        progressView.anchor(top: playButton.bottomAnchor, left: playView.leftAnchor, right: playView.rightAnchor, paddingTop: 30, paddingLeft: 20, paddingRight: 20, height: 2)
-        progressDot.anchor(centerY: progressView.centerYAnchor, width: 10, height: 10)
-        progressDotLeadingConstraint = progressDot.leadingAnchor.constraint(equalTo: progressView.leadingAnchor)
-        progressDotLeadingConstraint.isActive = true
+        audioSlider.anchor(top: playButton.bottomAnchor, left: playView.leftAnchor, right: playView.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingRight: 20)
     }
     
     func configureVideoView() {
@@ -958,10 +909,8 @@ extension NewSongViewController: AVAudioRecorderDelegate {
 extension NewSongViewController: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         stopAndResetPlayback()
-        progressView.progress = 0
-        progressDotLeadingConstraint.constant = 0
         
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .bold, scale: .large)
         let largeImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
         playButton.setImage(largeImage, for: .normal)
         playButton.tag = 0
