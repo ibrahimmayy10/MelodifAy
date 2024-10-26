@@ -116,6 +116,28 @@ class EditVideoViewController: UIViewController {
         playVideo()
         setupSlider()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(videoDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: videoPlayer.currentItem)
+                
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+        
+    @objc func videoDidFinishPlaying() {
+        print("Video oynatması tamamlandı")
+        
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 35, weight: .bold, scale: .large)
+        let largeImage = UIImage(systemName: "play.circle.fill", withConfiguration: largeConfig)
+        playButton.setImage(largeImage, for: .normal)
+        videoSlider.value = 0.0
+        
+        videoPlayer.seek(to: .zero)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        playVideo()
     }
     
     func addTargetButtons() {
@@ -133,7 +155,14 @@ class EditVideoViewController: UIViewController {
     func playVideo() {
         guard let videoURL = videoURL else { return }
         
-        videoPlayer.replaceCurrentItem(with: AVPlayerItem(url: videoURL))
+        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
+        
+        playerLayer.removeFromSuperlayer()
+        
+        let playerItem = AVPlayerItem(url: videoURL)
+        videoPlayer.replaceCurrentItem(with: playerItem)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(videoDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
         
         playerLayer = AVPlayerLayer(player: videoPlayer)
         playerLayer.videoGravity = .resizeAspect
@@ -207,6 +236,7 @@ class EditVideoViewController: UIViewController {
 extension EditVideoViewController {
     func configureTopBar() {
         view.backgroundColor = .white
+        navigationController?.navigationBar.isHidden = true
         
         view.addViews(dismissButton, playButton, forwardButton, backwardButton, videoSlider, backgroundOverlay, nextButton)
         

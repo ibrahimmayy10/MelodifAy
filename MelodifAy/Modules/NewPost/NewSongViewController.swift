@@ -338,8 +338,9 @@ class NewSongViewController: UIViewController {
     
     @objc func cameraButton_Clicked() {
         let vc = CameraViewController()
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true)
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .fullScreen
+        present(navController, animated: true)
     }
     
     @objc func optionsButton_Clicked() {
@@ -973,6 +974,7 @@ extension NewSongViewController: UIImagePickerControllerDelegate, UINavigationCo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedVideoURL = info[.mediaURL] as? URL {
             self.selectedVideoURL = selectedVideoURL
+            print(selectedVideoURL)
         }
         
         dismiss(animated: true) {
