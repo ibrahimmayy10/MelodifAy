@@ -355,7 +355,7 @@ class NewSongViewController: UIViewController {
             
             let audioUrl = self.convertUrlToString(url: recordedAudioURL)
             
-            self.viewModel.saveAudioSketch(audioUrl: audioUrl) { success in
+            self.viewModel.saveDraft(url: audioUrl) { success in
                 if success {
                     let successImageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
                     successImageView.tintColor = .systemOrange
@@ -363,7 +363,7 @@ class NewSongViewController: UIViewController {
                     successImageView.translatesAutoresizingMaskIntoConstraints = false
                     self.soundView.addSubview(successImageView)
                     
-                    successImageView.anchor(centerX: self.soundView.centerXAnchor, centerY: self.soundView.centerYAnchor, width: 150, height: 150)
+                    successImageView.anchor(centerX: self.soundView.centerXAnchor, centerY: self.soundView.centerYAnchor, width: 100, height: 100)
                     
                     UIView.animate(withDuration: 0.5, animations: {
                         successImageView.alpha = 1.0
