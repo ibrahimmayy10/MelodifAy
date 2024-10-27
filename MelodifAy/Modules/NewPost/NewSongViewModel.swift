@@ -11,7 +11,7 @@ import Firebase
 class NewSongViewModel {
     let firestore = Firestore.firestore()
     
-    func saveAudioSketch(audioUrl: String, completion: @escaping (Bool) -> Void) {
+    func saveDraft(url: String, completion: @escaping (Bool) -> Void) {
         guard let user = Auth.auth().currentUser else {
             completion(false)
             return
@@ -19,15 +19,15 @@ class NewSongViewModel {
         
         let currentUserID = user.uid
         
-        let audioSketchRef = firestore.collection("AudioSketch").document()
-        let firestoreSketch = ["audioUrl": audioUrl, "userID": currentUserID, "audioID": audioSketchRef.documentID] as [String: Any]
+        let audioDraftRef = firestore.collection("Drafts").document()
+        let firestoreDraft = ["url": url, "userID": currentUserID, "draftID": audioDraftRef.documentID] as [String: Any]
         
-        audioSketchRef.setData(firestoreSketch) { error in
+        audioDraftRef.setData(firestoreDraft) { error in
             if error != nil {
                 print(error?.localizedDescription ?? "")
                 completion(false)
             } else {
-                print("Ses taslağı başarılı bir şekilde kaydedildi.")
+                print("Taslak başarılı bir şekilde kaydedildi.")
                 completion(true)
             }
         }

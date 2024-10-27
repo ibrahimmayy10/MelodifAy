@@ -83,6 +83,36 @@ class EditVideoViewController: UIViewController {
         return button
     }()
     
+    private let saveDraftButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Taslağı kaydet", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = UIColor.darkGray
+        button.layer.cornerRadius = 20
+        return button
+    }()
+    
+    private let shareButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        var config = UIButton.Configuration.plain()
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .bold, scale: .large)
+        let largeImage = UIImage(systemName: "square.and.arrow.up.circle.fill", withConfiguration: largeConfig)
+        config.image = largeImage
+        config.baseForegroundColor = .darkGray
+        config.background.backgroundColor = .white
+        config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+        button.configuration = config
+
+        button.anchor(width: 30, height: 30)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 15
+        
+        return button
+    }()
+    
     private let backgroundOverlay: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -104,9 +134,18 @@ class EditVideoViewController: UIViewController {
         return slider
     }()
     
+    private let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.color = .white
+        return indicator
+    }()
+    
     var videoURL: URL?
     private let videoPlayer = AVPlayer()
     private var playerLayer = AVPlayerLayer()
+    
+    private let newSongViewModel = NewSongViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -143,9 +182,61 @@ class EditVideoViewController: UIViewController {
     func addTargetButtons() {
         setupGestureRecognizers()
         dismissButton.addTarget(self, action: #selector(dismissButton_Clicked), for: .touchUpInside)
+        shareButton.addTarget(self, action: #selector(shareButton_Clicked), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(playButton_Clicked), for: .touchUpInside)
         forwardButton.addTarget(self, action: #selector(forwardButton_Clicked), for: .touchUpInside)
         backwardButton.addTarget(self, action: #selector(backwardButton_Clicked), for: .touchUpInside)
+        saveDraftButton.addTarget(self, action: #selector(saveDraftButton_Clicked), for: .touchUpInside)
+    }
+    
+    @objc func saveDraftButton_Clicked() {
+        guard let videoURL = videoURL else { return }
+        let url = convertUrlToString(url: videoURL)
+        
+        saveDraftButton.setTitle("", for: .normal)
+        activityIndicator.startAnimating()
+        newSongViewModel.saveDraft(url: url) { success in
+            self.activityIndicator.stopAnimating()
+            self.saveDraftButton.setTitle("Taslağı kaydet", for: .normal)
+            
+            if success {
+                let successImageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
+                successImageView.tintColor = .systemOrange
+                successImageView.alpha = 0.0
+                successImageView.translatesAutoresizingMaskIntoConstraints = false
+                self.view.addSubview(successImageView)
+                
+                successImageView.anchor(centerX: self.view.centerXAnchor, centerY: self.view.centerYAnchor, width: 100, height: 100)
+                
+                UIView.animate(withDuration: 0.5, animations: {
+                    successImageView.alpha = 1.0
+                }) { _ in
+                    UIView.animate(withDuration: 0.5, delay: 1.0, options: [], animations: {
+                        successImageView.alpha = 0.0
+                    }, completion: { _ in
+                        successImageView.removeFromSuperview()
+                    })
+                }
+            } else {
+                self.makeAlert(message: "Ses taslağı kaydedilirken bir hata oluştu.")
+            }
+        }
+    }
+    
+    func convertUrlToString(url: URL) -> String {
+        return url.absoluteString
+    }
+    
+    @objc func shareButton_Clicked() {
+        let activityViewController = UIActivityViewController(activityItems: [videoURL], applicationActivities: nil)
+        
+        if let popoverController = activityViewController.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        
+        present(activityViewController, animated: true)
     }
     
     @objc func dismissButton_Clicked() {
@@ -238,20 +329,31 @@ extension EditVideoViewController {
         view.backgroundColor = .white
         navigationController?.navigationBar.isHidden = true
         
-        view.addViews(dismissButton, playButton, forwardButton, backwardButton, videoSlider, backgroundOverlay, nextButton)
+        view.addViews(dismissButton, shareButton, playButton, forwardButton, backwardButton, videoSlider, backgroundOverlay, nextButton, saveDraftButton, activityIndicator)
         
         dismissButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 10, paddingLeft: 10)
+        shareButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, right: view.rightAnchor, paddingTop: 10, paddingRight: 10)
         playButton.anchor(centerX: view.centerXAnchor, centerY: view.centerYAnchor)
         backwardButton.anchor(right: playButton.leftAnchor, centerY: view.centerYAnchor, paddingRight: 30)
         forwardButton.anchor(left: playButton.rightAnchor, centerY: view.centerYAnchor, paddingLeft: 30)
         videoSlider.anchor(top: playButton.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20)
         backgroundOverlay.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
         nextButton.anchor(right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingRight: 20, paddingBottom: 20, width: 100, height: 40)
+        saveDraftButton.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingLeft: 20, paddingBottom: 20, width: 140, height: 40)
+        activityIndicator.anchor(centerX: saveDraftButton.centerXAnchor, centerY: saveDraftButton.centerYAnchor)
         
         playButton.layer.zPosition = 1
         forwardButton.layer.zPosition = 1
         backwardButton.layer.zPosition = 1
         videoSlider.layer.zPosition = 1
         backgroundOverlay.isUserInteractionEnabled = false
+    }
+}
+
+extension EditVideoViewController {
+    func makeAlert(message: String) {
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Tamam", style: .default))
+        present(alert, animated: true)
     }
 }

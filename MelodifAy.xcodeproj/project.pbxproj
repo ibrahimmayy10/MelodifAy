@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		171DF00B2CC1333600523459 /* EditPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171DF00A2CC1333600523459 /* EditPostViewController.swift */; };
+		171E07F92CCE6B0400425271 /* EditVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171E07F82CCE6B0400425271 /* EditVideoViewModel.swift */; };
 		17379D302CCBDF5000D4A1CD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17379D2F2CCBDF5000D4A1CD /* CameraViewController.swift */; };
 		1746CD482CB0245A00B3701A /* CreateSongWithAIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD472CB0245A00B3701A /* CreateSongWithAIViewController.swift */; };
 		1746CD4A2CB029A700B3701A /* SeperatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD492CB029A700B3701A /* SeperatorView.swift */; };
@@ -45,6 +46,7 @@
 
 /* Begin PBXFileReference section */
 		171DF00A2CC1333600523459 /* EditPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPostViewController.swift; sourceTree = "<group>"; };
+		171E07F82CCE6B0400425271 /* EditVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditVideoViewModel.swift; sourceTree = "<group>"; };
 		17379D2F2CCBDF5000D4A1CD /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		1746CD472CB0245A00B3701A /* CreateSongWithAIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSongWithAIViewController.swift; sourceTree = "<group>"; };
 		1746CD492CB029A700B3701A /* SeperatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeperatorView.swift; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 			children = (
 				179F94CA2CCA9BBF00D05AF7 /* EditVideoViewController.swift */,
 				17379D2F2CCBDF5000D4A1CD /* CameraViewController.swift */,
+				171E07F82CCE6B0400425271 /* EditVideoViewModel.swift */,
 			);
 			path = VideoOperations;
 			sourceTree = "<group>";
@@ -407,6 +410,7 @@
 				177282D32CB6847600247853 /* NewSongViewController.swift in Sources */,
 				17D8E18A2CAECBBB008F06CD /* ImageViews.swift in Sources */,
 				17A32AAC2CAFEF680010A7DC /* AccountViewController.swift in Sources */,
+				171E07F92CCE6B0400425271 /* EditVideoViewModel.swift in Sources */,
 				1746CD512CB034BC00B3701A /* SongModel.swift in Sources */,
 				171DF00B2CC1333600523459 /* EditPostViewController.swift in Sources */,
 				17A32AAE2CAFF0030010A7DC /* BottomBarView.swift in Sources */,

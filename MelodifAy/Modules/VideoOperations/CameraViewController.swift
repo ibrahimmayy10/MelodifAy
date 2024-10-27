@@ -139,16 +139,6 @@ class CameraViewController: UIViewController {
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: false)
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: false)
-    }
-    
     func addTargetButtons() {
         dismissButton.addTarget(self, action: #selector(dismissButton_Clicked), for: .touchUpInside)
         cameraButton.addTarget(self, action: #selector(cameraButton_Clicked), for: .touchUpInside)
@@ -337,8 +327,22 @@ class CameraViewController: UIViewController {
             return
         }
         
+        guard let audioCaptureDevice = AVCaptureDevice.default(for: .audio) else { return }
+        let audioInput: AVCaptureDeviceInput
+        
+        do {
+            audioInput = try AVCaptureDeviceInput(device: audioCaptureDevice)
+        } catch {
+            print("Audio input oluşturulamadı: \(error)")
+            return
+        }
+        
         if captureSession?.canAddInput(videoInput) == true {
             captureSession?.addInput(videoInput)
+        }
+        
+        if captureSession?.canAddInput(audioInput) == true {
+            captureSession?.addInput(audioInput)
         }
         
         if captureSession?.canAddOutput(movieOutput) == true {
@@ -358,13 +362,14 @@ class CameraViewController: UIViewController {
 extension CameraViewController {
     func configureWithExt() {
         view.backgroundColor = .white
+        navigationController?.navigationBar.isHidden = true
         
         view.addViews(dismissButton, cameraButton, pauseButton, timerLabel, pauseLabel, changeCameraPositionButton, flashButton)
                 
-        dismissButton.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 30, paddingLeft: 10)
-        timerLabel.anchor(top: view.topAnchor, centerX: view.centerXAnchor, paddingTop: 30, width: 100, height: 30)
-        changeCameraPositionButton.anchor(top: view.topAnchor, right: view.rightAnchor, paddingTop: 30, paddingRight: 10)
-        flashButton.anchor(top: view.topAnchor, right: changeCameraPositionButton.leftAnchor, paddingTop: 30, paddingRight: 10)
+        dismissButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 10, paddingLeft: 10)
+        timerLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10, width: 100, height: 30)
+        changeCameraPositionButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, right: view.rightAnchor, paddingTop: 10, paddingRight: 10)
+        flashButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, right: changeCameraPositionButton.leftAnchor, paddingTop: 10, paddingRight: 10)
         pauseLabel.anchor(top: timerLabel.bottomAnchor, centerX: view.centerXAnchor, paddingTop: 10, width: 130, height: 25)
         cameraButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, centerX: view.centerXAnchor, paddingBottom: 10)
         pauseButton.anchor(left: view.leftAnchor, centerY: cameraButton.centerYAnchor, paddingLeft: 10)
