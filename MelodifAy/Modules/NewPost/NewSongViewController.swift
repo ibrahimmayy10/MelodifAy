@@ -334,6 +334,13 @@ class NewSongViewController: UIViewController {
         optionsButton.addTarget(self, action: #selector(optionsButton_Clicked), for: .touchUpInside)
         audioSlider.addTarget(self, action: #selector(audioSliderValueChanged(_:)), for: .valueChanged)
         cameraButton.addTarget(self, action: #selector(cameraButton_Clicked), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(nextButton_Clicked), for: .touchUpInside)
+    }
+    
+    @objc func nextButton_Clicked() {
+        let vc = ShareNewPostViewController()
+        vc.newPostURL = recordedAudioURL
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func cameraButton_Clicked() {

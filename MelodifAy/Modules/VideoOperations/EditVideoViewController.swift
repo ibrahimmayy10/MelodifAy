@@ -187,6 +187,13 @@ class EditVideoViewController: UIViewController {
         forwardButton.addTarget(self, action: #selector(forwardButton_Clicked), for: .touchUpInside)
         backwardButton.addTarget(self, action: #selector(backwardButton_Clicked), for: .touchUpInside)
         saveDraftButton.addTarget(self, action: #selector(saveDraftButton_Clicked), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(nextButton_Clicked), for: .touchUpInside)
+    }
+    
+    @objc func nextButton_Clicked() {
+        let vc = ShareNewPostViewController()
+        vc.newPostURL = videoURL
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func saveDraftButton_Clicked() {

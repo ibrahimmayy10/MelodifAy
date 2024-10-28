@@ -35,7 +35,7 @@ class TextFields: UITextField, UITextFieldDelegate {
     
     func setTextField(textPlaceHolder: String, secureText: Bool, textType: UITextContentType,maxLength : Int){
         attributedPlaceholder = NSAttributedString(string: textPlaceHolder, attributes: [.foregroundColor: UIColor.systemGray4])
-        textColor = .white
+        textColor = .black
         borderStyle = .none
         isSecureTextEntry = secureText
         textContentType = textType
@@ -53,7 +53,7 @@ class TextFields: UITextField, UITextFieldDelegate {
         super.layoutSubviews()
         let bottomLine = CALayer()
         bottomLine.frame = CGRect(x: 0, y: frame.height + 5, width: frame.width, height: 1)
-        bottomLine.backgroundColor = UIColor.gray.cgColor
+        bottomLine.backgroundColor = UIColor.systemGray4.cgColor
         
         layer.addSublayer(bottomLine)
     }
