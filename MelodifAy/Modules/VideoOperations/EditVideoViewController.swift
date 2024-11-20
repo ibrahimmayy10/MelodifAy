@@ -191,6 +191,7 @@ class EditVideoViewController: UIViewController {
     }
     
     @objc func nextButton_Clicked() {
+        videoPlayer.pause()
         let vc = ShareNewPostViewController()
         vc.newPostURL = videoURL
         navigationController?.pushViewController(vc, animated: true)

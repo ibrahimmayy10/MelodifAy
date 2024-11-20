@@ -7,11 +7,12 @@
 
 import UIKit
 import AVFoundation
+import Lottie
 
 class ShareNewPostViewController: UIViewController {
     
     private let shareLabel = Labels(textLabel: "Şarkını paylaş", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
-    private let previewLabel = Labels(textLabel: "Önizleme", fontLabel: .systemFont(ofSize: 17), textColorLabel: .black)
+    private let explanationLabel = Labels(textLabel: "Şarkı sözlerini ekleyebilirsiniz...", fontLabel: .systemFont(ofSize: 17), textColorLabel: .systemGray4)
     
     private let backButton: UIButton = {
         let button = UIButton()
@@ -31,20 +32,6 @@ class ShareNewPostViewController: UIViewController {
         return button
     }()
     
-    private let audioView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 10
-        
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowOpacity = 0.4
-        view.layer.shadowRadius = 5
-        
-        return view
-    }()
-    
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -57,26 +44,38 @@ class ShareNewPostViewController: UIViewController {
         return view
     }()
     
-    private let explanationTextField = TextFields(placeHolder: "Şarkı ismi", secureText: false, textType: .name, maxLength: 35)
+    private let songNameTextField = TextFields(placeHolder: "Şarkı ismi", secureText: false, textType: .name, maxLength: 50)
+    
+    private let lyricsTextView: UITextView = {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.textColor = .black
+        textView.font = .systemFont(ofSize: 17)
+        
+        return textView
+    }()
+    
+    private let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.color = .white
+        return indicator
+    }()
+    
+    private let seperatorView = SeperatorView(color: .systemGray4)
+    
+    private let imageView = ImageViews(imageName: "logo")
     
     var newPostURL: URL?
-    private let videoPlayer = AVPlayer()
-    private var playerLayer = AVPlayerLayer()
+    
+    private let viewModel = ShareNewPostViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureWithExt()
         keyboardShowing()
-        
-        guard let url = newPostURL?.absoluteString else { return }
-        if url.contains(".MOV") {
-            print("video")
-        } else  {
-            print("ses")
-        }
-        
-        playVideo()
+        addTargetButtons()
         
     }
     
@@ -87,6 +86,39 @@ class ShareNewPostViewController: UIViewController {
     
     @objc func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    func addTargetButtons() {
+        backButton.addTarget(self, action: #selector(backButton_Clicked), for: .touchUpInside)
+        shareButton.addTarget(self, action: #selector(shareButton_Clicked), for: .touchUpInside)
+    }
+    
+    @objc func backButton_Clicked() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func shareButton_Clicked() {
+        activityIndicator.startAnimating()
+        shareButton.setTitle("", for: .normal)
+        
+        guard let url = newPostURL?.absoluteString, let songName = songNameTextField.text, let lyrics = lyricsTextView.text else { return }
+        viewModel.shareNewPost(url: url, songName: songName, lyrics: lyrics) { [weak self] success in
+            guard let self = self else { return }
+            self.activityIndicator.stopAnimating()
+            self.shareButton.setTitle("Paylaş", for: .normal)
+            
+            if success {
+                self.navigationController?.pushViewController(AccountViewController(), animated: true)
+            } else {
+                self.showAlert(message: "Şarkıyı paylaşırken bir sorun oluştu")
+            }
+        }
+    }
+    
+    func showAlert(message: String) {
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     
     func keyboardShowing() {
@@ -106,8 +138,10 @@ class ShareNewPostViewController: UIViewController {
             scrollView.scrollIndicatorInsets = contentInsets
             
             var activeField: UIView?
-            if explanationTextField.isFirstResponder {
-                activeField = explanationTextField
+            if lyricsTextView.isFirstResponder {
+                activeField = lyricsTextView
+            } else if songNameTextField.isFirstResponder {
+                activeField = songNameTextField
             }
             
             if let activeField = activeField {
@@ -126,33 +160,6 @@ class ShareNewPostViewController: UIViewController {
             self.scrollView.scrollIndicatorInsets = contentInsets
         }
     }
-    
-    func playVideo() {
-        guard let videoURL = newPostURL else { return }
-        
-        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
-        
-        playerLayer.removeFromSuperlayer()
-        
-        let playerItem = AVPlayerItem(url: videoURL)
-        videoPlayer.replaceCurrentItem(with: playerItem)
-        
-        playerLayer = AVPlayerLayer(player: videoPlayer)
-        playerLayer.videoGravity = .resizeAspect
-        
-        playerLayer.cornerRadius = 10
-        
-        let padding: CGFloat = 20
-        playerLayer.frame = CGRect(
-            x: padding,
-            y: padding,
-            width: view.bounds.width - (2 * padding),
-            height: view.bounds.height - (10 * padding)
-        )
-        contentView.layer.insertSublayer(playerLayer, at: 0)
-        
-        videoPlayer.play()
-    }
 
 }
 
@@ -160,9 +167,12 @@ extension ShareNewPostViewController {
     func configureWithExt() {
         view.backgroundColor = .white
         
-        view.addViews(scrollView, backButton, shareLabel)
+        lyricsTextView.delegate = self
+        imageView.contentMode = .scaleToFill
+        
+        view.addViews(scrollView, backButton, shareLabel, imageView)
         scrollView.addSubview(contentView)
-        contentView.addViews(explanationTextField, shareButton)
+        contentView.addViews(lyricsTextView, songNameTextField, explanationLabel, shareButton, seperatorView, activityIndicator)
         
         scrollView.anchor(top: shareLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, width: view.bounds.size.width)
         
@@ -171,7 +181,18 @@ extension ShareNewPostViewController {
         
         backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 10, paddingLeft: 10)
         shareLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10)
-        shareButton.anchor(left: contentView.leftAnchor, right: contentView.rightAnchor, bottom: contentView.bottomAnchor, paddingLeft: 20, paddingRight: 20, paddingBottom: 20, height: 40)
-        explanationTextField.anchor(left: contentView.leftAnchor, right: contentView.rightAnchor, bottom: shareButton.topAnchor, paddingLeft: 20, paddingRight: 20, paddingBottom: 20)
+        songNameTextField.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20)
+        lyricsTextView.anchor(top: songNameTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20, paddingLeft: 16, paddingRight: 20, height: 60)
+        explanationLabel.anchor(top: lyricsTextView.topAnchor, left: lyricsTextView.leftAnchor, paddingTop: 8, paddingLeft: 4)
+        seperatorView.anchor(top: lyricsTextView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 5, paddingLeft: 20, paddingRight: 20, height: 1)
+        shareButton.anchor(top: seperatorView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, height: 40)
+        activityIndicator.anchor(top: shareButton.topAnchor, left: shareButton.leftAnchor, right: shareButton.rightAnchor, bottom: shareButton.bottomAnchor)
+        imageView.anchor(bottom: view.bottomAnchor, centerX: view.centerXAnchor, width: 150, height: 150)
+    }
+}
+
+extension ShareNewPostViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        explanationLabel.isHidden = !textView.text.isEmpty
     }
 }

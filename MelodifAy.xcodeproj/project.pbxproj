@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1703E9622CEE1466008E6BEB /* ShareNewPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1703E9612CEE1466008E6BEB /* ShareNewPostViewModel.swift */; };
 		171DF00B2CC1333600523459 /* EditPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171DF00A2CC1333600523459 /* EditPostViewController.swift */; };
 		171E07F92CCE6B0400425271 /* EditVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171E07F82CCE6B0400425271 /* EditVideoViewModel.swift */; };
 		17379D302CCBDF5000D4A1CD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17379D2F2CCBDF5000D4A1CD /* CameraViewController.swift */; };
@@ -15,13 +16,13 @@
 		1746CD4E2CB0346E00B3701A /* CreateSongWithAIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */; };
 		1746CD512CB034BC00B3701A /* SongModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD502CB034BC00B3701A /* SongModel.swift */; };
 		176499A52CB1654E004D38A9 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 176499A42CB1654E004D38A9 /* GoogleGenerativeAI */; };
-		176B6A852CB5848A003CAA0F /* musicAnimations.json in Resources */ = {isa = PBXBuildFile; fileRef = 176B6A842CB5848A003CAA0F /* musicAnimations.json */; };
 		177282D32CB6847600247853 /* NewSongViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177282D22CB6847600247853 /* NewSongViewController.swift */; };
 		177282D52CB6848900247853 /* NewSongViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177282D42CB6848900247853 /* NewSongViewModel.swift */; };
 		177EF64C2CAEF1590015F3CB /* SignInService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177EF64B2CAEF1590015F3CB /* SignInService.swift */; };
 		177EF64E2CAEF1680015F3CB /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177EF64D2CAEF1680015F3CB /* SignInViewModel.swift */; };
 		177EF6512CAEF6530015F3CB /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177EF6502CAEF6530015F3CB /* HomePageViewController.swift */; };
 		17912D042CC5529200ED572B /* BottomSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17912D032CC5529200ED572B /* BottomSheetPresentationController.swift */; };
+		17915B362CE4D06100A98A99 /* playerAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = 17915B352CE4D06100A98A99 /* playerAnimation.json */; };
 		179F94CB2CCA9BBF00D05AF7 /* EditVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179F94CA2CCA9BBF00D05AF7 /* EditVideoViewController.swift */; };
 		17A32AAC2CAFEF680010A7DC /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A32AAB2CAFEF680010A7DC /* AccountViewController.swift */; };
 		17A32AAE2CAFF0030010A7DC /* BottomBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A32AAD2CAFF0030010A7DC /* BottomBarView.swift */; };
@@ -46,6 +47,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1703E9612CEE1466008E6BEB /* ShareNewPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNewPostViewModel.swift; sourceTree = "<group>"; };
 		171DF00A2CC1333600523459 /* EditPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPostViewController.swift; sourceTree = "<group>"; };
 		171E07F82CCE6B0400425271 /* EditVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditVideoViewModel.swift; sourceTree = "<group>"; };
 		17379D2F2CCBDF5000D4A1CD /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
@@ -53,13 +55,13 @@
 		1746CD492CB029A700B3701A /* SeperatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeperatorView.swift; sourceTree = "<group>"; };
 		1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSongWithAIViewModel.swift; sourceTree = "<group>"; };
 		1746CD502CB034BC00B3701A /* SongModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongModel.swift; sourceTree = "<group>"; };
-		176B6A842CB5848A003CAA0F /* musicAnimations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = musicAnimations.json; sourceTree = "<group>"; };
 		177282D22CB6847600247853 /* NewSongViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSongViewController.swift; sourceTree = "<group>"; };
 		177282D42CB6848900247853 /* NewSongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSongViewModel.swift; sourceTree = "<group>"; };
 		177EF64B2CAEF1590015F3CB /* SignInService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInService.swift; sourceTree = "<group>"; };
 		177EF64D2CAEF1680015F3CB /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		177EF6502CAEF6530015F3CB /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
 		17912D032CC5529200ED572B /* BottomSheetPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentationController.swift; sourceTree = "<group>"; };
+		17915B352CE4D06100A98A99 /* playerAnimation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = playerAnimation.json; sourceTree = "<group>"; };
 		179F94CA2CCA9BBF00D05AF7 /* EditVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditVideoViewController.swift; sourceTree = "<group>"; };
 		17A32AAB2CAFEF680010A7DC /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		17A32AAD2CAFF0030010A7DC /* BottomBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBarView.swift; sourceTree = "<group>"; };
@@ -132,8 +134,8 @@
 		176B6A832CB5847C003CAA0F /* Animations */ = {
 			isa = PBXGroup;
 			children = (
-				176B6A842CB5848A003CAA0F /* musicAnimations.json */,
 				17A601A62CB6BA7C0047A0B5 /* micAnimations.json */,
+				17915B352CE4D06100A98A99 /* playerAnimation.json */,
 			);
 			path = Animations;
 			sourceTree = "<group>";
@@ -285,6 +287,7 @@
 			isa = PBXGroup;
 			children = (
 				17F5F69B2CCFA848000052F4 /* ShareNewPostViewController.swift */,
+				1703E9612CEE1466008E6BEB /* ShareNewPostViewModel.swift */,
 			);
 			path = SharePost;
 			sourceTree = "<group>";
@@ -360,8 +363,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				176B6A852CB5848A003CAA0F /* musicAnimations.json in Resources */,
 				17D8E1782CAEC119008F06CD /* Assets.xcassets in Resources */,
+				17915B362CE4D06100A98A99 /* playerAnimation.json in Resources */,
 				17D8E1792CAEC119008F06CD /* GoogleService-Info.plist in Resources */,
 				17A601A72CB6BA7C0047A0B5 /* micAnimations.json in Resources */,
 				17D8E17B2CAEC119008F06CD /* LaunchScreen.storyboard in Resources */,
@@ -434,6 +437,7 @@
 				17D8E1912CAED64A008F06CD /* RegisterViewController.swift in Sources */,
 				17D8E18E2CAED1ED008F06CD /* Labels.swift in Sources */,
 				177EF6512CAEF6530015F3CB /* HomePageViewController.swift in Sources */,
+				1703E9622CEE1466008E6BEB /* ShareNewPostViewModel.swift in Sources */,
 				17A32AB12CAFF0510010A7DC /* SearchViewController.swift in Sources */,
 				17379D302CCBDF5000D4A1CD /* CameraViewController.swift in Sources */,
 				1746CD4E2CB0346E00B3701A /* CreateSongWithAIViewModel.swift in Sources */,
