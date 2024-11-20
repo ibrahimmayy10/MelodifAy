@@ -29,7 +29,7 @@ class AccountViewController: UIViewController {
 
 extension AccountViewController {
     func configureBottomBar() {
-        view.backgroundColor = .black
+        view.backgroundColor = .white
         navigationController?.navigationBar.isHidden = true
         
         let accountViewModel = BottomBarViewModel(selectedTab: .account(isSelected: true))
