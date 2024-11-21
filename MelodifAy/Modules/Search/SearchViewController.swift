@@ -11,12 +11,7 @@ class SearchViewController: UIViewController {
     
     private let bottomBar = BottomBarView()
     
-    private let seperatorView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .darkGray
-        return view
-    }()
+    private let seperatorView = SeperatorView(color: .lightGray)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,13 +24,13 @@ class SearchViewController: UIViewController {
 
 extension SearchViewController {
     func configureBottomBar() {
-        view.backgroundColor = .black
+        view.backgroundColor = .white
         navigationController?.navigationBar.isHidden = true
         
         let searchViewModel = BottomBarViewModel(selectedTab: .search(isSelected: true))
         bottomBar.viewModel = searchViewModel
         bottomBar.delegate = self
-        bottomBar.backgroundColor = .black
+        bottomBar.backgroundColor = .white
         
         view.addViews(bottomBar, seperatorView)
         bottomBar.translatesAutoresizingMaskIntoConstraints = false

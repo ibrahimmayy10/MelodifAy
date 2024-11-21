@@ -338,9 +338,19 @@ class NewSongViewController: UIViewController {
     }
     
     @objc func nextButton_Clicked() {
+        guard ((recordedAudioURL?.absoluteString.isEmpty) != nil) else {
+            self.showAlert(message: "Herhangi bir kayıt bulunamadı")
+            return
+        }
         let vc = ShareNewPostViewController()
         vc.newPostURL = recordedAudioURL
         navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func showAlert(message: String) {
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     
     @objc func cameraButton_Clicked() {
