@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 
 class ShareNewPostViewModel {
-    func shareNewPost(url: String, songName: String, lyrics: String, completion: @escaping (Bool) -> Void) {
+    func shareNewPost(url: String, songName: String, lyrics: String, coverPhotoURL: String, completion: @escaping (Bool) -> Void) {
         guard let user = Auth.auth().currentUser else {
             completion(false)
             return
@@ -19,7 +19,7 @@ class ShareNewPostViewModel {
         let firestore = Firestore.firestore()
         
         let sharePostRef = firestore.collection("Musics").document()
-        let firestoreMusic = ["userID": currentUserID, "musicUrl": url, "musicID": sharePostRef.documentID, "songName": songName, "lyrics": lyrics] as [String: Any]
+        let firestoreMusic = ["userID": currentUserID, "musicUrl": url, "musicID": sharePostRef.documentID, "songName": songName, "lyrics": lyrics, "coverPhotoURL": coverPhotoURL] as [String: Any]
         
         sharePostRef.setData(firestoreMusic) { error in
             if error != nil {

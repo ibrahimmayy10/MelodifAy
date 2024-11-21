@@ -13,6 +13,7 @@ class ShareNewPostViewController: UIViewController {
     
     private let shareLabel = Labels(textLabel: "Şarkını paylaş", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
     private let explanationLabel = Labels(textLabel: "Şarkı sözlerini ekleyebilirsiniz...", fontLabel: .systemFont(ofSize: 17), textColorLabel: .systemGray4)
+    private let selectionImageLabel = Labels(textLabel: "Şarkınıza bir kapak fotoğrafı ekleyin", fontLabel: .systemFont(ofSize: 17), textColorLabel: .black)
     
     private let backButton: UIButton = {
         let button = UIButton()
@@ -66,7 +67,30 @@ class ShareNewPostViewController: UIViewController {
     
     private let imageView = ImageViews(imageName: "logo")
     
+    private let selectionImageViewContainer: UIView = {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.backgroundColor = .systemGray6
+        container.layer.cornerRadius = 12
+        container.layer.shadowColor = UIColor.black.cgColor
+        container.layer.shadowOpacity = 0.1
+        container.layer.shadowOffset = CGSize(width: 0, height: 4)
+        container.layer.shadowRadius = 8
+        return container
+    }()
+    
+    private let selectionImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "photo"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.tintColor = .darkGray
+        imageView.layer.cornerRadius = 10
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     var newPostURL: URL?
+    var selectedImageURL: URL?
+    var selectedImage: UIImage?
     
     private let viewModel = ShareNewPostViewModel()
 
@@ -91,6 +115,18 @@ class ShareNewPostViewController: UIViewController {
     func addTargetButtons() {
         backButton.addTarget(self, action: #selector(backButton_Clicked), for: .touchUpInside)
         shareButton.addTarget(self, action: #selector(shareButton_Clicked), for: .touchUpInside)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectCoverImage))
+        selectionImageViewContainer.addGestureRecognizer(tapGesture)
+        selectionImageViewContainer.isUserInteractionEnabled = true
+    }
+    
+    @objc func selectCoverImage() {
+        let picker = UIImagePickerController()
+        picker.sourceType = .photoLibrary
+        picker.delegate = self
+        picker.allowsEditing = true
+        present(picker, animated: true)
     }
     
     @objc func backButton_Clicked() {
@@ -98,17 +134,23 @@ class ShareNewPostViewController: UIViewController {
     }
     
     @objc func shareButton_Clicked() {
+        guard let url = newPostURL?.absoluteString, let songName = songNameTextField.text, let selectedImageURL = selectedImageURL?.absoluteString, !songName.isEmpty, !url.isEmpty, !selectedImageURL.isEmpty else {
+            self.showAlert(message: "Lütfen şarkınıza bir isim veriniz")
+            return
+        }
         activityIndicator.startAnimating()
         shareButton.setTitle("", for: .normal)
         
-        guard let url = newPostURL?.absoluteString, let songName = songNameTextField.text, let lyrics = lyricsTextView.text else { return }
-        viewModel.shareNewPost(url: url, songName: songName, lyrics: lyrics) { [weak self] success in
+        viewModel.shareNewPost(url: url, songName: songName, lyrics: lyricsTextView.text ?? "", coverPhotoURL: selectedImageURL) { [weak self] success in
             guard let self = self else { return }
             self.activityIndicator.stopAnimating()
             self.shareButton.setTitle("Paylaş", for: .normal)
             
             if success {
-                self.navigationController?.pushViewController(AccountViewController(), animated: true)
+                let vc = PreviewViewController()
+                let navController = UINavigationController(rootViewController: vc)
+                navController.modalPresentationStyle = .fullScreen
+                present(navController, animated: true)
             } else {
                 self.showAlert(message: "Şarkıyı paylaşırken bir sorun oluştu")
             }
@@ -172,7 +214,8 @@ extension ShareNewPostViewController {
         
         view.addViews(scrollView, backButton, shareLabel, imageView)
         scrollView.addSubview(contentView)
-        contentView.addViews(lyricsTextView, songNameTextField, explanationLabel, shareButton, seperatorView, activityIndicator)
+        contentView.addViews(lyricsTextView, songNameTextField, explanationLabel, shareButton, seperatorView, activityIndicator, selectionImageLabel, selectionImageViewContainer)
+        selectionImageViewContainer.addSubview(selectionImageView)
         
         scrollView.anchor(top: shareLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, width: view.bounds.size.width)
         
@@ -185,14 +228,44 @@ extension ShareNewPostViewController {
         lyricsTextView.anchor(top: songNameTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20, paddingLeft: 16, paddingRight: 20, height: 60)
         explanationLabel.anchor(top: lyricsTextView.topAnchor, left: lyricsTextView.leftAnchor, paddingTop: 8, paddingLeft: 4)
         seperatorView.anchor(top: lyricsTextView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 5, paddingLeft: 20, paddingRight: 20, height: 1)
-        shareButton.anchor(top: seperatorView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, height: 40)
+        selectionImageLabel.anchor(top: seperatorView.bottomAnchor, left: contentView.leftAnchor, paddingTop: 20, paddingLeft: 20)
+        selectionImageViewContainer.anchor(top: selectionImageLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 20, paddingLeft: 20, width: 150, height: 150)
+        selectionImageView.anchor(centerX: selectionImageViewContainer.centerXAnchor, centerY: selectionImageViewContainer.centerYAnchor, width: 100, height: 100)
+        shareButton.anchor(top: selectionImageViewContainer.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, height: 40)
         activityIndicator.anchor(top: shareButton.topAnchor, left: shareButton.leftAnchor, right: shareButton.rightAnchor, bottom: shareButton.bottomAnchor)
-        imageView.anchor(bottom: view.bottomAnchor, centerX: view.centerXAnchor, width: 150, height: 150)
+        imageView.anchor(bottom: view.bottomAnchor, centerX: view.centerXAnchor, width: 120, height: 120)
     }
 }
 
 extension ShareNewPostViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         explanationLabel.isHidden = !textView.text.isEmpty
+    }
+}
+
+extension ShareNewPostViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedImage = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage {
+            self.selectedImage = selectedImage
+            self.selectionImageView.image = selectedImage
+            
+            if let imageData = selectedImage.jpegData(compressionQuality: 0.5) {
+                let tempDirectory = FileManager.default.temporaryDirectory
+                let fileName = UUID().uuidString + ".jpg"
+                let fileURL = tempDirectory.appendingPathComponent(fileName)
+                
+                do {
+                    try imageData.write(to: fileURL)
+                    self.selectedImageURL = fileURL
+                } catch {
+                    print("resim url e dönüştürülürken hata oluştu")
+                }
+            }
+        }
+        picker.dismiss(animated: true)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
     }
 }

@@ -11,12 +11,7 @@ class AccountViewController: UIViewController {
     
     private let bottomBar = BottomBarView()
     
-    private let seperatorView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .darkGray
-        return view
-    }()
+    private let seperatorView = SeperatorView(color: .lightGray)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +30,7 @@ extension AccountViewController {
         let accountViewModel = BottomBarViewModel(selectedTab: .account(isSelected: true))
         bottomBar.viewModel = accountViewModel
         bottomBar.delegate = self
-        bottomBar.backgroundColor = .black
+        bottomBar.backgroundColor = .white
         
         view.addViews(bottomBar, seperatorView)
         bottomBar.translatesAutoresizingMaskIntoConstraints = false
