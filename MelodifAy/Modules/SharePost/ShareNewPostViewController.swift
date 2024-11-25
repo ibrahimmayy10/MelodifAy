@@ -83,7 +83,6 @@ class ShareNewPostViewController: UIViewController {
         let imageView = UIImageView(image: UIImage(systemName: "photo"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.tintColor = .darkGray
-        imageView.layer.cornerRadius = 10
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -135,7 +134,7 @@ class ShareNewPostViewController: UIViewController {
     
     @objc func shareButton_Clicked() {
         guard let url = newPostURL?.absoluteString, let songName = songNameTextField.text, let selectedImageURL = selectedImageURL?.absoluteString, !songName.isEmpty, !url.isEmpty, !selectedImageURL.isEmpty else {
-            self.showAlert(message: "Lütfen şarkınıza bir isim veriniz")
+            self.showAlert(message: "Lütfen şarkınıza bir isim ve kapak fotoğrafı ekleyiniz")
             return
         }
         activityIndicator.startAnimating()
@@ -148,6 +147,8 @@ class ShareNewPostViewController: UIViewController {
             
             if success {
                 let vc = PreviewViewController()
+                vc.imageUrl = selectedImageURL
+                vc.songName = songName
                 let navController = UINavigationController(rootViewController: vc)
                 navController.modalPresentationStyle = .fullScreen
                 present(navController, animated: true)
@@ -247,6 +248,9 @@ extension ShareNewPostViewController: UIImagePickerControllerDelegate, UINavigat
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage {
             self.selectedImage = selectedImage
+            selectionImageView.clipsToBounds = true
+            selectionImageView.layer.cornerRadius = 10
+            selectionImageView.contentMode = .scaleAspectFill
             self.selectionImageView.image = selectedImage
             
             if let imageData = selectedImage.jpegData(compressionQuality: 0.5) {
