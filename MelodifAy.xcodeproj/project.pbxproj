@@ -11,10 +11,12 @@
 		171DF00B2CC1333600523459 /* EditPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171DF00A2CC1333600523459 /* EditPostViewController.swift */; };
 		171E07F92CCE6B0400425271 /* EditVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171E07F82CCE6B0400425271 /* EditVideoViewModel.swift */; };
 		17379D302CCBDF5000D4A1CD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17379D2F2CCBDF5000D4A1CD /* CameraViewController.swift */; };
+		174155A62CF4C48F005E70BB /* PreviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174155A52CF4C48F005E70BB /* PreviewViewModel.swift */; };
+		174155A82CF4C4D9005E70BB /* ServicePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174155A72CF4C4D8005E70BB /* ServicePreview.swift */; };
 		1746CD482CB0245A00B3701A /* CreateSongWithAIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD472CB0245A00B3701A /* CreateSongWithAIViewController.swift */; };
 		1746CD4A2CB029A700B3701A /* SeperatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD492CB029A700B3701A /* SeperatorView.swift */; };
 		1746CD4E2CB0346E00B3701A /* CreateSongWithAIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */; };
-		1746CD512CB034BC00B3701A /* SongModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD502CB034BC00B3701A /* SongModel.swift */; };
+		1746CD512CB034BC00B3701A /* MusicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD502CB034BC00B3701A /* MusicModel.swift */; };
 		176499A52CB1654E004D38A9 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 176499A42CB1654E004D38A9 /* GoogleGenerativeAI */; };
 		176C55FB2CEF59EB00585BD4 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176C55FA2CEF59EB00585BD4 /* PreviewViewController.swift */; };
 		177282D32CB6847600247853 /* NewSongViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177282D22CB6847600247853 /* NewSongViewController.swift */; };
@@ -52,10 +54,12 @@
 		171DF00A2CC1333600523459 /* EditPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPostViewController.swift; sourceTree = "<group>"; };
 		171E07F82CCE6B0400425271 /* EditVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditVideoViewModel.swift; sourceTree = "<group>"; };
 		17379D2F2CCBDF5000D4A1CD /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		174155A52CF4C48F005E70BB /* PreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewModel.swift; sourceTree = "<group>"; };
+		174155A72CF4C4D8005E70BB /* ServicePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePreview.swift; sourceTree = "<group>"; };
 		1746CD472CB0245A00B3701A /* CreateSongWithAIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSongWithAIViewController.swift; sourceTree = "<group>"; };
 		1746CD492CB029A700B3701A /* SeperatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeperatorView.swift; sourceTree = "<group>"; };
 		1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSongWithAIViewModel.swift; sourceTree = "<group>"; };
-		1746CD502CB034BC00B3701A /* SongModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongModel.swift; sourceTree = "<group>"; };
+		1746CD502CB034BC00B3701A /* MusicModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicModel.swift; sourceTree = "<group>"; };
 		176C55FA2CEF59EB00585BD4 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		177282D22CB6847600247853 /* NewSongViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSongViewController.swift; sourceTree = "<group>"; };
 		177282D42CB6848900247853 /* NewSongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSongViewModel.swift; sourceTree = "<group>"; };
@@ -128,7 +132,7 @@
 		1746CD4F2CB034AB00B3701A /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				1746CD502CB034BC00B3701A /* SongModel.swift */,
+				1746CD502CB034BC00B3701A /* MusicModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -146,6 +150,8 @@
 			isa = PBXGroup;
 			children = (
 				176C55FA2CEF59EB00585BD4 /* PreviewViewController.swift */,
+				174155A52CF4C48F005E70BB /* PreviewViewModel.swift */,
+				174155A72CF4C4D8005E70BB /* ServicePreview.swift */,
 			);
 			path = PreviewScreen;
 			sourceTree = "<group>";
@@ -436,7 +442,7 @@
 				17D8E18A2CAECBBB008F06CD /* ImageViews.swift in Sources */,
 				17A32AAC2CAFEF680010A7DC /* AccountViewController.swift in Sources */,
 				171E07F92CCE6B0400425271 /* EditVideoViewModel.swift in Sources */,
-				1746CD512CB034BC00B3701A /* SongModel.swift in Sources */,
+				1746CD512CB034BC00B3701A /* MusicModel.swift in Sources */,
 				171DF00B2CC1333600523459 /* EditPostViewController.swift in Sources */,
 				17A32AAE2CAFF0030010A7DC /* BottomBarView.swift in Sources */,
 				1746CD4A2CB029A700B3701A /* SeperatorView.swift in Sources */,
@@ -455,6 +461,7 @@
 				17B1B03C2CC6B403004488BF /* AudioProcessor.swift in Sources */,
 				17D8E1882CAEC950008F06CD /* ViewExtensions.swift in Sources */,
 				177EF64E2CAEF1680015F3CB /* SignInViewModel.swift in Sources */,
+				174155A82CF4C4D9005E70BB /* ServicePreview.swift in Sources */,
 				176C55FB2CEF59EB00585BD4 /* PreviewViewController.swift in Sources */,
 				17A436632CAEE305001DEF62 /* RegisterService.swift in Sources */,
 				17D8E1862CAEC8C1008F06CD /* SignInViewController.swift in Sources */,
@@ -462,6 +469,7 @@
 				17D8E18C2CAECC30008F06CD /* TextFields.swift in Sources */,
 				179F94CB2CCA9BBF00D05AF7 /* EditVideoViewController.swift in Sources */,
 				1746CD482CB0245A00B3701A /* CreateSongWithAIViewController.swift in Sources */,
+				174155A62CF4C48F005E70BB /* PreviewViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

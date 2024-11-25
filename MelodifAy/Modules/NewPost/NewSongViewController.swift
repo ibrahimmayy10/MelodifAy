@@ -905,7 +905,9 @@ extension NewSongViewController: UIDocumentPickerDelegate {
         guard let selectedFileUrl = urls.first else { return }
         self.selectedAudioURL = selectedFileUrl
         self.selectedAudioURL = getDocumentsDirectory().appendingPathComponent("recording.m4a")
-        navigationController?.pushViewController(CreateSongWithAIViewController(), animated: false)
+        let vc = ShareNewPostViewController()
+        vc.newPostURL = self.selectedAudioURL
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func getDocumentsDirectory() -> URL {
