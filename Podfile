@@ -10,7 +10,7 @@ pod 'FirebaseAuth'
 pod 'FirebaseFirestore'
 pod 'FirebaseStorage'
 pod 'Firebase/Core'
-pod 'Alamofire'
+pod 'SDWebImage'
 pod 'lottie-ios'
 
   # Pods for MelodifAy
