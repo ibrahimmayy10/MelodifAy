@@ -18,7 +18,9 @@ class ShareNewPostViewController: UIViewController {
     private let backButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium, scale: .large)
+        let largeImage = UIImage(systemName: "chevron.backward", withConfiguration: largeConfig)
+        button.setImage(largeImage, for: .normal)
         button.tintColor = .black
         return button
     }()

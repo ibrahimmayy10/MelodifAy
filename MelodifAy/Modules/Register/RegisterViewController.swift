@@ -8,17 +8,28 @@
 import UIKit
 
 protocol RegisterViewControllerProtocol: AnyObject {
-    func setRegisterInfo() -> (String, String, String)?
+    func setRegisterInfo() -> (String, String, String, String, String, String)?
     func navigateSignIn()
     func showAlert(title: String, message: String)
 }
 
 class RegisterViewController: UIViewController {
     
-    private let imageView = ImageViews(imageName: "logo")
+    private let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "person.crop.circle.fill.badge.plus")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = .gray
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 50
+        return imageView
+    }()
     
     private let emailTextField = TextFields(placeHolder: "Email", secureText: false, textType: .emailAddress, maxLength: 1000)
-    private let nameTextField = TextFields(placeHolder: "Kullanıcı Adı", secureText: false, textType: .name, maxLength: 1000)
+    private let nameTextField = TextFields(placeHolder: "Ad", secureText: false, textType: .name, maxLength: 1000)
+    private let surnameTextField = TextFields(placeHolder: "Soyad", secureText: false, textType: .name, maxLength: 1000)
+    private let usernameTextField = TextFields(placeHolder: "Kullanıcı Adı", secureText: false, textType: .name, maxLength: 1000)
     private let passwordTextField = TextFields(placeHolder: "Şifre", secureText: true, textType: .password, maxLength: 8)
     
     private let signInButton: UIButton =  {
@@ -58,6 +69,9 @@ class RegisterViewController: UIViewController {
         return view
     }()
     
+    var selectedImage: UIImage?
+    var selectedImageURL: URL?
+    
     private let viewModel = RegisterViewModel()
 
     override func viewDidLoad() {
@@ -77,6 +91,18 @@ class RegisterViewController: UIViewController {
     func addTargetOnButton() {
         signInButton.addTarget(self, action: #selector(signInButton_Clicked), for: .touchUpInside)
         registerButton.addTarget(self, action: #selector(registerButton_Clicked), for: .touchUpInside)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectCoverImage))
+        imageView.addGestureRecognizer(tapGesture)
+        imageView.isUserInteractionEnabled = true
+    }
+    
+    @objc func selectCoverImage() {
+        let picker = UIImagePickerController()
+        picker.sourceType = .photoLibrary
+        picker.delegate = self
+        picker.allowsEditing = true
+        present(picker, animated: true)
     }
     
     @objc func signInButton_Clicked() {
@@ -89,11 +115,11 @@ class RegisterViewController: UIViewController {
             return
         }
         
-        let (name, email, password) = registerInfo
+        let (name, surname, username, imageUrl, email, password) = registerInfo
         
         activityIndicator.startAnimating()
         registerButton.setTitle("", for: .normal)
-        viewModel.register(name: name, email: email, password: password) { [weak self] success in
+        viewModel.register(name: name, surname: surname, username: username, imageUrl: imageUrl, email: email, password: password) { [weak self] success in
             guard let self = self else { return }
             self.activityIndicator.stopAnimating()
             self.registerButton.setTitle("Kayıt Ol", for: .normal)
@@ -122,16 +148,18 @@ extension RegisterViewController {
         
         view.addViews(scrollView, signInButton)
         scrollView.addSubview(contentView)
-        contentView.addViews(imageView, nameTextField, emailTextField, passwordTextField, registerButton, activityIndicator)
+        contentView.addViews(imageView, nameTextField, emailTextField, surnameTextField, usernameTextField, passwordTextField, registerButton, activityIndicator)
         
         scrollView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: signInButton.topAnchor, width: view.bounds.size.width)
         
         contentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, right: scrollView.rightAnchor, bottom: scrollView.bottomAnchor, width: view.bounds.size.width)
         contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor).isActive = true
         
-        imageView.anchor(top: contentView.topAnchor, centerX: contentView.centerXAnchor, paddingTop: 20, width: 300, height: 300)
+        imageView.anchor(top: contentView.topAnchor, centerX: contentView.centerXAnchor, paddingTop: 20, width: 100, height: 100)
         nameTextField.anchor(top: imageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15, height: 40)
-        emailTextField.anchor(top: nameTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15, height: 40)
+        surnameTextField.anchor(top: nameTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15, height: 40)
+        usernameTextField.anchor(top: surnameTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15, height: 40)
+        emailTextField.anchor(top: usernameTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15, height: 40)
         passwordTextField.anchor(top: emailTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15, height: 40)
         registerButton.anchor(top: passwordTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, height: 40)
         activityIndicator.anchor(centerX: registerButton.centerXAnchor, centerY: registerButton.centerYAnchor)
@@ -159,7 +187,13 @@ extension RegisterViewController {
             scrollView.scrollIndicatorInsets = contentInsets
             
             var activeField: UIView?
-            if emailTextField.isFirstResponder {
+            if nameTextField.isFirstResponder {
+                activeField = nameTextField
+            } else if surnameTextField.isFirstResponder {
+                activeField = surnameTextField
+            } else if usernameTextField.isFirstResponder {
+                activeField = usernameTextField
+            } else if emailTextField.isFirstResponder {
                 activeField = emailTextField
             } else if passwordTextField.isFirstResponder {
                 activeField = passwordTextField
@@ -184,12 +218,15 @@ extension RegisterViewController {
 }
 
 extension RegisterViewController: RegisterViewControllerProtocol {
-    func setRegisterInfo() -> (String, String, String)? {
+    func setRegisterInfo() -> (String, String, String, String, String, String)? {
         guard let name = nameTextField.text, !name.isEmpty else { return nil }
+        guard let surname = surnameTextField.text, !surname.isEmpty else { return nil }
+        guard let username = usernameTextField.text, !username.isEmpty else { return nil }
+        guard let imageUrl = selectedImageURL?.absoluteString else { return nil }
         guard let email = emailTextField.text, !email.isEmpty else { return nil }
         guard let password = passwordTextField.text, !password.isEmpty else { return nil }
         
-        return (name, email, password)
+        return (name, surname, username, imageUrl, email, password)
     }
     
     func navigateSignIn() {
@@ -200,5 +237,33 @@ extension RegisterViewController: RegisterViewControllerProtocol {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
+    }
+}
+
+extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedImage = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage {
+            self.selectedImage = selectedImage
+            imageView.contentMode = .scaleAspectFill
+            self.imageView.image = selectedImage
+            
+            if let imageData = selectedImage.jpegData(compressionQuality: 0.5) {
+                let tempDirectory = FileManager.default.temporaryDirectory
+                let fileName = UUID().uuidString + ".jpg"
+                let fileURL = tempDirectory.appendingPathComponent(fileName)
+                
+                do {
+                    try imageData.write(to: fileURL)
+                    self.selectedImageURL = fileURL
+                } catch {
+                    print("resim url e dönüştürülürken hata oluştu")
+                }
+            }
+        }
+        picker.dismiss(animated: true)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
     }
 }

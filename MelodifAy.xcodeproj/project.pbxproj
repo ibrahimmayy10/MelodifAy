@@ -45,6 +45,9 @@
 		17D8E18C2CAECC30008F06CD /* TextFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D8E18B2CAECC30008F06CD /* TextFields.swift */; };
 		17D8E18E2CAED1ED008F06CD /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D8E18D2CAED1ED008F06CD /* Labels.swift */; };
 		17D8E1912CAED64A008F06CD /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D8E1902CAED64A008F06CD /* RegisterViewController.swift */; };
+		17EB246D2CF5E3F30048D58B /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EB246C2CF5E3F30048D58B /* AccountViewModel.swift */; };
+		17EB246F2CF5E3FE0048D58B /* ServiceAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EB246E2CF5E3FE0048D58B /* ServiceAccount.swift */; };
+		17EB24712CF5E4B50048D58B /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EB24702CF5E4B50048D58B /* UserModel.swift */; };
 		17F5F69C2CCFA848000052F4 /* ShareNewPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F5F69B2CCFA848000052F4 /* ShareNewPostViewController.swift */; };
 		1ECF26D23DF30FD9622CC4F6 /* Pods_MelodifAy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAF1CE99ECFBBC35521C9730 /* Pods_MelodifAy.framework */; };
 /* End PBXBuildFile section */
@@ -89,6 +92,9 @@
 		17D8E18B2CAECC30008F06CD /* TextFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFields.swift; sourceTree = "<group>"; };
 		17D8E18D2CAED1ED008F06CD /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
 		17D8E1902CAED64A008F06CD /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		17EB246C2CF5E3F30048D58B /* AccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewModel.swift; sourceTree = "<group>"; };
+		17EB246E2CF5E3FE0048D58B /* ServiceAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceAccount.swift; sourceTree = "<group>"; };
+		17EB24702CF5E4B50048D58B /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		17F5F69B2CCFA848000052F4 /* ShareNewPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNewPostViewController.swift; sourceTree = "<group>"; };
 		9AB614A9D8A409CC29047DA8 /* Pods-MelodifAy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MelodifAy.release.xcconfig"; path = "Target Support Files/Pods-MelodifAy/Pods-MelodifAy.release.xcconfig"; sourceTree = "<group>"; };
 		CAF1CE99ECFBBC35521C9730 /* Pods_MelodifAy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MelodifAy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -133,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				1746CD502CB034BC00B3701A /* MusicModel.swift */,
+				17EB24702CF5E4B50048D58B /* UserModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -187,6 +194,8 @@
 			isa = PBXGroup;
 			children = (
 				17A32AAB2CAFEF680010A7DC /* AccountViewController.swift */,
+				17EB246C2CF5E3F30048D58B /* AccountViewModel.swift */,
+				17EB246E2CF5E3FE0048D58B /* ServiceAccount.swift */,
 			);
 			path = PersonInfo;
 			sourceTree = "<group>";
@@ -458,6 +467,7 @@
 				17A32AB12CAFF0510010A7DC /* SearchViewController.swift in Sources */,
 				17379D302CCBDF5000D4A1CD /* CameraViewController.swift in Sources */,
 				1746CD4E2CB0346E00B3701A /* CreateSongWithAIViewModel.swift in Sources */,
+				17EB246F2CF5E3FE0048D58B /* ServiceAccount.swift in Sources */,
 				17B1B03C2CC6B403004488BF /* AudioProcessor.swift in Sources */,
 				17D8E1882CAEC950008F06CD /* ViewExtensions.swift in Sources */,
 				177EF64E2CAEF1680015F3CB /* SignInViewModel.swift in Sources */,
@@ -469,6 +479,8 @@
 				17D8E18C2CAECC30008F06CD /* TextFields.swift in Sources */,
 				179F94CB2CCA9BBF00D05AF7 /* EditVideoViewController.swift in Sources */,
 				1746CD482CB0245A00B3701A /* CreateSongWithAIViewController.swift in Sources */,
+				17EB246D2CF5E3F30048D58B /* AccountViewModel.swift in Sources */,
+				17EB24712CF5E4B50048D58B /* UserModel.swift in Sources */,
 				174155A62CF4C48F005E70BB /* PreviewViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -12,7 +12,10 @@ class NewSongViewController: UIViewController {
     
     private let backButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium, scale: .large)
+        let largeImage = UIImage(systemName: "chevron.backward", withConfiguration: largeConfig)
+        button.setImage(largeImage, for: .normal)
         button.tintColor = .black
         return button
     }()
