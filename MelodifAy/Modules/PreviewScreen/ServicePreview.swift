@@ -23,8 +23,10 @@ class ServicePreview: ServicePreviewProtocol {
             if error != nil {
                 print(error?.localizedDescription ?? "")
             } else if let document = document {
-                guard let name = document.get("username") as? String else { return }
-                completion(name)
+                guard let name = document.get("name") as? String else { return }
+                guard let surname = document.get("surname") as? String else { return }
+                let newName = name + " " + surname
+                completion(newName)
             }
         }
     }

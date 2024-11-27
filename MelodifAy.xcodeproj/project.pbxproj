@@ -17,6 +17,7 @@
 		1746CD4A2CB029A700B3701A /* SeperatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD492CB029A700B3701A /* SeperatorView.swift */; };
 		1746CD4E2CB0346E00B3701A /* CreateSongWithAIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */; };
 		1746CD512CB034BC00B3701A /* MusicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD502CB034BC00B3701A /* MusicModel.swift */; };
+		174D74E12CF7393F00C93DFE /* MyPostsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174D74E02CF7393F00C93DFE /* MyPostsTableViewCell.swift */; };
 		176499A52CB1654E004D38A9 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 176499A42CB1654E004D38A9 /* GoogleGenerativeAI */; };
 		176C55FB2CEF59EB00585BD4 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176C55FA2CEF59EB00585BD4 /* PreviewViewController.swift */; };
 		177282D32CB6847600247853 /* NewSongViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177282D22CB6847600247853 /* NewSongViewController.swift */; };
@@ -63,6 +64,7 @@
 		1746CD492CB029A700B3701A /* SeperatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeperatorView.swift; sourceTree = "<group>"; };
 		1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSongWithAIViewModel.swift; sourceTree = "<group>"; };
 		1746CD502CB034BC00B3701A /* MusicModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicModel.swift; sourceTree = "<group>"; };
+		174D74E02CF7393F00C93DFE /* MyPostsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPostsTableViewCell.swift; sourceTree = "<group>"; };
 		176C55FA2CEF59EB00585BD4 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		177282D22CB6847600247853 /* NewSongViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSongViewController.swift; sourceTree = "<group>"; };
 		177282D42CB6848900247853 /* NewSongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSongViewModel.swift; sourceTree = "<group>"; };
@@ -142,6 +144,14 @@
 				17EB24702CF5E4B50048D58B /* UserModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		174D74DD2CF734C900C93DFE /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				174D74E02CF7393F00C93DFE /* MyPostsTableViewCell.swift */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		176B6A832CB5847C003CAA0F /* Animations */ = {
@@ -274,6 +284,7 @@
 		17D8E1832CAEC881008F06CD /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				174D74DD2CF734C900C93DFE /* Cell */,
 				176C55F92CEF59D100585BD4 /* PreviewScreen */,
 				17F5F69A2CCFA836000052F4 /* SharePost */,
 				179F94C92CCA9B9000D05AF7 /* VideoOperations */,
@@ -472,6 +483,7 @@
 				17D8E1882CAEC950008F06CD /* ViewExtensions.swift in Sources */,
 				177EF64E2CAEF1680015F3CB /* SignInViewModel.swift in Sources */,
 				174155A82CF4C4D9005E70BB /* ServicePreview.swift in Sources */,
+				174D74E12CF7393F00C93DFE /* MyPostsTableViewCell.swift in Sources */,
 				176C55FB2CEF59EB00585BD4 /* PreviewViewController.swift in Sources */,
 				17A436632CAEE305001DEF62 /* RegisterService.swift in Sources */,
 				17D8E1862CAEC8C1008F06CD /* SignInViewController.swift in Sources */,

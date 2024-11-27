@@ -11,6 +11,7 @@ import SDWebImage
 
 protocol AccountViewControllerProtocol: AnyObject {
     func setUserInfo(user: UserModel)
+    func reloadDataTableView()
 }
 
 class AccountViewController: UIViewController {
@@ -36,22 +37,45 @@ class AccountViewController: UIViewController {
         return imageView
     }()
     
-    private let button: UIButton = {
+    private let editProfileButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("çıkış yap", for: .normal)
+        button.setTitle("Düzenle", for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = .systemBlue
+        button.backgroundColor = .systemGray5
+        button.layer.cornerRadius = 10
         return button
     }()
     
-//    private let collectionView: UICollectionView = {
-//        let collectionView = UICollectionView()
-//        collectionView.translatesAutoresizingMaskIntoConstraints = false
-//        collectionView.backgroundColor = .white
-//        collectionView.register(<#T##cellClass: AnyClass?##AnyClass?#>, forCellWithReuseIdentifier: <#T##String#>)
-//        return collectionView
-//    }()
+    let segmentedControl: UISegmentedControl = {
+        let items = ["Paylaşımlarım", "Kitaplığım"]
+        let segmentedControl = UISegmentedControl(items: items)
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        return segmentedControl
+    }()
+    
+    let myPostsView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let myLikesView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let myPostsTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .white
+        tableView.register(MyPostsTableViewCell.self, forCellReuseIdentifier: MyPostsTableViewCell.cellID)
+        return tableView
+    }()
     
     private var viewModel: AccountViewModel?
 
@@ -63,20 +87,31 @@ class AccountViewController: UIViewController {
         setup()
         configureBottomBar()
         configureWithExt()
+        configureSegmentedControl()
+        configureMyPostsView()
         addTargetButtons()
+        setDelegate()
         
     }
     
-    func addTargetButtons() {
-        button.addTarget(self, action: #selector(button_Clicked), for: .touchUpInside)
+    func setDelegate() {
+        myPostsTableView.delegate = self
+        myPostsTableView.dataSource = self
+        
+        myPostsTableView.separatorStyle = .none
     }
     
-    @objc func button_Clicked() {
-        do {
-            try Auth.auth().signOut()
-            self.navigationController?.pushViewController(SignInViewController(), animated: true)
-        } catch {
-            print("öfdsşlfslş")
+    func addTargetButtons() {
+        segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
+    }
+    
+    @objc func segmentChanged(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 0 {
+            myPostsView.isHidden = false
+            myLikesView.isHidden = true
+        } else {
+            myPostsView.isHidden = true
+            myLikesView.isHidden = false
         }
     }
 
@@ -88,6 +123,7 @@ extension AccountViewController {
         navigationController?.navigationBar.isHidden = true
         
         viewModel?.getDataUserInfo()
+        viewModel?.getDataMusicInfo()
     }
     
     func configureBottomBar() {
@@ -104,16 +140,30 @@ extension AccountViewController {
     }
     
     func configureWithExt() {
-        view.addViews(profileImageView, nameLabel, usernameLabel, followerLabel, followerCountLabel, followingLabel, followingCountLabel, button)
+        view.addViews(profileImageView, nameLabel, usernameLabel, followerLabel, followerCountLabel, followingLabel, followingCountLabel, editProfileButton)
         
         profileImageView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20, width: 70, height: 70)
         nameLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: profileImageView.rightAnchor, paddingTop: 30, paddingLeft: 15)
         usernameLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor, paddingTop: 5, paddingLeft: 15)
-        followerLabel.anchor(top: usernameLabel.bottomAnchor, left: profileImageView.rightAnchor, paddingTop: 20, paddingLeft: 15)
+        editProfileButton.anchor(top: profileImageView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20, width: 120, height: 30)
+        followerLabel.anchor(top: profileImageView.bottomAnchor, left: editProfileButton.rightAnchor, paddingTop: 15, paddingLeft: 20)
         followerCountLabel.anchor(top: followerLabel.bottomAnchor, centerX: followerLabel.centerXAnchor, paddingTop: 5)
-        followingLabel.anchor(top: usernameLabel.bottomAnchor, left: followerLabel.rightAnchor, paddingTop: 20, paddingLeft: 20)
+        followingLabel.anchor(top: profileImageView.bottomAnchor, left: followerLabel.rightAnchor, paddingTop: 15, paddingLeft: 25)
         followingCountLabel.anchor(top: followingLabel.bottomAnchor, centerX: followingLabel.centerXAnchor, paddingTop: 5)
-        button.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: bottomBar.topAnchor, paddingBottom: 20, height: 50)
+    }
+    
+    private func configureSegmentedControl() {
+        view.addSubview(segmentedControl)
+        myLikesView.isHidden = true
+        segmentedControl.anchor(top: editProfileButton.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 10, paddingRight: 10)
+    }
+    
+    private func configureMyPostsView() {
+        view.addViews(myPostsView)
+        myPostsView.addSubview(myPostsTableView)
+        
+        myPostsView.anchor(top: segmentedControl.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: seperatorView.topAnchor)
+        myPostsTableView.anchor(top: myPostsView.topAnchor, left: myPostsView.leftAnchor, right: myPostsView.rightAnchor, bottom: myPostsView.bottomAnchor)
     }
 }
 
@@ -142,5 +192,28 @@ extension AccountViewController: AccountViewControllerProtocol {
             profileImageView.image = UIImage(systemName: "person.circle")
             profileImageView.contentMode = .scaleAspectFit
         }
+    }
+    
+    func reloadDataTableView() {
+        DispatchQueue.main.async {
+            self.myPostsTableView.reloadData()
+        }
+    }
+}
+
+extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel?.musics.count ?? 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: MyPostsTableViewCell.cellID, for: indexPath) as! MyPostsTableViewCell
+        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", userID: "")
+        cell.configure(music: music)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 90
     }
 }
