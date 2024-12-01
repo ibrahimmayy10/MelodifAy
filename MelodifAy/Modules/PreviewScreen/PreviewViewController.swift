@@ -49,7 +49,7 @@ class PreviewViewController: UIViewController {
         return button
     }()
     
-    var imageUrl = String()
+    var coverImage = UIImage()
     var songName = String()
     
     private var viewModel: PreviewViewModel?
@@ -80,9 +80,7 @@ extension PreviewViewController {
         viewModel?.getUserName()
         
         songNameLabel.text = songName
-        if let imageUrl = URL(string: imageUrl), let imageData = try? Data(contentsOf: imageUrl) {
-            imageView.image = UIImage(data: imageData)
-        }
+        imageView.image = coverImage
         
         view.backgroundColor = .white
         navigationController?.navigationBar.isHidden = true

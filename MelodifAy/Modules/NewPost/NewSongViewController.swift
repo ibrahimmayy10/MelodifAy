@@ -372,10 +372,8 @@ class NewSongViewController: UIViewController {
         
         alert.addAction(UIAlertAction(title: "Taslağı Kaydet", style: .default, handler: { action in
             guard let recordedAudioURL = self.recordedAudioURL else { return }
-            
-            let audioUrl = self.convertUrlToString(url: recordedAudioURL)
-            
-            self.viewModel.saveDraft(url: audioUrl) { success in
+                        
+            self.viewModel.saveDraft(url: recordedAudioURL) { success in
                 if success {
                     let successImageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
                     successImageView.tintColor = .systemOrange
@@ -906,11 +904,42 @@ extension NewSongViewController {
 extension NewSongViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         guard let selectedFileUrl = urls.first else { return }
-        self.selectedAudioURL = selectedFileUrl
-        self.selectedAudioURL = getDocumentsDirectory().appendingPathComponent("recording.m4a")
-        let vc = ShareNewPostViewController()
-        vc.newPostURL = self.selectedAudioURL
-        navigationController?.pushViewController(vc, animated: true)
+        
+        guard selectedFileUrl.startAccessingSecurityScopedResource() else {
+            print("Could not access the file.")
+            return
+        }
+        
+        do {
+            var isDirectory: ObjCBool = false
+            let fileManager = FileManager.default
+            guard fileManager.fileExists(atPath: selectedFileUrl.path, isDirectory: &isDirectory), !isDirectory.boolValue else {
+                print("File does not exist or is a directory")
+                selectedFileUrl.stopAccessingSecurityScopedResource()
+                return
+            }
+            
+            let documentsDirectory = getDocumentsDirectory()
+            let destinationURL = documentsDirectory.appendingPathComponent(selectedFileUrl.lastPathComponent)
+            
+            if fileManager.fileExists(atPath: destinationURL.path) {
+                try fileManager.removeItem(at: destinationURL)
+            }
+            
+            try fileManager.copyItem(at: selectedFileUrl, to: destinationURL)
+            
+            selectedFileUrl.stopAccessingSecurityScopedResource()
+            
+            self.recordedAudioURL = destinationURL
+            
+            let vc = ShareNewPostViewController()
+            vc.newPostURL = self.recordedAudioURL
+            navigationController?.pushViewController(vc, animated: true)
+            
+        } catch {
+            print("Error processing file: \(error)")
+            selectedFileUrl.stopAccessingSecurityScopedResource()
+        }
     }
     
     func getDocumentsDirectory() -> URL {
@@ -997,12 +1026,39 @@ extension NewSongViewController: UIImagePickerControllerDelegate, UINavigationCo
         if let selectedVideoURL = info[.mediaURL] as? URL {
             self.selectedVideoURL = selectedVideoURL
             print(selectedVideoURL)
-        }
-        
-        dismiss(animated: true) {
-            let vc = EditVideoViewController()
-            vc.videoURL = self.selectedVideoURL
-            self.navigationController?.pushViewController(vc, animated: true)
+            
+            do {
+                var isDirectory: ObjCBool = false
+                let fileManager = FileManager.default
+                guard fileManager.fileExists(atPath: selectedVideoURL.path, isDirectory: &isDirectory), !isDirectory.boolValue else {
+                    print("File does not exist or is a directory")
+                    selectedVideoURL.stopAccessingSecurityScopedResource()
+                    return
+                }
+                
+                let documentsDirectory = getDocumentsDirectory()
+                let destinationURL = documentsDirectory.appendingPathComponent(selectedVideoURL.lastPathComponent)
+                
+                if fileManager.fileExists(atPath: destinationURL.path) {
+                    try fileManager.removeItem(at: destinationURL)
+                }
+                
+                try fileManager.copyItem(at: selectedVideoURL, to: destinationURL)
+                
+                selectedVideoURL.stopAccessingSecurityScopedResource()
+                
+                self.selectedVideoURL = destinationURL
+                
+                self.dismiss(animated: true) {
+                    let vc = EditVideoViewController()
+                    vc.videoURL = self.selectedVideoURL
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+                
+            } catch {
+                print("Error processing file: \(error)")
+                selectedVideoURL.stopAccessingSecurityScopedResource()
+            }
         }
     }
 }

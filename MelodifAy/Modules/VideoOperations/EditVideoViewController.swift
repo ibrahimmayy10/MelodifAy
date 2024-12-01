@@ -199,11 +199,10 @@ class EditVideoViewController: UIViewController {
     
     @objc func saveDraftButton_Clicked() {
         guard let videoURL = videoURL else { return }
-        let url = convertUrlToString(url: videoURL)
         
         saveDraftButton.setTitle("", for: .normal)
         activityIndicator.startAnimating()
-        newSongViewModel.saveDraft(url: url) { success in
+        newSongViewModel.saveDraft(url: videoURL) { success in
             self.activityIndicator.stopAnimating()
             self.saveDraftButton.setTitle("Taslağı kaydet", for: .normal)
             
@@ -229,10 +228,6 @@ class EditVideoViewController: UIViewController {
                 self.makeAlert(message: "Ses taslağı kaydedilirken bir hata oluştu.")
             }
         }
-    }
-    
-    func convertUrlToString(url: URL) -> String {
-        return url.absoluteString
     }
     
     @objc func shareButton_Clicked() {
