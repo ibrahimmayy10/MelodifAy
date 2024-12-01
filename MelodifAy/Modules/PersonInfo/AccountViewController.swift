@@ -103,6 +103,16 @@ class AccountViewController: UIViewController {
     
     func addTargetButtons() {
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
+        editProfileButton.addTarget(self, action: #selector(editProfileButton_Clicked), for: .touchUpInside)
+    }
+    
+    @objc func editProfileButton_Clicked() {
+        do {
+            try Auth.auth().signOut()
+            navigationController?.pushViewController(SignInViewController(), animated: true)
+        } catch {
+            print("lfdösşfş")
+        }
     }
     
     @objc func segmentChanged(_ sender: UISegmentedControl) {
@@ -188,6 +198,7 @@ extension AccountViewController: AccountViewControllerProtocol {
          
         if !user.imageUrl.isEmpty {
             profileImageView.sd_setImage(with: URL(string: user.imageUrl))
+            profileImageView.contentMode = .scaleAspectFill
         } else {
             profileImageView.image = UIImage(systemName: "person.circle")
             profileImageView.contentMode = .scaleAspectFit
@@ -211,6 +222,19 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
         let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", userID: "")
         cell.configure(music: music)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", userID: "")
+        
+        if let cell = tableView.cellForRow(at: indexPath) {
+            AnimationHelper.animateCell(cell: cell, in: self.view) {
+                let vc = MusicDetailsViewController()
+                vc.music = music
+                vc.modalPresentationStyle = .fullScreen
+                self.present(vc, animated: true)
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

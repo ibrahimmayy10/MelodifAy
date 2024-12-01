@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import Firebase
 
 protocol RegisterViewControllerProtocol: AnyObject {
-    func setRegisterInfo() -> (String, String, String, String, String, String)?
+    func setRegisterInfo() -> (String, String, String, UIImage, String, String)?
     func navigateSignIn()
     func showAlert(title: String, message: String)
 }
@@ -115,11 +116,11 @@ class RegisterViewController: UIViewController {
             return
         }
         
-        let (name, surname, username, imageUrl, email, password) = registerInfo
+        let (name, surname, username, image, email, password) = registerInfo
         
         activityIndicator.startAnimating()
         registerButton.setTitle("", for: .normal)
-        viewModel.register(name: name, surname: surname, username: username, imageUrl: imageUrl, email: email, password: password) { [weak self] success in
+        viewModel.registerUser(name: name, surname: surname, username: username, image: image, email: email, password: password) { [weak self] success in
             guard let self = self else { return }
             self.activityIndicator.stopAnimating()
             self.registerButton.setTitle("Kayıt Ol", for: .normal)
@@ -218,15 +219,15 @@ extension RegisterViewController {
 }
 
 extension RegisterViewController: RegisterViewControllerProtocol {
-    func setRegisterInfo() -> (String, String, String, String, String, String)? {
+    func setRegisterInfo() -> (String, String, String, UIImage, String, String)? {
         guard let name = nameTextField.text, !name.isEmpty else { return nil }
         guard let surname = surnameTextField.text, !surname.isEmpty else { return nil }
         guard let username = usernameTextField.text, !username.isEmpty else { return nil }
-        guard let imageUrl = selectedImageURL?.absoluteString else { return nil }
+        guard let image = selectedImage else { return nil }
         guard let email = emailTextField.text, !email.isEmpty else { return nil }
         guard let password = passwordTextField.text, !password.isEmpty else { return nil }
         
-        return (name, surname, username, imageUrl, email, password)
+        return (name, surname, username, image, email, password)
     }
     
     func navigateSignIn() {
@@ -242,23 +243,23 @@ extension RegisterViewController: RegisterViewControllerProtocol {
 
 extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let selectedImage = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage {
+        if let selectedImage = info[.originalImage] as? UIImage ?? info[.originalImage] as? UIImage {
             self.selectedImage = selectedImage
             imageView.contentMode = .scaleAspectFill
             self.imageView.image = selectedImage
             
-            if let imageData = selectedImage.jpegData(compressionQuality: 0.5) {
-                let tempDirectory = FileManager.default.temporaryDirectory
-                let fileName = UUID().uuidString + ".jpg"
-                let fileURL = tempDirectory.appendingPathComponent(fileName)
-                
-                do {
-                    try imageData.write(to: fileURL)
-                    self.selectedImageURL = fileURL
-                } catch {
-                    print("resim url e dönüştürülürken hata oluştu")
-                }
-            }
+//            if let imageData = selectedImage.jpegData(compressionQuality: 0.5) {
+//                let tempDirectory = FileManager.default.temporaryDirectory
+//                let fileName = UUID().uuidString + ".jpg"
+//                let fileURL = tempDirectory.appendingPathComponent(fileName)
+//                
+//                do {
+//                    try imageData.write(to: fileURL)
+//                    self.selectedImageURL = fileURL
+//                } catch {
+//                    print("resim url e dönüştürülürken hata oluştu")
+//                }
+//            }
         }
         picker.dismiss(animated: true)
     }

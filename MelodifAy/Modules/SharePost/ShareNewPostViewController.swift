@@ -102,6 +102,8 @@ class ShareNewPostViewController: UIViewController {
         keyboardShowing()
         addTargetButtons()
         
+        print(newPostURL?.absoluteString)
+        
     }
     
     deinit {
@@ -135,21 +137,21 @@ class ShareNewPostViewController: UIViewController {
     }
     
     @objc func shareButton_Clicked() {
-        guard let url = newPostURL?.absoluteString, let songName = songNameTextField.text, let selectedImageURL = selectedImageURL?.absoluteString, !songName.isEmpty, !url.isEmpty, !selectedImageURL.isEmpty else {
+        guard let newPostURL = newPostURL, let songName = songNameTextField.text, let selectedImage = selectedImage, !songName.isEmpty, !newPostURL.absoluteString.isEmpty else {
             self.showAlert(message: "Lütfen şarkınıza bir isim ve kapak fotoğrafı ekleyiniz")
             return
         }
         activityIndicator.startAnimating()
         shareButton.setTitle("", for: .normal)
         
-        viewModel.shareNewPost(url: url, songName: songName, lyrics: lyricsTextView.text ?? "", coverPhotoURL: selectedImageURL) { [weak self] success in
+        viewModel.shareNewPost(url: newPostURL, songName: songName, lyrics: lyricsTextView.text ?? "", coverPhoto: selectedImage) { [weak self] success in
             guard let self = self else { return }
             self.activityIndicator.stopAnimating()
             self.shareButton.setTitle("Paylaş", for: .normal)
             
             if success {
                 let vc = PreviewViewController()
-                vc.imageUrl = selectedImageURL
+                vc.coverImage = selectedImage
                 vc.songName = songName
                 let navController = UINavigationController(rootViewController: vc)
                 navController.modalPresentationStyle = .fullScreen
@@ -254,19 +256,6 @@ extension ShareNewPostViewController: UIImagePickerControllerDelegate, UINavigat
             selectionImageView.layer.cornerRadius = 10
             selectionImageView.contentMode = .scaleAspectFill
             self.selectionImageView.image = selectedImage
-            
-            if let imageData = selectedImage.jpegData(compressionQuality: 0.5) {
-                let tempDirectory = FileManager.default.temporaryDirectory
-                let fileName = UUID().uuidString + ".jpg"
-                let fileURL = tempDirectory.appendingPathComponent(fileName)
-                
-                do {
-                    try imageData.write(to: fileURL)
-                    self.selectedImageURL = fileURL
-                } catch {
-                    print("resim url e dönüştürülürken hata oluştu")
-                }
-            }
         }
         picker.dismiss(animated: true)
     }
