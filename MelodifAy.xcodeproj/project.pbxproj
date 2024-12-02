@@ -27,6 +27,9 @@
 		177EF6512CAEF6530015F3CB /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177EF6502CAEF6530015F3CB /* HomePageViewController.swift */; };
 		17912D042CC5529200ED572B /* BottomSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17912D032CC5529200ED572B /* BottomSheetPresentationController.swift */; };
 		17915B362CE4D06100A98A99 /* playerAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = 17915B352CE4D06100A98A99 /* playerAnimation.json */; };
+		179B36EB2CFDFFF700BA7DE8 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179B36EA2CFDFFF700BA7DE8 /* SearchViewModel.swift */; };
+		179B36ED2CFE000100BA7DE8 /* ServiceSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179B36EC2CFE000100BA7DE8 /* ServiceSearch.swift */; };
+		179B36EF2CFE04D200BA7DE8 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179B36EE2CFE04D200BA7DE8 /* SearchTableViewCell.swift */; };
 		179F94CB2CCA9BBF00D05AF7 /* EditVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179F94CA2CCA9BBF00D05AF7 /* EditVideoViewController.swift */; };
 		17A32AAC2CAFEF680010A7DC /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A32AAB2CAFEF680010A7DC /* AccountViewController.swift */; };
 		17A32AAE2CAFF0030010A7DC /* BottomBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A32AAD2CAFF0030010A7DC /* BottomBarView.swift */; };
@@ -75,6 +78,9 @@
 		177EF6502CAEF6530015F3CB /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
 		17912D032CC5529200ED572B /* BottomSheetPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentationController.swift; sourceTree = "<group>"; };
 		17915B352CE4D06100A98A99 /* playerAnimation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = playerAnimation.json; sourceTree = "<group>"; };
+		179B36EA2CFDFFF700BA7DE8 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		179B36EC2CFE000100BA7DE8 /* ServiceSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceSearch.swift; sourceTree = "<group>"; };
+		179B36EE2CFE04D200BA7DE8 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		179F94CA2CCA9BBF00D05AF7 /* EditVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditVideoViewController.swift; sourceTree = "<group>"; };
 		17A32AAB2CAFEF680010A7DC /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		17A32AAD2CAFF0030010A7DC /* BottomBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBarView.swift; sourceTree = "<group>"; };
@@ -153,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				174D74E02CF7393F00C93DFE /* MyPostsTableViewCell.swift */,
+				179B36EE2CFE04D200BA7DE8 /* SearchTableViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -218,6 +225,8 @@
 			isa = PBXGroup;
 			children = (
 				17A32AB02CAFF0510010A7DC /* SearchViewController.swift */,
+				179B36EA2CFDFFF700BA7DE8 /* SearchViewModel.swift */,
+				179B36EC2CFE000100BA7DE8 /* ServiceSearch.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -483,12 +492,15 @@
 				1746CD4A2CB029A700B3701A /* SeperatorView.swift in Sources */,
 				17912D042CC5529200ED572B /* BottomSheetPresentationController.swift in Sources */,
 				17A436652CAEE4FC001DEF62 /* RegisterViewModel.swift in Sources */,
+				179B36ED2CFE000100BA7DE8 /* ServiceSearch.swift in Sources */,
 				177282D52CB6848900247853 /* NewSongViewModel.swift in Sources */,
 				17D8E17D2CAEC119008F06CD /* AppDelegate.swift in Sources */,
 				17D8E17E2CAEC119008F06CD /* SceneDelegate.swift in Sources */,
 				17D8E1912CAED64A008F06CD /* RegisterViewController.swift in Sources */,
 				17D8E18E2CAED1ED008F06CD /* Labels.swift in Sources */,
+				179B36EB2CFDFFF700BA7DE8 /* SearchViewModel.swift in Sources */,
 				177EF6512CAEF6530015F3CB /* HomePageViewController.swift in Sources */,
+				179B36EF2CFE04D200BA7DE8 /* SearchTableViewCell.swift in Sources */,
 				1703E9622CEE1466008E6BEB /* ShareNewPostViewModel.swift in Sources */,
 				17A32AB12CAFF0510010A7DC /* SearchViewController.swift in Sources */,
 				17379D302CCBDF5000D4A1CD /* CameraViewController.swift in Sources */,

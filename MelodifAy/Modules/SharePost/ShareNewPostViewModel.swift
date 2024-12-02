@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 
 class ShareNewPostViewModel {
-    func shareNewPost(url: URL, songName: String, lyrics: String, coverPhoto: UIImage, completion: @escaping (Bool) -> Void) {
+    func shareNewPost(url: URL, songName: String, lyrics: String, coverPhoto: UIImage, name: String, completion: @escaping (Bool) -> Void) {
         guard let user = Auth.auth().currentUser else {
             completion(false)
             return
@@ -40,9 +40,9 @@ class ShareNewPostViewModel {
                                 guard let imageUrl = url?.absoluteString else { return }
                                 
                                 let firestore = Firestore.firestore()
-                                
+                                                                
                                 let sharePostRef = firestore.collection("Musics").document()
-                                let firestoreMusic = ["userID": currentUserID, "musicUrl": postUrl, "musicID": sharePostRef.documentID, "songName": songName, "lyrics": lyrics, "coverPhotoURL": imageUrl] as [String: Any]
+                                let firestoreMusic = ["userID": currentUserID, "musicUrl": postUrl, "musicID": sharePostRef.documentID, "songName": songName, "lyrics": lyrics, "coverPhotoURL": imageUrl, "name": name] as [String: Any]
                                 
                                 sharePostRef.setData(firestoreMusic) { error in
                                     if error != nil {
@@ -60,4 +60,26 @@ class ShareNewPostViewModel {
             }
         }
     }
+    
+    func fetchUserName(completion: @escaping (String) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            completion("")
+            return
+        }
+        let currentUserID = user.uid
+        
+        let firestore = Firestore.firestore()
+        firestore.collection("Users").document(currentUserID).getDocument { document, error in
+            if let error = error {
+                print(error.localizedDescription)
+                completion("")
+            } else if let document = document {
+                let name = document.get("name") as? String ?? ""
+                let surname = document.get("surname") as? String ?? ""
+                let fullName = "\(name) \(surname)"
+                completion(fullName)
+            }
+        }
+    }
+
 }

@@ -25,11 +25,12 @@ class ServiceAccount: ServiceAccountProtocol {
                 print(error?.localizedDescription ?? "")
             } else if let document = document, let data = document.data() {
                 guard let name = data["name"] as? String,
+                      let userID = data["userID"] as? String,
                       let surname = data["surname"] as? String,
                       let username = data["username"] as? String,
                       let imageUrl = data["imageUrl"] as? String else { return }
                 
-                let userModel = UserModel(name: name, surname: surname, username: username, imageUrl: imageUrl)
+                let userModel = UserModel(userID: userID, name: name, surname: surname, username: username, imageUrl: imageUrl)
                 completion(userModel)
             }
         }
@@ -51,9 +52,10 @@ class ServiceAccount: ServiceAccountProtocol {
                           let musicID = data["musicID"] as? String,
                           let musicUrl = data["musicUrl"] as? String,
                           let songName = data["songName"] as? String,
+                          let name = data["name"] as? String,
                           let userID = data["userID"] as? String else { return }
                     
-                    let musicModel = MusicModel(coverPhotoURL: coverPhotoURL, lyrics: lyrics, musicID: musicID, musicUrl: musicUrl, songName: songName, userID: userID)
+                    let musicModel = MusicModel(coverPhotoURL: coverPhotoURL, lyrics: lyrics, musicID: musicID, musicUrl: musicUrl, songName: songName, name: name, userID: userID)
                     musics.append(musicModel)
                 }
                 

@@ -41,7 +41,7 @@ class MyPostsTableViewCell: UITableViewCell {
     }()
     
     private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 17), textColorLabel: .black)
-    private let nameLabel = Labels(textLabel: "İbrahim Ay", fontLabel: .systemFont(ofSize: 16), textColorLabel: .darkGray)
+    private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 16), textColorLabel: .darkGray)
     private let likeCountLabel = Labels(textLabel: "250", fontLabel: .boldSystemFont(ofSize: 16), textColorLabel: .systemRed)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -80,6 +80,7 @@ class MyPostsTableViewCell: UITableViewCell {
     }
     
     func configure(music: MusicModel) {
+        nameLabel.text = music.name
         myPostImageView.sd_setImage(with: URL(string: music.coverPhotoURL))
         songNameLabel.text = music.songName
     }

@@ -13,5 +13,6 @@ struct MusicModel: Codable {
     let musicID: String
     let musicUrl: String
     let songName: String
+    let name: String
     let userID: String
 }

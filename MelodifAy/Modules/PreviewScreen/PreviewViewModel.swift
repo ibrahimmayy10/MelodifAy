@@ -6,23 +6,23 @@
 //
 
 import Foundation
-
-protocol PreviewViewModelProtocol {
-    func getUserName()
-    var servicePreview: ServicePreviewProtocol { get }
-}
-
-class PreviewViewModel: PreviewViewModelProtocol {
-    var servicePreview: ServicePreviewProtocol = ServicePreview()
-    weak var view: PreviewViewControllerProtocol?
-    
-    init(view: PreviewViewControllerProtocol?) {
-        self.view = view
-    }
-    
-    func getUserName() {
-        servicePreview.fetchUserName { name in
-            self.view?.setUsername(name: name)
-        }
-    }
-}
+//
+//protocol PreviewViewModelProtocol {
+//    func getUserName()
+//    var servicePreview: ServicePreviewProtocol { get }
+//}
+//
+//class PreviewViewModel: PreviewViewModelProtocol {
+//    var servicePreview: ServicePreviewProtocol = ServicePreview()
+//    weak var view: PreviewViewControllerProtocol?
+//    
+//    init(view: PreviewViewControllerProtocol?) {
+//        self.view = view
+//    }
+//    
+//    func getUserName() {
+//        servicePreview.fetchUserName { name in
+//            self.view?.setUsername(name: name)
+//        }
+//    }
+//}
