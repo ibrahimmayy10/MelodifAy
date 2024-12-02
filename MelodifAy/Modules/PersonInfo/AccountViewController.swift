@@ -78,6 +78,7 @@ class AccountViewController: UIViewController {
     }()
     
     private var viewModel: AccountViewModel?
+    private var name = String()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -193,6 +194,8 @@ extension AccountViewController: BottomBarViewProtocol {
 
 extension AccountViewController: AccountViewControllerProtocol {
     func setUserInfo(user: UserModel) {
+        self.name = user.name + " " + user.surname
+        
         nameLabel.text = "\(user.name) \(user.surname)"
         usernameLabel.text = "@\(user.username)"
          
@@ -219,13 +222,13 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MyPostsTableViewCell.cellID, for: indexPath) as! MyPostsTableViewCell
-        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", userID: "")
+        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "")
         cell.configure(music: music)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", userID: "")
+        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "")
         
         if let cell = tableView.cellForRow(at: indexPath) {
             AnimationHelper.animateCell(cell: cell, in: self.view) {

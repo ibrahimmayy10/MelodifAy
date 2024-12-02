@@ -101,9 +101,7 @@ class ShareNewPostViewController: UIViewController {
         configureWithExt()
         keyboardShowing()
         addTargetButtons()
-        
-        print(newPostURL?.absoluteString)
-        
+                
     }
     
     deinit {
@@ -144,23 +142,28 @@ class ShareNewPostViewController: UIViewController {
         activityIndicator.startAnimating()
         shareButton.setTitle("", for: .normal)
         
-        viewModel.shareNewPost(url: newPostURL, songName: songName, lyrics: lyricsTextView.text ?? "", coverPhoto: selectedImage) { [weak self] success in
+        viewModel.fetchUserName { [weak self] nameSurname in
             guard let self = self else { return }
-            self.activityIndicator.stopAnimating()
-            self.shareButton.setTitle("Paylaş", for: .normal)
             
-            if success {
-                let vc = PreviewViewController()
-                vc.coverImage = selectedImage
-                vc.songName = songName
-                let navController = UINavigationController(rootViewController: vc)
-                navController.modalPresentationStyle = .fullScreen
-                present(navController, animated: true)
-            } else {
-                self.showAlert(message: "Şarkıyı paylaşırken bir sorun oluştu")
+            self.viewModel.shareNewPost(url: newPostURL, songName: songName, lyrics: self.lyricsTextView.text ?? "", coverPhoto: selectedImage, name: nameSurname) { success in
+                self.activityIndicator.stopAnimating()
+                self.shareButton.setTitle("Paylaş", for: .normal)
+                
+                if success {
+                    let vc = PreviewViewController()
+                    vc.coverImage = selectedImage
+                    vc.songName = songName
+                    vc.name = nameSurname
+                    let navController = UINavigationController(rootViewController: vc)
+                    navController.modalPresentationStyle = .fullScreen
+                    self.present(navController, animated: true)
+                } else {
+                    self.showAlert(message: "Şarkıyı paylaşırken bir sorun oluştu")
+                }
             }
         }
     }
+
     
     func showAlert(message: String) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)

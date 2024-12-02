@@ -7,9 +7,9 @@
 
 import UIKit
 
-protocol PreviewViewControllerProtocol: AnyObject {
-    func setUsername(name: String)
-}
+//protocol PreviewViewControllerProtocol: AnyObject {
+//    func setUsername(name: String)
+//}
 
 class PreviewViewController: UIViewController {
     
@@ -51,13 +51,14 @@ class PreviewViewController: UIViewController {
     
     var coverImage = UIImage()
     var songName = String()
+    var name = String()
     
-    private var viewModel: PreviewViewModel?
+//    private var viewModel: PreviewViewModel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel = PreviewViewModel(view: self)
+//        viewModel = PreviewViewModel(view: self)
         
         setup()
         configureWithExt()
@@ -77,8 +78,9 @@ class PreviewViewController: UIViewController {
 
 extension PreviewViewController {
     func setup() {
-        viewModel?.getUserName()
+//        viewModel?.getUserName()
         
+        nameLabel.text = name
         songNameLabel.text = songName
         imageView.image = coverImage
         
@@ -101,8 +103,8 @@ extension PreviewViewController {
     }
 }
 
-extension PreviewViewController: PreviewViewControllerProtocol {
-    func setUsername(name: String) {
-        nameLabel.text = name
-    }
-}
+//extension PreviewViewController: PreviewViewControllerProtocol {
+//    func setUsername(name: String) {
+//        nameLabel.text = name
+//    }
+//}
