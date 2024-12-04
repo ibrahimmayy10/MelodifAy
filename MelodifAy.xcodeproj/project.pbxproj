@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1703E9622CEE1466008E6BEB /* ShareNewPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1703E9612CEE1466008E6BEB /* ShareNewPostViewModel.swift */; };
+		1714CB202D0066B600C4930B /* MusicPlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1714CB1F2D0066B600C4930B /* MusicPlayerService.swift */; };
 		171DF00B2CC1333600523459 /* EditPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171DF00A2CC1333600523459 /* EditPostViewController.swift */; };
 		171E07F92CCE6B0400425271 /* EditVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171E07F82CCE6B0400425271 /* EditVideoViewModel.swift */; };
 		17379D302CCBDF5000D4A1CD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17379D2F2CCBDF5000D4A1CD /* CameraViewController.swift */; };
@@ -59,6 +60,7 @@
 
 /* Begin PBXFileReference section */
 		1703E9612CEE1466008E6BEB /* ShareNewPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNewPostViewModel.swift; sourceTree = "<group>"; };
+		1714CB1F2D0066B600C4930B /* MusicPlayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerService.swift; sourceTree = "<group>"; };
 		171DF00A2CC1333600523459 /* EditPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPostViewController.swift; sourceTree = "<group>"; };
 		171E07F82CCE6B0400425271 /* EditVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditVideoViewModel.swift; sourceTree = "<group>"; };
 		1723CE752CFC98E40020E398 /* MelodifAy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MelodifAy.entitlements; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 			isa = PBXGroup;
 			children = (
 				17A66F4C2CF89FDB005898D3 /* MusicDetailsViewController.swift */,
+				1714CB1F2D0066B600C4930B /* MusicPlayerService.swift */,
 			);
 			path = MusicDetails;
 			sourceTree = "<group>";
@@ -493,6 +496,7 @@
 				17912D042CC5529200ED572B /* BottomSheetPresentationController.swift in Sources */,
 				17A436652CAEE4FC001DEF62 /* RegisterViewModel.swift in Sources */,
 				179B36ED2CFE000100BA7DE8 /* ServiceSearch.swift in Sources */,
+				1714CB202D0066B600C4930B /* MusicPlayerService.swift in Sources */,
 				177282D52CB6848900247853 /* NewSongViewModel.swift in Sources */,
 				17D8E17D2CAEC119008F06CD /* AppDelegate.swift in Sources */,
 				17D8E17E2CAEC119008F06CD /* SceneDelegate.swift in Sources */,
