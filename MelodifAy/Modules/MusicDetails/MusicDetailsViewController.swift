@@ -7,6 +7,8 @@
 
 import UIKit
 import AVFoundation
+import AVKit
+import Firebase
 
 class MusicDetailsViewController: UIViewController {
     
@@ -27,7 +29,7 @@ class MusicDetailsViewController: UIViewController {
     private let playButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 40, weight: .medium, scale: .large)
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .medium, scale: .large)
         let largeImage = UIImage(systemName: "pause.circle.fill", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
         button.tintColor = .black
@@ -91,88 +93,142 @@ class MusicDetailsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
+        isLoadingMusic()
+        configureAudioPlayer()
         setup()
         configureWithExt()
         setMusicInfo()
         addTargetButtons()
+        playMusic()
         
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    func playMusic() {
+        guard let musicUrl = music?.musicUrl else { return }
         
-        stopPlaybackTimer()
-        if let timeObserverToken = timeObserverToken {
-            player?.removeTimeObserver(timeObserverToken)
-            self.timeObserverToken = nil
+        fetchFileType(for: musicUrl) { [weak self] contentType in
+            DispatchQueue.main.async {
+                if let contentType = contentType, contentType.contains("video") {
+                    self?.playVideo(from: musicUrl)
+                } else {
+                    self?.configureAudioPlayer()
+                    MusicPlayerService.shared.playMusic(from: musicUrl)
+                }
+            }
         }
-        player?.pause()
-        player = nil
-        audioSlider.value = 0
+    }
+    
+    func playVideo(from url: String) {
+        guard let videoURL = URL(string: url) else { return }
+        
+        let player = AVPlayer(url: videoURL)
+        let playerViewController = AVPlayerViewController()
+        playerViewController.player = player
+        
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
+                                               object: player.currentItem,
+                                               queue: .main) { [weak self] _ in
+            self?.dismiss(animated: true)
+        }
+        
+        present(playerViewController, animated: true) {
+            player.play()
+        }
+    }
+    
+    func fetchFileType(for url: String, completion: @escaping (String?) -> Void) {
+        let storageRef = Storage.storage(url: "gs://melodifay-15da7.firebasestorage.app").reference(forURL: url)
+        
+        storageRef.getMetadata { metadata, error in
+            if error != nil {
+                print(error?.localizedDescription ?? "")
+                completion(nil)
+            } else {
+                completion(metadata?.contentType)
+            }
+        }
     }
     
     func addTargetButtons() {
         dismissButton.addTarget(self, action: #selector(dismissButton_Clicked), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(playButton_Clicked), for: .touchUpInside)
-        audioSlider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
+        audioSlider.addTarget(self, action: #selector(sliderChanged), for: .valueChanged)
     }
     
-    @objc func sliderValueChanged(_ sender: UISlider) {
-        guard let player = player else { return }
-        let seconds = Int64(sender.value)
-        let targetTime = CMTimeMake(value: seconds, timescale: 1)
-        player.seek(to: targetTime)
+    @objc func sliderChanged() {
+        MusicPlayerService.shared.seek(to: Double(audioSlider.value))
     }
     
-    @objc func playButton_Clicked() {
-        guard let player = player else { return }
-        
+    @objc func playButton_Clicked() {        
         if playButton.tag == 0 {
             playButton.tag = 1
-            let largeConfig = UIImage.SymbolConfiguration(pointSize: 40, weight: .medium, scale: .large)
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .medium, scale: .large)
             let largeImage = UIImage(systemName: "play.circle.fill", withConfiguration: largeConfig)
             playButton.setImage(largeImage, for: .normal)
             
-            player.pause()
+            MusicPlayerService.shared.pausePlayback()
         } else {
             playButton.tag = 0
-            let largeConfig = UIImage.SymbolConfiguration(pointSize: 40, weight: .medium, scale: .large)
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .medium, scale: .large)
             let largeImage = UIImage(systemName: "pause.circle.fill", withConfiguration: largeConfig)
             playButton.setImage(largeImage, for: .normal)
             
-            player.play()
+            MusicPlayerService.shared.startPlayback()
         }
     }
     
-    func startPlaybackTimer() {
-        playbackTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            guard let self = self, let player = self.player, let currentItem = player.currentItem else { return }
-            let currentTime = CMTimeGetSeconds(player.currentTime())
-            self.audioSlider.value = Float(currentTime)
-            
-            if CMTimeGetSeconds(currentItem.duration) == currentTime {
-                self.playButton.tag = 0
-                let largeConfig = UIImage.SymbolConfiguration(pointSize: 40, weight: .medium, scale: .large)
-                let largeImage = UIImage(systemName: "play.circle.fill", withConfiguration: largeConfig)
-                self.playButton.setImage(largeImage, for: .normal)
+    func isLoadingMusic() {
+        loadingIndicator.startAnimating()
+        
+        dismissButton.alpha = 0.3
+        playLabel.alpha = 0.3
+        coverPhotoImageView.alpha = 0.3
+        nameLabel.alpha = 0.3
+        songNameLabel.alpha = 0.3
+        audioSlider.alpha = 0.3
+        forwardButton.alpha = 0.3
+        backwardButton.alpha = 0.3
+        playButton.alpha = 0.3
+        
+        loadingIndicator.alpha = 1.0
+    }
+    
+    func configureAudioPlayer() {
+        MusicPlayerService.shared.progressHandler = { [weak self] currentTime, duration in
+            DispatchQueue.main.async {
+                self?.audioSlider.maximumValue = Float(duration)
+                self?.audioSlider.value = Float(currentTime)
             }
         }
-    }
-
-    func stopPlaybackTimer() {
-        playbackTimer?.invalidate()
-        playbackTimer = nil
-    }
-    
-    func addPeriodicTimeObserver() {
-        guard let player = player else { return }
         
-        let interval = CMTime(seconds: 1.0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
-            guard let self = self else { return }
-            let currentTime = CMTimeGetSeconds(time)
-            self.audioSlider.value = Float(currentTime)
+        MusicPlayerService.shared.loadingStateHandler = { [weak self] isLoading in
+            DispatchQueue.main.async {
+                if isLoading {
+                    self?.isLoadingMusic()
+                } else {
+                    self?.loadingIndicator.stopAnimating()
+                    
+                    self?.dismissButton.alpha = 1.0
+                    self?.playLabel.alpha = 1.0
+                    self?.coverPhotoImageView.alpha = 1.0
+                    self?.nameLabel.alpha = 1.0
+                    self?.songNameLabel.alpha = 1.0
+                    self?.audioSlider.alpha = 1.0
+                    self?.forwardButton.alpha = 1.0
+                    self?.backwardButton.alpha = 1.0
+                    self?.playButton.alpha = 1.0
+                }
+            }
+        }
+        
+        MusicPlayerService.shared.playbackCompletionHandler = { [weak self] in
+            DispatchQueue.main.async {
+                self?.playButton.tag = 1
+                let largeConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .medium, scale: .large)
+                let largeImage = UIImage(systemName: "play.circle.fill", withConfiguration: largeConfig)
+                self?.playButton.setImage(largeImage, for: .normal)
+            }
         }
     }
     
@@ -193,48 +249,6 @@ extension MusicDetailsViewController {
         coverPhotoImageView.sd_setImage(with: URL(string: music.coverPhotoURL))
         songNameLabel.text = music.songName
         nameLabel.text = music.name
-        
-        loadingIndicator.startAnimating()
-        self.dismissButton.isHidden = true
-        self.playLabel.isHidden = true
-        self.coverPhotoImageView.isHidden = true
-        self.nameLabel.isHidden = true
-        self.songNameLabel.isHidden = true
-        self.audioSlider.isHidden = true
-        self.forwardButton.isHidden = true
-        self.backwardButton.isHidden = true
-        self.playButton.isHidden = true
-        
-        DispatchQueue.global().async { [weak self] in
-            guard let self = self, let url = URL(string: music.musicUrl) else { return }
-            let playerItem = AVPlayerItem(url: url)
-            
-            DispatchQueue.main.async {
-                self.playerItem = playerItem
-                self.player = AVPlayer(playerItem: playerItem)
-                
-                let duration = playerItem.asset.duration
-                let seconds = CMTimeGetSeconds(duration)
-                self.audioSlider.maximumValue = Float(seconds)
-                self.audioSlider.value = 0
-                
-                
-                self.addPeriodicTimeObserver()
-                self.startPlaybackTimer()
-                self.player?.play()
-                self.loadingIndicator.stopAnimating()
-                
-                self.dismissButton.isHidden = false
-                self.playLabel.isHidden = false
-                self.coverPhotoImageView.isHidden = false
-                self.nameLabel.isHidden = false
-                self.songNameLabel.isHidden = false
-                self.audioSlider.isHidden = false
-                self.forwardButton.isHidden = false
-                self.backwardButton.isHidden = false
-                self.playButton.isHidden = false
-            }
-        }
     }
     
     func configureWithExt() {
