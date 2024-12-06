@@ -53,9 +53,10 @@ class ServiceAccount: ServiceAccountProtocol {
                           let musicUrl = data["musicUrl"] as? String,
                           let songName = data["songName"] as? String,
                           let name = data["name"] as? String,
+                          let musicFileType = data["musicFileType"] as? String,
                           let userID = data["userID"] as? String else { return }
                     
-                    let musicModel = MusicModel(coverPhotoURL: coverPhotoURL, lyrics: lyrics, musicID: musicID, musicUrl: musicUrl, songName: songName, name: name, userID: userID)
+                    let musicModel = MusicModel(coverPhotoURL: coverPhotoURL, lyrics: lyrics, musicID: musicID, musicUrl: musicUrl, songName: songName, name: name, userID: userID, musicFileType: musicFileType)
                     musics.append(musicModel)
                 }
                 

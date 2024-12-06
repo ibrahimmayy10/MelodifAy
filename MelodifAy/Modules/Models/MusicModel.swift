@@ -15,4 +15,5 @@ struct MusicModel: Codable {
     let songName: String
     let name: String
     let userID: String
+    let musicFileType: String
 }
