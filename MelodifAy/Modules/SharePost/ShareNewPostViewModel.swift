@@ -19,6 +19,14 @@ class ShareNewPostViewModel {
         let storage = Storage.storage(url: "gs://melodifay-15da7.firebasestorage.app")
         let postRef = storage.reference().child("musics/\(UUID().uuidString)")
         
+        var musicFileType = String()
+        
+        if url.absoluteString.contains("MOV") {
+            musicFileType = "video"
+        } else {
+            musicFileType = "audio"
+        }
+        
         postRef.putFile(from: url, metadata: nil) { metadata, error in
             if error != nil {
                 print(error?.localizedDescription ?? "")
@@ -42,7 +50,7 @@ class ShareNewPostViewModel {
                                 let firestore = Firestore.firestore()
                                                                 
                                 let sharePostRef = firestore.collection("Musics").document()
-                                let firestoreMusic = ["userID": currentUserID, "musicUrl": postUrl, "musicID": sharePostRef.documentID, "songName": songName, "lyrics": lyrics, "coverPhotoURL": imageUrl, "name": name] as [String: Any]
+                                let firestoreMusic = ["userID": currentUserID, "musicUrl": postUrl, "musicID": sharePostRef.documentID, "songName": songName, "lyrics": lyrics, "coverPhotoURL": imageUrl, "name": name, "musicFileType": musicFileType] as [String: Any]
                                 
                                 sharePostRef.setData(firestoreMusic) { error in
                                     if error != nil {

@@ -8,8 +8,8 @@
 import Foundation
 import AVFoundation
 
-class MusicPlayerService: NSObject {
-    static let shared = MusicPlayerService()
+class MusicAudioPlayerService: NSObject {
+    static let shared = MusicAudioPlayerService()
     
     private var player: AVAudioPlayer?
     private var audioTimer: Timer?
@@ -112,7 +112,7 @@ class MusicPlayerService: NSObject {
     }
 }
 
-extension MusicPlayerService: AVAudioPlayerDelegate {
+extension MusicAudioPlayerService: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         DispatchQueue.main.async {
             self.playbackCompletionHandler?()
