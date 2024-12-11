@@ -10,6 +10,10 @@ import AVFoundation
 import AVKit
 import Firebase
 
+protocol MusicDetailsDelegate: AnyObject {
+    func updateMiniPlayer(with music: MusicModel, isPlaying: Bool)
+}
+
 class MusicDetailsViewController: UIViewController {
     
     private let playLabel = Labels(textLabel: "Şarkı oynatılıyor", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
@@ -23,6 +27,16 @@ class MusicDetailsViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium, scale: .large)
         let largeImage = UIImage(systemName: "chevron.down", withConfiguration: largeConfig)
+        button.setImage(largeImage, for: .normal)
+        button.tintColor = .black
+        return button
+    }()
+    
+    private let editButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium, scale: .large)
+        let largeImage = UIImage(systemName: "ellipsis", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
         button.tintColor = .black
         return button
@@ -113,14 +127,10 @@ class MusicDetailsViewController: UIViewController {
         view.layer.cornerRadius = 10
         return view
     }()
-    
-    private var timeObserverToken: Any?
-    private var playbackTimer: Timer?
-    
-    private var player: AVPlayer?
-    private var playerLayer: AVPlayerLayer?
-    
+        
     var music: MusicModel?
+    
+    weak var delegate: MusicDetailsDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -133,11 +143,31 @@ class MusicDetailsViewController: UIViewController {
         
     }
     
+    @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        guard let music = music else { return }
+        
+        let translation = gesture.translation(in: view)
+        
+        switch gesture.state {
+        case .changed:
+            if translation.y > 0 {
+                view.transform = CGAffineTransform(translationX: 0, y: translation.y)
+            }
+        case .ended:
+            if translation.y > 100 {
+                delegate?.updateMiniPlayer(with: music, isPlaying: MusicAudioPlayerService.shared.isPlaying)
+                dismiss(animated: true, completion: nil)
+            }
+        default:
+            break
+        }
+    }
+    
     func playMusic() {
         guard let music = music else { return }
         let musicUrl = music.musicUrl
         let musicFileType = music.musicFileType
-        
+                
         if musicFileType == "video" {
             configureVideoPlayer()
             coverPhotoImageView.isHidden = true
@@ -145,6 +175,7 @@ class MusicDetailsViewController: UIViewController {
         } else {
             configureAudioPlayer()
             MusicAudioPlayerService.shared.playMusic(from: musicUrl)
+            MusicAudioPlayerService.shared.music = music
         }
     }
     
@@ -155,6 +186,9 @@ class MusicDetailsViewController: UIViewController {
         backwardButton.addTarget(self, action: #selector(backwardButton_Clicked), for: .touchUpInside)
         restartButton.addTarget(self, action: #selector(restartButton_Clicked), for: .touchUpInside)
         mixButton.addTarget(self, action: #selector(mixButton_Clicked), for: .touchUpInside)
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        view.addGestureRecognizer(panGesture)
     }
     
     @objc func mixButton_Clicked() {
@@ -315,6 +349,8 @@ class MusicDetailsViewController: UIViewController {
     }
     
     func configureAudioPlayer() {
+        guard let musicUrl = music?.musicUrl else { return }
+        
         MusicAudioPlayerService.shared.progressHandler = { [weak self] currentTime, duration in
             DispatchQueue.main.async {
                 guard !currentTime.isNaN, !duration.isNaN else { return }
@@ -348,7 +384,7 @@ class MusicDetailsViewController: UIViewController {
                 
                 if self?.restartButton.tag == 1 {
                     MusicAudioPlayerService.shared.seek(to: 0)
-                    MusicAudioPlayerService.shared.startPlayback()
+                    MusicAudioPlayerService.shared.playMusic(from: musicUrl)
                     self?.playButton.tag = 0
                     let largeConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .medium, scale: .large)
                     let largeImage = UIImage(systemName: "pause.circle.fill", withConfiguration: largeConfig)
@@ -359,7 +395,10 @@ class MusicDetailsViewController: UIViewController {
     }
     
     @objc func dismissButton_Clicked() {
-        dismiss(animated: true)
+        guard let music = music else { return }
+        
+        delegate?.updateMiniPlayer(with: music, isPlaying: MusicAudioPlayerService.shared.isPlaying)
+        dismiss(animated: true, completion: nil)
     }
 
 }
@@ -378,12 +417,13 @@ extension MusicDetailsViewController {
     }
     
     func configureWithExt() {
-        view.addViews(dismissButton, playLabel, nameLabel, songNameLabel, audioSlider, playButton, backwardButton, forwardButton, loadingIndicator, remainingTimeLabel, currentTimeLabel, musicView, restartButton, mixButton)
+        view.addViews(dismissButton, editButton, playLabel, nameLabel, songNameLabel, audioSlider, playButton, backwardButton, forwardButton, loadingIndicator, remainingTimeLabel, currentTimeLabel, musicView, restartButton, mixButton)
         musicView.addViews(coverPhotoImageView)
         
         loadingIndicator.anchor(centerX: view.centerXAnchor, centerY: view.centerYAnchor)
         dismissButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 10, paddingLeft: 10)
         playLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10)
+        editButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, right: view.rightAnchor, paddingTop: 10, paddingRight: 10)
         musicView.anchor(top: playLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 30, paddingLeft: 20, paddingRight: 20, height: 350)
         coverPhotoImageView.anchor(top: musicView.topAnchor, left: musicView.leftAnchor, right: musicView.rightAnchor, bottom: musicView.bottomAnchor)
         songNameLabel.anchor(top: musicView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)

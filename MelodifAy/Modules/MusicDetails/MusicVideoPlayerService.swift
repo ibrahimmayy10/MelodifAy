@@ -39,6 +39,7 @@ class MusicVideoPlayerService: NSObject {
             playerLayer?.removeFromSuperlayer()
             
             playerItem = AVPlayerItem(url: url)
+            playerItem?.preferredForwardBufferDuration = 1
             player = AVPlayer(playerItem: playerItem)
             
             playerLayer = AVPlayerLayer(player: player)
@@ -56,13 +57,15 @@ class MusicVideoPlayerService: NSObject {
                                                    name: .AVPlayerItemDidPlayToEndTime,
                                                    object: playerItem)
             
-            timeObserverToken = player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 10), queue: .main) { [weak self] time in
-                guard let self = self, let currentItem = self.player?.currentItem else { return }
-                
-                let currentTime = time.seconds
-                let duration = currentItem.duration.seconds
-                
-                self.progressHandler?(currentTime, duration)
+            if timeObserverToken == nil {
+                timeObserverToken = player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 10), queue: .main) { [weak self] time in
+                    guard let self = self, let currentItem = self.player?.currentItem else { return }
+                    
+                    let currentTime = time.seconds
+                    let duration = currentItem.duration.seconds
+                    
+                    self.progressHandler?(currentTime, duration)
+                }
             }
             
             DispatchQueue.main.async {

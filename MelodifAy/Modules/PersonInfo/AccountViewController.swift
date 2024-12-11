@@ -14,7 +14,7 @@ protocol AccountViewControllerProtocol: AnyObject {
     func reloadDataTableView()
 }
 
-class AccountViewController: UIViewController {
+class AccountViewController: BaseViewController {
     
     private let bottomBar = BottomBarView()
     
@@ -78,6 +78,7 @@ class AccountViewController: UIViewController {
     }()
     
     private var viewModel: AccountViewModel?
+    private var music: MusicModel?
     private var name = String()
 
     override func viewDidLoad() {
@@ -85,14 +86,22 @@ class AccountViewController: UIViewController {
         
         viewModel = AccountViewModel(view: self)
         
-        setup()
         configureBottomBar()
+        setup()
         configureWithExt()
         configureSegmentedControl()
         configureMyPostsView()
         addTargetButtons()
         setDelegate()
         
+        if let currentMusic = MusicAudioPlayerService.shared.music {
+            showMiniMusicPlayer(with: currentMusic)
+        }
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        setup()
     }
     
     func setDelegate() {
@@ -233,8 +242,11 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
         if let cell = tableView.cellForRow(at: indexPath) {
             AnimationHelper.animateCell(cell: cell, in: self.view) {
                 let vc = MusicDetailsViewController()
+                self.music = music
                 vc.music = music
-                vc.modalPresentationStyle = .fullScreen
+                vc.delegate = self
+                vc.modalPresentationStyle = .overFullScreen
+                vc.modalTransitionStyle = .crossDissolve
                 self.present(vc, animated: true)
             }
         }
@@ -242,5 +254,22 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 90
+    }
+}
+
+extension AccountViewController: MusicDetailsDelegate {
+    func updateMiniPlayer(with music: MusicModel, isPlaying: Bool) {
+        MusicAudioPlayerService.shared.musicStatusChangedHandler = { song, isPlayingss in
+            MiniMusicPlayerViewController.shared.miniMusicNameLabel.text = music.songName
+            MiniMusicPlayerViewController.shared.miniNameLabel.text = music.name
+            guard let url = URL(string: music.coverPhotoURL) else { return }
+            MiniMusicPlayerViewController.shared.imageView.sd_setImage(with: url)
+            
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .large)
+            let largePauseImage = UIImage(systemName: "pause.fill", withConfiguration: largeConfig)
+            let largePlayImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
+            let buttonImage = isPlayingss ? largePauseImage : largePlayImage
+            MiniMusicPlayerViewController.shared.miniPlayButton.setImage(buttonImage, for: .normal)
+        }
     }
 }
