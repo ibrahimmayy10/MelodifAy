@@ -13,11 +13,15 @@ class MusicAudioPlayerService: NSObject {
     
     private var player: AVAudioPlayer?
     private var audioTimer: Timer?
+    var isPlaying = false
+    
+    var music: MusicModel?
     
     var progressHandler: ((TimeInterval, TimeInterval) -> Void)?
     var playbackStateHandler: ((Bool) -> Void)?
     var playbackCompletionHandler: (() -> Void)?
     var loadingStateHandler: ((Bool) -> Void)?
+    var musicStatusChangedHandler: ((MusicModel?, Bool) -> Void)?
     
     private override init() {}
     
@@ -27,16 +31,38 @@ class MusicAudioPlayerService: NSObject {
             return
         }
         
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-            try AVAudioSession.sharedInstance().setActive(true)
+        loadingStateHandler?(true)
+        
+        URLSession.shared.dataTask(with: url) { [weak self] (data, response, error) in
+            guard let self = self, let data = data, error == nil else {
+                print("Download failed: \(error?.localizedDescription ?? "Unknown error")")
+                DispatchQueue.main.async {
+                    self?.loadingStateHandler?(false)
+                }
+                return
+            }
             
-            loadingStateHandler?(true)
-            downloadAndPlayMusic(from: url)
-        } catch {
-            print("Audio session configuration error: \(error)")
-            loadingStateHandler?(false)
-        }
+            do {
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+                try AVAudioSession.sharedInstance().setActive(true)
+                
+                self.player = try AVAudioPlayer(data: data)
+                self.player?.delegate = self
+                self.player?.prepareToPlay()
+                
+                DispatchQueue.main.async {
+                    self.loadingStateHandler?(false)
+                    self.startPlayback()
+                    self.musicStatusChangedHandler?(self.music, true)
+                    self.isPlaying = true
+                }
+            } catch {
+                print("Audio player initialization error: \(error)")
+                DispatchQueue.main.async {
+                    self.loadingStateHandler?(false)
+                }
+            }
+        }.resume()
     }
     
     private func downloadAndPlayMusic(from url: URL) {
@@ -71,12 +97,16 @@ class MusicAudioPlayerService: NSObject {
         player?.play()
         playbackStateHandler?(true)
         startProgressTimer()
+        self.isPlaying = true
+        musicStatusChangedHandler?(music, true)
     }
     
     func pausePlayback() {
         player?.pause()
         playbackStateHandler?(false)
         stopProgressTimer()
+        self.isPlaying = false
+        musicStatusChangedHandler?(music, false)
     }
     
     func stopPlayback() {
@@ -84,6 +114,8 @@ class MusicAudioPlayerService: NSObject {
         player?.currentTime = 0
         playbackStateHandler?(false)
         stopProgressTimer()
+        self.isPlaying = false
+        musicStatusChangedHandler?(music, false)
     }
     
     private func startProgressTimer() {
@@ -97,7 +129,7 @@ class MusicAudioPlayerService: NSObject {
             
             if currentTime >= duration {
                 self.stopPlayback()
-                self.playbackCompletionHandler?() 
+                self.playbackCompletionHandler?()
             }
         }
     }
@@ -116,6 +148,8 @@ extension MusicAudioPlayerService: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         DispatchQueue.main.async {
             self.playbackCompletionHandler?()
+            self.isPlaying = false
+            self.musicStatusChangedHandler?(self.music, false)
         }
     }
 }

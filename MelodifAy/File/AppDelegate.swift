@@ -11,13 +11,17 @@ import FirebaseCore
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
         
         return true
+    }
+    
+    func saveLastPlayedSong(_ song: MusicModel) {
+        if let data = try? JSONEncoder().encode(song) {
+            UserDefaults.standard.set(data, forKey: "lastPlayedSong")
+        }
     }
 
     // MARK: UISceneSession Lifecycle

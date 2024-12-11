@@ -16,7 +16,7 @@ enum SearchResult {
     case user(UserModel)
 }
 
-class SearchViewController: UIViewController {
+class SearchViewController: BaseViewController {
     
     private let bottomBar = BottomBarView()
     
@@ -53,6 +53,10 @@ class SearchViewController: UIViewController {
         configureBottomBar()
         setDelegate()
         addTargetButtons()
+        
+        if let currentMusic = MusicAudioPlayerService.shared.music {
+            showMiniMusicPlayer(with: currentMusic)
+        }
         
     }
     
@@ -174,6 +178,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         case .music(let music):
             let vc = MusicDetailsViewController()
             vc.music = music
+            vc.delegate = self
             let navController = UINavigationController(rootViewController: vc)
             navController.modalPresentationStyle = .fullScreen
             present(navController, animated: true)
@@ -182,8 +187,25 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             print(user.name)
         }
     }
-        
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
+    }
+}
+
+extension SearchViewController: MusicDetailsDelegate {
+    func updateMiniPlayer(with music: MusicModel, isPlaying: Bool) {
+        MusicAudioPlayerService.shared.musicStatusChangedHandler = { song, isPlayingss in
+            MiniMusicPlayerViewController.shared.miniMusicNameLabel.text = music.songName
+            MiniMusicPlayerViewController.shared.miniNameLabel.text = music.name
+            guard let url = URL(string: music.coverPhotoURL) else { return }
+            MiniMusicPlayerViewController.shared.imageView.sd_setImage(with: url)
+            
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .large)
+            let largePauseImage = UIImage(systemName: "pause.fill", withConfiguration: largeConfig)
+            let largePlayImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
+            let buttonImage = isPlayingss ? largePauseImage : largePlayImage
+            MiniMusicPlayerViewController.shared.miniPlayButton.setImage(buttonImage, for: .normal)
+        }
     }
 }

@@ -75,6 +75,8 @@ protocol BottomBarViewProtocol: AnyObject {
 
 class BottomBarView: UIView {
     
+    static let shared = BottomBarView()
+    
     private let homeButton = UIButton(type: .system)
     private let searchButton = UIButton(type: .system)
     private let accountButton = UIButton(type: .system)

@@ -12,6 +12,7 @@ pod 'Firebase/Storage'
 pod 'Firebase/Core'
 pod 'SDWebImage'
 pod 'lottie-ios'
+pod 'KTVHTTPCache'
 
   # Pods for MelodifAy
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		170258312D08ACAB002D16EB /* MiniMusicPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170258302D08ACAB002D16EB /* MiniMusicPlayerViewController.swift */; };
 		1703E9622CEE1466008E6BEB /* ShareNewPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1703E9612CEE1466008E6BEB /* ShareNewPostViewModel.swift */; };
 		1714CB202D0066B600C4930B /* MusicAudioPlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1714CB1F2D0066B600C4930B /* MusicAudioPlayerService.swift */; };
 		171DF00B2CC1333600523459 /* EditPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171DF00A2CC1333600523459 /* EditPostViewController.swift */; };
@@ -33,6 +34,7 @@
 		179B36ED2CFE000100BA7DE8 /* ServiceSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179B36EC2CFE000100BA7DE8 /* ServiceSearch.swift */; };
 		179B36EF2CFE04D200BA7DE8 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179B36EE2CFE04D200BA7DE8 /* SearchTableViewCell.swift */; };
 		179F94CB2CCA9BBF00D05AF7 /* EditVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179F94CA2CCA9BBF00D05AF7 /* EditVideoViewController.swift */; };
+		17A2FF2C2D09C13400C3EF46 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A2FF2B2D09C13400C3EF46 /* BaseViewController.swift */; };
 		17A32AAC2CAFEF680010A7DC /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A32AAB2CAFEF680010A7DC /* AccountViewController.swift */; };
 		17A32AAE2CAFF0030010A7DC /* BottomBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A32AAD2CAFF0030010A7DC /* BottomBarView.swift */; };
 		17A32AB12CAFF0510010A7DC /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A32AB02CAFF0510010A7DC /* SearchViewController.swift */; };
@@ -60,6 +62,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		170258302D08ACAB002D16EB /* MiniMusicPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniMusicPlayerViewController.swift; sourceTree = "<group>"; };
 		1703E9612CEE1466008E6BEB /* ShareNewPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNewPostViewModel.swift; sourceTree = "<group>"; };
 		1714CB1F2D0066B600C4930B /* MusicAudioPlayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicAudioPlayerService.swift; sourceTree = "<group>"; };
 		171DF00A2CC1333600523459 /* EditPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPostViewController.swift; sourceTree = "<group>"; };
@@ -86,6 +89,7 @@
 		179B36EC2CFE000100BA7DE8 /* ServiceSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceSearch.swift; sourceTree = "<group>"; };
 		179B36EE2CFE04D200BA7DE8 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		179F94CA2CCA9BBF00D05AF7 /* EditVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditVideoViewController.swift; sourceTree = "<group>"; };
+		17A2FF2B2D09C13400C3EF46 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		17A32AAB2CAFEF680010A7DC /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		17A32AAD2CAFF0030010A7DC /* BottomBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBarView.swift; sourceTree = "<group>"; };
 		17A32AB02CAFF0510010A7DC /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -136,6 +140,15 @@
 				9AB614A9D8A409CC29047DA8 /* Pods-MelodifAy.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		1702582F2D08AC7A002D16EB /* MiniMusicPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				170258302D08ACAB002D16EB /* MiniMusicPlayerViewController.swift */,
+				17A2FF2B2D09C13400C3EF46 /* BaseViewController.swift */,
+			);
+			path = MiniMusicPlayer;
 			sourceTree = "<group>";
 		};
 		1746CD462CB0244400B3701A /* NewPost */ = {
@@ -312,6 +325,7 @@
 		17D8E1832CAEC881008F06CD /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				1702582F2D08AC7A002D16EB /* MiniMusicPlayer */,
 				17A66F4B2CF89FC4005898D3 /* MusicDetails */,
 				174D74DD2CF734C900C93DFE /* Cell */,
 				176C55F92CEF59D100585BD4 /* PreviewScreen */,
@@ -485,10 +499,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				170258312D08ACAB002D16EB /* MiniMusicPlayerViewController.swift in Sources */,
 				177EF64C2CAEF1590015F3CB /* SignInService.swift in Sources */,
 				17A66F4D2CF89FDB005898D3 /* MusicDetailsViewController.swift in Sources */,
 				177282D32CB6847600247853 /* NewSongViewController.swift in Sources */,
 				1755CB472D01CE6100A26158 /* MusicVideoPlayerService.swift in Sources */,
+				17A2FF2C2D09C13400C3EF46 /* BaseViewController.swift in Sources */,
 				17D8E18A2CAECBBB008F06CD /* ImageViews.swift in Sources */,
 				17A32AAC2CAFEF680010A7DC /* AccountViewController.swift in Sources */,
 				171E07F92CCE6B0400425271 /* EditVideoViewModel.swift in Sources */,
