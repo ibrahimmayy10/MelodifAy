@@ -17,12 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
-    
-    func saveLastPlayedSong(_ song: MusicModel) {
-        if let data = try? JSONEncoder().encode(song) {
-            UserDefaults.standard.set(data, forKey: "lastPlayedSong")
-        }
-    }
 
     // MARK: UISceneSession Lifecycle
 

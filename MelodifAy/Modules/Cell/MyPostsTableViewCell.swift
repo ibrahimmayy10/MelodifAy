@@ -72,7 +72,7 @@ class MyPostsTableViewCell: UITableViewCell {
         contentView.backgroundColor = .white
         
         cellBarView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, bottom: contentView.bottomAnchor, paddingTop: 10, paddingLeft: 10, paddingRight: 10, paddingBottom: 10)
-        myPostImageView.anchor(top: cellBarView.topAnchor, left: cellBarView.leftAnchor, bottom: cellBarView.bottomAnchor, width: 70)
+        myPostImageView.anchor(top: cellBarView.topAnchor, left: cellBarView.leftAnchor, bottom: cellBarView.bottomAnchor, paddingTop: 5, paddingLeft: 5, paddingBottom: 5, width: 60)
         songNameLabel.anchor(top: cellBarView.topAnchor, left: myPostImageView.rightAnchor, paddingTop: 15, paddingLeft: 10)
         nameLabel.anchor(top: songNameLabel.bottomAnchor, left: myPostImageView.rightAnchor, paddingLeft: 10)
         heartImageView.anchor(right: cellBarView.rightAnchor, centerY: cellBarView.centerYAnchor, paddingRight: 10, width: 20, height: 20)
