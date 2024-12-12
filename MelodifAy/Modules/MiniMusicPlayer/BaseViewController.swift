@@ -16,7 +16,7 @@ class BaseViewController: UIViewController {
         
         setupMiniMusicPlayer()
         
-        MusicAudioPlayerService.shared.musicStatusChangedHandler = { [weak self] music, isPlaying in
+        MusicPlayerService.shared.musicStatusChangedHandler = { [weak self] music, isPlaying in
             guard let music = music else {
                 self?.hideMiniMusicPlayer()
                 return
@@ -42,7 +42,9 @@ class BaseViewController: UIViewController {
         miniPlayerVC.didMove(toParent: self)
         
         miniPlayerVC.view.translatesAutoresizingMaskIntoConstraints = false
-        miniPlayerVC.view.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 60, height: 60)
+        miniPlayerVC.view.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingLeft: 5, paddingRight: 5, paddingBottom: 65, height: 65)
+        miniPlayerVC.view.clipsToBounds = true
+        miniPlayerVC.view.layer.cornerRadius = 10
         
         miniPlayerVC.view.isHidden = true
         self.miniMusicPlayerViewController = miniPlayerVC

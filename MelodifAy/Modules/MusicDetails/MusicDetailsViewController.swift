@@ -92,6 +92,20 @@ class MusicDetailsViewController: UIViewController {
         return button
     }()
     
+    private let watchVideoButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Videoyu izle", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .white
+        button.layer.cornerRadius = 20
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowOpacity = 0.2
+        button.isHidden = true
+        return button
+    }()
+    
     private let coverPhotoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -155,7 +169,7 @@ class MusicDetailsViewController: UIViewController {
             }
         case .ended:
             if translation.y > 100 {
-                delegate?.updateMiniPlayer(with: music, isPlaying: MusicAudioPlayerService.shared.isPlaying)
+                delegate?.updateMiniPlayer(with: music, isPlaying: MusicPlayerService.shared.isPlaying)
                 dismiss(animated: true, completion: nil)
             }
         default:
@@ -166,17 +180,10 @@ class MusicDetailsViewController: UIViewController {
     func playMusic() {
         guard let music = music else { return }
         let musicUrl = music.musicUrl
-        let musicFileType = music.musicFileType
-                
-        if musicFileType == "video" {
-            configureVideoPlayer()
-            coverPhotoImageView.isHidden = true
-            MusicVideoPlayerService.shared.playVideoInView(in: self.musicView, with: musicUrl)
-        } else {
-            configureAudioPlayer()
-            MusicAudioPlayerService.shared.playMusic(from: musicUrl)
-            MusicAudioPlayerService.shared.music = music
-        }
+        
+        configureAudioPlayer()
+        MusicPlayerService.shared.playMusic(from: musicUrl)
+        MusicPlayerService.shared.music = music
     }
     
     func addTargetButtons() {
@@ -216,14 +223,7 @@ class MusicDetailsViewController: UIViewController {
     }
     
     @objc func backwardButton_Clicked() {
-        guard let music = music else { return }
-        let musicFileType = music.musicFileType
-        
-        if musicFileType == "video" {
-            MusicVideoPlayerService.shared.seek(to: 0)
-        } else {
-            MusicAudioPlayerService.shared.seek(to: 0)
-        }
+        MusicPlayerService.shared.seek(to: 0)
         
         if playButton.tag == 1 {
             self.playButton_Clicked()
@@ -231,36 +231,24 @@ class MusicDetailsViewController: UIViewController {
     }
     
     @objc func sliderChanged() {
-        MusicAudioPlayerService.shared.seek(to: Double(audioSlider.value))
-        MusicVideoPlayerService.shared.seek(to: Double(audioSlider.value))
+        MusicPlayerService.shared.seek(to: Double(audioSlider.value))
     }
     
     @objc func playButton_Clicked() {
-        guard let music = music else { return }
-        let musicFileType = music.musicFileType
-        
         if playButton.tag == 0 {
             playButton.tag = 1
             let largeConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .medium, scale: .large)
             let largeImage = UIImage(systemName: "play.circle.fill", withConfiguration: largeConfig)
             playButton.setImage(largeImage, for: .normal)
-            
-            if musicFileType == "video" {
-                MusicVideoPlayerService.shared.pausePlayback()
-            } else {
-                MusicAudioPlayerService.shared.pausePlayback()
-            }
+
+            MusicPlayerService.shared.pausePlayback()
         } else {
             playButton.tag = 0
             let largeConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .medium, scale: .large)
             let largeImage = UIImage(systemName: "pause.circle.fill", withConfiguration: largeConfig)
             playButton.setImage(largeImage, for: .normal)
-            
-            if musicFileType == "video" {
-                MusicVideoPlayerService.shared.startPlayback()
-            } else {
-                MusicAudioPlayerService.shared.startPlayback()
-            }
+
+            MusicPlayerService.shared.startPlayback()
         }
     }
     
@@ -268,6 +256,7 @@ class MusicDetailsViewController: UIViewController {
         loadingIndicator.startAnimating()
         
         dismissButton.alpha = 0.3
+        watchVideoButton.alpha = 0.3
         playLabel.alpha = 0.3
         coverPhotoImageView.alpha = 0.3
         nameLabel.alpha = 0.3
@@ -286,6 +275,7 @@ class MusicDetailsViewController: UIViewController {
         loadingIndicator.stopAnimating()
         
         dismissButton.alpha = 1.0
+        watchVideoButton.alpha = 1.0
         playLabel.alpha = 1.0
         coverPhotoImageView.alpha = 1.0
         nameLabel.alpha = 1.0
@@ -304,54 +294,10 @@ class MusicDetailsViewController: UIViewController {
         return String(format: "%d:%02d", minutes, seconds)
     }
     
-    func configureVideoPlayer() {        
-        MusicVideoPlayerService.shared.progressHandler = { [weak self] currentTime, duration in
-            DispatchQueue.main.async {
-                guard !currentTime.isNaN, !duration.isNaN else { return }
-                
-                self?.audioSlider.maximumValue = Float(duration)
-                self?.audioSlider.value = Float(currentTime)
-                
-                self?.currentTimeLabel.text = self?.formatTime(currentTime)
-                
-                let remainingTime = duration - currentTime
-                self?.remainingTimeLabel.text = self?.formatTime(remainingTime)
-            }
-        }
-        
-        MusicVideoPlayerService.shared.loadingStateHandler = { [weak self] isLoading in
-            DispatchQueue.main.async {
-                if isLoading {
-                    self?.loadingIndicator.startAnimating()
-                } else {
-                    self?.loadingIndicator.stopAnimating()
-                }
-            }
-        }
-        
-        MusicVideoPlayerService.shared.playbackCompletionHandler = { [weak self] in
-            DispatchQueue.main.async {
-                self?.playButton.tag = 1
-                let largeConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .medium, scale: .large)
-                let largeImage = UIImage(systemName: "play.circle.fill", withConfiguration: largeConfig)
-                self?.playButton.setImage(largeImage, for: .normal)
-                
-                if self?.restartButton.tag == 1 {
-                    MusicVideoPlayerService.shared.seek(to: 0)
-                    MusicVideoPlayerService.shared.startPlayback()
-                    self?.playButton.tag = 0
-                    let largeConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .medium, scale: .large)
-                    let largeImage = UIImage(systemName: "pause.circle.fill", withConfiguration: largeConfig)
-                    self?.playButton.setImage(largeImage, for: .normal)
-                }
-            }
-        }
-    }
-    
     func configureAudioPlayer() {
         guard let musicUrl = music?.musicUrl else { return }
         
-        MusicAudioPlayerService.shared.progressHandler = { [weak self] currentTime, duration in
+        MusicPlayerService.shared.progressHandler = { [weak self] currentTime, duration in
             DispatchQueue.main.async {
                 guard !currentTime.isNaN, !duration.isNaN else { return }
                 
@@ -365,7 +311,7 @@ class MusicDetailsViewController: UIViewController {
             }
         }
         
-        MusicAudioPlayerService.shared.loadingStateHandler = { [weak self] isLoading in
+        MusicPlayerService.shared.loadingStateHandler = { [weak self] isLoading in
             DispatchQueue.main.async {
                 if isLoading {
                     self?.isLoadingMusic()
@@ -375,7 +321,7 @@ class MusicDetailsViewController: UIViewController {
             }
         }
         
-        MusicAudioPlayerService.shared.playbackCompletionHandler = { [weak self] in
+        MusicPlayerService.shared.playbackCompletionHandler = { [weak self] in
             DispatchQueue.main.async {
                 self?.playButton.tag = 1
                 let largeConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .medium, scale: .large)
@@ -383,8 +329,8 @@ class MusicDetailsViewController: UIViewController {
                 self?.playButton.setImage(largeImage, for: .normal)
                 
                 if self?.restartButton.tag == 1 {
-                    MusicAudioPlayerService.shared.seek(to: 0)
-                    MusicAudioPlayerService.shared.playMusic(from: musicUrl)
+                    MusicPlayerService.shared.seek(to: 0)
+                    MusicPlayerService.shared.playMusic(from: musicUrl)
                     self?.playButton.tag = 0
                     let largeConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .medium, scale: .large)
                     let largeImage = UIImage(systemName: "pause.circle.fill", withConfiguration: largeConfig)
@@ -397,7 +343,7 @@ class MusicDetailsViewController: UIViewController {
     @objc func dismissButton_Clicked() {
         guard let music = music else { return }
         
-        delegate?.updateMiniPlayer(with: music, isPlaying: MusicAudioPlayerService.shared.isPlaying)
+        delegate?.updateMiniPlayer(with: music, isPlaying: MusicPlayerService.shared.isPlaying)
         dismiss(animated: true, completion: nil)
     }
 
@@ -406,6 +352,8 @@ class MusicDetailsViewController: UIViewController {
 extension MusicDetailsViewController {
     func setup() {
         view.backgroundColor = .white
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 15
         navigationController?.navigationBar.isHidden = true
     }
     
@@ -417,14 +365,23 @@ extension MusicDetailsViewController {
     }
     
     func configureWithExt() {
-        view.addViews(dismissButton, editButton, playLabel, nameLabel, songNameLabel, audioSlider, playButton, backwardButton, forwardButton, loadingIndicator, remainingTimeLabel, currentTimeLabel, musicView, restartButton, mixButton)
+        view.addViews(dismissButton, editButton, playLabel, nameLabel, songNameLabel, audioSlider, playButton, backwardButton, forwardButton, loadingIndicator, remainingTimeLabel, currentTimeLabel, musicView, restartButton, mixButton, watchVideoButton)
         musicView.addViews(coverPhotoImageView)
         
         loadingIndicator.anchor(centerX: view.centerXAnchor, centerY: view.centerYAnchor)
         dismissButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 10, paddingLeft: 10)
         playLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10)
         editButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, right: view.rightAnchor, paddingTop: 10, paddingRight: 10)
-        musicView.anchor(top: playLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 30, paddingLeft: 20, paddingRight: 20, height: 350)
+        watchVideoButton.anchor(top: playLabel.bottomAnchor, centerX: view.centerXAnchor, paddingTop: 10, width: 150, height: 40)
+        
+        if music?.musicFileType == "video" {
+            watchVideoButton.isHidden = false
+            musicView.anchor(top: watchVideoButton.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 15, paddingLeft: 20, paddingRight: 20, height: view.bounds.size.height * 0.5)
+        } else {
+            watchVideoButton.isHidden = true
+            musicView.anchor(top: playLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 30, paddingLeft: 20, paddingRight: 20, height: view.bounds.size.height * 0.5)
+        }
+        
         coverPhotoImageView.anchor(top: musicView.topAnchor, left: musicView.leftAnchor, right: musicView.rightAnchor, bottom: musicView.bottomAnchor)
         songNameLabel.anchor(top: musicView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
         nameLabel.anchor(top: songNameLabel.bottomAnchor, left: view.leftAnchor, paddingLeft: 20)
