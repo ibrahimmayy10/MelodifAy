@@ -143,6 +143,7 @@ class MusicDetailsViewController: UIViewController {
     }()
         
     var music: MusicModel?
+    var musics = [MusicModel]()
     
     weak var delegate: MusicDetailsDelegate?
 
@@ -182,8 +183,14 @@ class MusicDetailsViewController: UIViewController {
         let musicUrl = music.musicUrl
         
         configureAudioPlayer()
-        MusicPlayerService.shared.playMusic(from: musicUrl)
-        MusicPlayerService.shared.music = music
+        
+        if let currentMusic = MusicPlayerService.shared.music, currentMusic.musicUrl == musicUrl {
+            MusicPlayerService.shared.startPlayback()
+            MiniMusicPlayerViewController.shared.miniPlayButton.tag = 0
+        } else {
+            MusicPlayerService.shared.playMusic(from: musicUrl)
+            MusicPlayerService.shared.music = music
+        }
     }
     
     func addTargetButtons() {
@@ -191,6 +198,7 @@ class MusicDetailsViewController: UIViewController {
         playButton.addTarget(self, action: #selector(playButton_Clicked), for: .touchUpInside)
         audioSlider.addTarget(self, action: #selector(sliderChanged), for: .valueChanged)
         backwardButton.addTarget(self, action: #selector(backwardButton_Clicked), for: .touchUpInside)
+        forwardButton.addTarget(self, action: #selector(forwardButton_Clicked), for: .touchUpInside)
         restartButton.addTarget(self, action: #selector(restartButton_Clicked), for: .touchUpInside)
         mixButton.addTarget(self, action: #selector(mixButton_Clicked), for: .touchUpInside)
         
@@ -202,6 +210,9 @@ class MusicDetailsViewController: UIViewController {
         if mixButton.tag == 0 {
             mixButton.tag = 1
             mixButton.tintColor = .systemGreen
+            
+            guard let delegate = delegate as? AccountViewController else { return }
+            delegate.playRandomSong()
         } else {
             mixButton.tag = 0
             mixButton.tintColor = .black
@@ -219,7 +230,8 @@ class MusicDetailsViewController: UIViewController {
     }
     
     @objc func forwardButton_Clicked() {
-        
+        guard let delegate = delegate as? AccountViewController else { return }
+        delegate.playNextSong()
     }
     
     @objc func backwardButton_Clicked() {

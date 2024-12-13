@@ -244,6 +244,7 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
                 let vc = MusicDetailsViewController()
                 self.music = music
                 vc.music = music
+                vc.musics = self.viewModel?.musics ?? []
                 vc.delegate = self
                 vc.modalPresentationStyle = .overFullScreen
                 vc.modalTransitionStyle = .crossDissolve
@@ -272,5 +273,39 @@ extension AccountViewController: MusicDetailsDelegate {
         let largePlayImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
         let buttonImage = MusicPlayerService.shared.isPlaying ? largePauseImage : largePlayImage
         MiniMusicPlayerViewController.shared.miniPlayButton.setImage(buttonImage, for: .normal)
+    }
+}
+
+extension AccountViewController {
+    func playNextSong() {
+        guard let currentMusic = MusicPlayerService.shared.music,
+              let currentIndex = viewModel?.musics.firstIndex(where: { $0.musicID == currentMusic.musicID }),
+              currentIndex + 1 < viewModel?.musics.count ?? 0 else { return }
+        
+        let nextMusic = viewModel?.musics[currentIndex + 1]
+        playMusicAndUpdateUI(music: nextMusic)
+    }
+    
+    func playRandomSong() {
+        guard let randomMusic = viewModel?.musics.randomElement() else { return }
+        playMusicAndUpdateUI(music: randomMusic)
+    }
+    
+    private func playMusicAndUpdateUI(music: MusicModel?) {
+        guard let music = music else { return }
+        
+        let vc = MusicDetailsViewController()
+        vc.music = music
+        vc.delegate = self
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
+        
+        if presentedViewController is MusicDetailsViewController {
+            dismiss(animated: false) {
+                self.present(vc, animated: true)
+            }
+        } else {
+            present(vc, animated: true)
+        }
     }
 }
