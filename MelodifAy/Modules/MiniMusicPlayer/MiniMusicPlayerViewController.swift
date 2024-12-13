@@ -111,6 +111,7 @@ extension MiniMusicPlayerViewController {
         let musicDetailsVC = MusicDetailsViewController()
         musicDetailsVC.modalPresentationStyle = .overFullScreen
         musicDetailsVC.music = MusicPlayerService.shared.music
+        musicDetailsVC.delegate = self
         present(musicDetailsVC, animated: true, completion: nil)
     }
     

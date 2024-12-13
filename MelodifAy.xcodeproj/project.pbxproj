@@ -20,6 +20,7 @@
 		1746CD4E2CB0346E00B3701A /* CreateSongWithAIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */; };
 		1746CD512CB034BC00B3701A /* MusicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD502CB034BC00B3701A /* MusicModel.swift */; };
 		174D74E12CF7393F00C93DFE /* MyPostsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174D74E02CF7393F00C93DFE /* MyPostsTableViewCell.swift */; };
+		174DAC7A2D0C823300AE558D /* UserDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174DAC792D0C823300AE558D /* UserDetailsViewController.swift */; };
 		176499A52CB1654E004D38A9 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 176499A42CB1654E004D38A9 /* GoogleGenerativeAI */; };
 		176C55FB2CEF59EB00585BD4 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176C55FA2CEF59EB00585BD4 /* PreviewViewController.swift */; };
 		177282D32CB6847600247853 /* NewSongViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177282D22CB6847600247853 /* NewSongViewController.swift */; };
@@ -75,6 +76,7 @@
 		1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSongWithAIViewModel.swift; sourceTree = "<group>"; };
 		1746CD502CB034BC00B3701A /* MusicModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicModel.swift; sourceTree = "<group>"; };
 		174D74E02CF7393F00C93DFE /* MyPostsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPostsTableViewCell.swift; sourceTree = "<group>"; };
+		174DAC792D0C823300AE558D /* UserDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailsViewController.swift; sourceTree = "<group>"; };
 		176C55FA2CEF59EB00585BD4 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		177282D22CB6847600247853 /* NewSongViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSongViewController.swift; sourceTree = "<group>"; };
 		177282D42CB6848900247853 /* NewSongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSongViewModel.swift; sourceTree = "<group>"; };
@@ -177,6 +179,14 @@
 				179B36EE2CFE04D200BA7DE8 /* SearchTableViewCell.swift */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		174DAC782D0C822400AE558D /* UserDetails */ = {
+			isa = PBXGroup;
+			children = (
+				174DAC792D0C823300AE558D /* UserDetailsViewController.swift */,
+			);
+			path = UserDetails;
 			sourceTree = "<group>";
 		};
 		176B6A832CB5847C003CAA0F /* Animations */ = {
@@ -322,6 +332,7 @@
 		17D8E1832CAEC881008F06CD /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				174DAC782D0C822400AE558D /* UserDetails */,
 				1702582F2D08AC7A002D16EB /* MiniMusicPlayer */,
 				17A66F4B2CF89FC4005898D3 /* MusicDetails */,
 				174D74DD2CF734C900C93DFE /* Cell */,
@@ -531,6 +542,7 @@
 				177EF64E2CAEF1680015F3CB /* SignInViewModel.swift in Sources */,
 				174155A82CF4C4D9005E70BB /* ServicePreview.swift in Sources */,
 				174D74E12CF7393F00C93DFE /* MyPostsTableViewCell.swift in Sources */,
+				174DAC7A2D0C823300AE558D /* UserDetailsViewController.swift in Sources */,
 				176C55FB2CEF59EB00585BD4 /* PreviewViewController.swift in Sources */,
 				17D8E1862CAEC8C1008F06CD /* SignInViewController.swift in Sources */,
 				17F5F69C2CCFA848000052F4 /* ShareNewPostViewController.swift in Sources */,

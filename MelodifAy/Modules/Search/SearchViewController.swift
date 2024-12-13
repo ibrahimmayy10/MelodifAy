@@ -184,7 +184,9 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             present(navController, animated: true)
             
         case .user(let user):
-            print(user.name)
+            let vc = UserDetailsViewController()
+            vc.user = user
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
     
