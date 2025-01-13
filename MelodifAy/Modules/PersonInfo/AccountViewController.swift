@@ -18,22 +18,20 @@ class AccountViewController: BaseViewController {
     
     private let bottomBar = BottomBarView()
     
-    private let seperatorView = SeperatorView(color: .lightGray)
+    private let nameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .white)
+    private let usernameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 17), textColorLabel: .lightGray)
     
-    private let nameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
-    private let usernameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 17), textColorLabel: .darkGray)
-    
-    private let followingLabel = Labels(textLabel: "Takip", fontLabel: .systemFont(ofSize: 14), textColorLabel: .black)
-    private let followingCountLabel = Labels(textLabel: "200", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .black)
-    private let followerLabel = Labels(textLabel: "Takipçi", fontLabel: .systemFont(ofSize: 14), textColorLabel: .black)
-    private let followerCountLabel = Labels(textLabel: "300", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .black)
+    private let followingLabel = Labels(textLabel: "Takip", fontLabel: .systemFont(ofSize: 14), textColorLabel: .white)
+    private let followingCountLabel = Labels(textLabel: "200", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
+    private let followerLabel = Labels(textLabel: "Takipçi", fontLabel: .systemFont(ofSize: 14), textColorLabel: .white)
+    private let followerCountLabel = Labels(textLabel: "300", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
     
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 35
-        imageView.tintColor = .gray
+        imageView.tintColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         return imageView
     }()
     
@@ -41,8 +39,8 @@ class AccountViewController: BaseViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Düzenle", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = .systemGray5
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         button.layer.cornerRadius = 10
         return button
     }()
@@ -50,6 +48,7 @@ class AccountViewController: BaseViewController {
     let segmentedControl: UISegmentedControl = {
         let items = ["Paylaşımlarım", "Kitaplığım"]
         let segmentedControl = UISegmentedControl(items: items)
+        segmentedControl.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         return segmentedControl
@@ -57,14 +56,14 @@ class AccountViewController: BaseViewController {
     
     let myPostsView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     let myLikesView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -72,7 +71,7 @@ class AccountViewController: BaseViewController {
     private let myPostsTableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         tableView.register(MyPostsTableViewCell.self, forCellReuseIdentifier: MyPostsTableViewCell.cellID)
         return tableView
     }()
@@ -107,8 +106,6 @@ class AccountViewController: BaseViewController {
     func setDelegate() {
         myPostsTableView.delegate = self
         myPostsTableView.dataSource = self
-        
-        myPostsTableView.separatorStyle = .none
     }
     
     func addTargetButtons() {
@@ -139,7 +136,7 @@ class AccountViewController: BaseViewController {
 
 extension AccountViewController {
     func setup() {
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         navigationController?.navigationBar.isHidden = true
         
         viewModel?.getDataUserInfo()
@@ -150,13 +147,12 @@ extension AccountViewController {
         let accountViewModel = BottomBarViewModel(selectedTab: .account(isSelected: true))
         bottomBar.viewModel = accountViewModel
         bottomBar.delegate = self
-        bottomBar.backgroundColor = .white
+        bottomBar.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
-        view.addViews(bottomBar, seperatorView)
+        view.addViews(bottomBar)
         bottomBar.translatesAutoresizingMaskIntoConstraints = false
         
         bottomBar.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, height: 60)
-        seperatorView.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: bottomBar.topAnchor, height: 1)
     }
     
     func configureWithExt() {
@@ -165,24 +161,24 @@ extension AccountViewController {
         profileImageView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20, width: 70, height: 70)
         nameLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: profileImageView.rightAnchor, paddingTop: 30, paddingLeft: 15)
         usernameLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor, paddingTop: 5, paddingLeft: 15)
-        editProfileButton.anchor(top: profileImageView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20, width: 120, height: 30)
-        followerLabel.anchor(top: profileImageView.bottomAnchor, left: editProfileButton.rightAnchor, paddingTop: 15, paddingLeft: 20)
+        editProfileButton.anchor(top: profileImageView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20, width: 160, height: 30)
+        followerLabel.anchor(top: profileImageView.bottomAnchor, left: editProfileButton.rightAnchor, paddingTop: 15, paddingLeft: 30)
         followerCountLabel.anchor(top: followerLabel.bottomAnchor, centerX: followerLabel.centerXAnchor, paddingTop: 5)
-        followingLabel.anchor(top: profileImageView.bottomAnchor, left: followerLabel.rightAnchor, paddingTop: 15, paddingLeft: 25)
+        followingLabel.anchor(top: profileImageView.bottomAnchor, left: followerLabel.rightAnchor, paddingTop: 15, paddingLeft: 30)
         followingCountLabel.anchor(top: followingLabel.bottomAnchor, centerX: followingLabel.centerXAnchor, paddingTop: 5)
     }
     
     private func configureSegmentedControl() {
         view.addSubview(segmentedControl)
         myLikesView.isHidden = true
-        segmentedControl.anchor(top: editProfileButton.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 10, paddingRight: 10)
+        segmentedControl.anchor(top: editProfileButton.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 30, paddingLeft: 10, paddingRight: 10)
     }
     
     private func configureMyPostsView() {
         view.addViews(myPostsView)
         myPostsView.addSubview(myPostsTableView)
         
-        myPostsView.anchor(top: segmentedControl.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: seperatorView.topAnchor)
+        myPostsView.anchor(top: segmentedControl.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: bottomBar.topAnchor)
         myPostsTableView.anchor(top: myPostsView.topAnchor, left: myPostsView.leftAnchor, right: myPostsView.rightAnchor, bottom: myPostsView.bottomAnchor)
     }
 }
@@ -254,7 +250,7 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 90
+        return 75
     }
 }
 

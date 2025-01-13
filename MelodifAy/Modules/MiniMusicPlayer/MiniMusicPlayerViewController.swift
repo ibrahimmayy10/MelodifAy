@@ -14,7 +14,7 @@ class MiniMusicPlayerViewController: UIViewController {
     let miniPlayerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .systemGray5
+        view.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         return view
     }()
     
@@ -24,12 +24,12 @@ class MiniMusicPlayerViewController: UIViewController {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium, scale: .large)
         let largeImage = UIImage(systemName: "pause.fill", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         return button
     }()
 
-    let miniMusicNameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 16), textColorLabel: .black)
-    let miniNameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 14), textColorLabel: .darkGray)
+    let miniMusicNameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 16), textColorLabel: .white)
+    let miniNameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 14), textColorLabel: .lightGray)
     
     let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -43,7 +43,7 @@ class MiniMusicPlayerViewController: UIViewController {
         let slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.minimumValue = 0
-        slider.tintColor = .black
+        slider.tintColor = .white
         slider.thumbTintColor = .clear
         slider.isUserInteractionEnabled = false
         return slider

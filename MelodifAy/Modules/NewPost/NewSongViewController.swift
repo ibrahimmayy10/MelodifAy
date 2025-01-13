@@ -16,17 +16,18 @@ class NewSongViewController: UIViewController {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium, scale: .large)
         let largeImage = UIImage(systemName: "chevron.backward", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         return button
     }()
     
-    private let newPostLabel = Labels(textLabel: "Yeni Gönderi", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
-    private let timerLabel = Labels(textLabel: "00.00", fontLabel: .boldSystemFont(ofSize: 32), textColorLabel: .black)
-    private let videoLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 30), textColorLabel: .black)
+    private let newPostLabel = Labels(textLabel: "Yeni Gönderi", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .white)
+    private let timerLabel = Labels(textLabel: "00.00", fontLabel: .boldSystemFont(ofSize: 32), textColorLabel: .white)
+    private let videoLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 30), textColorLabel: .white)
     
     let segmentedControl: UISegmentedControl = {
         let items = ["Video", "Ses"]
         let segmentedControl = UISegmentedControl(items: items)
+        segmentedControl.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         return segmentedControl
@@ -34,21 +35,21 @@ class NewSongViewController: UIViewController {
     
     let soundView: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemGray5
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     let videoView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     let timerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         view.layer.cornerRadius = 80
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -56,7 +57,7 @@ class NewSongViewController: UIViewController {
     
     let playView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         view.isHidden = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -64,29 +65,19 @@ class NewSongViewController: UIViewController {
     
     let buttonsView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         view.layer.cornerRadius = 30
         view.isHidden = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.4
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowRadius = 4
         
         return view
     }()
     
     let audioRecordingStartButtonView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         view.layer.cornerRadius = 60
         view.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.4
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowRadius = 4
         
         return view
     }()
@@ -98,7 +89,7 @@ class NewSongViewController: UIViewController {
         let largeImage = UIImage(systemName: "mic.circle.fill", withConfiguration: largeConfig)
         
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .systemOrange
+        button.tintColor = .white
         button.layer.cornerRadius = 10
         button.translatesAutoresizingMaskIntoConstraints = false
         
@@ -139,7 +130,7 @@ class NewSongViewController: UIViewController {
     private let optionsButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isHidden = true
         return button
@@ -148,7 +139,7 @@ class NewSongViewController: UIViewController {
     private let uploadRecordedButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "link"), for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -156,7 +147,7 @@ class NewSongViewController: UIViewController {
     private let nextButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "arrow.forward"), for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -167,7 +158,7 @@ class NewSongViewController: UIViewController {
         let largeImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
         button.isHidden = true
-        button.tintColor = .black
+        button.tintColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -178,7 +169,7 @@ class NewSongViewController: UIViewController {
         let largeImage = UIImage(systemName: "goforward.15", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
         button.isHidden = true
-        button.tintColor = .black
+        button.tintColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -189,7 +180,7 @@ class NewSongViewController: UIViewController {
         let largeImage = UIImage(systemName: "gobackward.15", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
         button.isHidden = true
-        button.tintColor = .black
+        button.tintColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -201,18 +192,9 @@ class NewSongViewController: UIViewController {
         slider.minimumValue = 0
         slider.tintColor = .gray
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 14, weight: .bold)
-        let largeCircleImage = UIImage(systemName: "circle.fill", withConfiguration: largeConfig)?.withTintColor(.black, renderingMode: .alwaysOriginal)
+        let largeCircleImage = UIImage(systemName: "circle.fill", withConfiguration: largeConfig)?.withTintColor(.white, renderingMode: .alwaysOriginal)
         slider.setThumbImage(largeCircleImage, for: .normal)
         return slider
-    }()
-    
-    private let waveformView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 5
-        view.isHidden = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
     }()
     
     private let cameraButton: UIButton = {
@@ -221,7 +203,7 @@ class NewSongViewController: UIViewController {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 40, weight: .bold, scale: .large)
         let largeImage = UIImage(systemName: "camera.circle.fill", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .systemOrange
+        button.tintColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         return button
     }()
     
@@ -229,6 +211,15 @@ class NewSongViewController: UIViewController {
     
     let scrollView = UIScrollView()
     let waveformContentView = UIView()
+    
+    private let centerLine: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .gray
+        view.isUserInteractionEnabled = false
+        return view
+    }()
+    
     var waveformBars = [UIView]()
     var waveformXOffset: CGFloat = 0.0
     
@@ -262,7 +253,6 @@ class NewSongViewController: UIViewController {
         configureSegmentedControl()
         configureWithExt()
         configureTimerLabel()
-        configureWaveformView()
         configureAudioPlayerView()
         configureVideoView()
         addTargetButtons()
@@ -278,7 +268,7 @@ class NewSongViewController: UIViewController {
     
     func setupCircularProgress() {
         progressLayer.fillColor = UIColor.clear.cgColor
-        progressLayer.strokeColor = UIColor.systemOrange.cgColor
+        progressLayer.strokeColor = UIColor.white.cgColor
         progressLayer.lineWidth = 5
         progressLayer.strokeEnd = 0
         progressLayer.lineCap = .round
@@ -376,7 +366,7 @@ class NewSongViewController: UIViewController {
             self.viewModel.saveDraft(url: recordedAudioURL) { success in
                 if success {
                     let successImageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
-                    successImageView.tintColor = .systemOrange
+                    successImageView.tintColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
                     successImageView.alpha = 0.0
                     successImageView.translatesAutoresizingMaskIntoConstraints = false
                     self.soundView.addSubview(successImageView)
@@ -572,13 +562,13 @@ class NewSongViewController: UIViewController {
     
     func startRecording() {
         resetWaveform()
-        waveformView.isHidden = false
         waveformContentView.isHidden = false
+        centerLine.isHidden = false
         audioRecordingPlayButton.isHidden = false
         buttonsView.isHidden = false
         audioRecordingPauseButton.isHidden = false
         optionsButton.isHidden = true
-        playView.isHidden = true
+        playView.isHidden = false
         audioSlider.isHidden = true
         playButton.isHidden = true
         forwardButton.isHidden = true
@@ -679,7 +669,7 @@ class NewSongViewController: UIViewController {
     }
     
     func updateWaveform(_ level: CGFloat) {
-        let maxBarHeight: CGFloat = 50
+        let maxBarHeight: CGFloat = 100
         let minBarHeight: CGFloat = 5
         let centerY: CGFloat = maxBarHeight / 2
         
@@ -727,8 +717,8 @@ class NewSongViewController: UIViewController {
         forwardButton.isHidden = false
         backwardButton.isHidden = false
         optionsButton.isHidden = false
-        waveformView.isHidden = true
         waveformContentView.isHidden = true
+        centerLine.isHidden = true
         audioRecordingPlayButton.isHidden = true
         buttonsView.isHidden = true
         audioRecordingPauseButton.isHidden = true
@@ -796,7 +786,7 @@ class NewSongViewController: UIViewController {
 
 extension NewSongViewController {
     func configureTopBar() {
-        view.backgroundColor = .systemGray5
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         view.addViews(backButton, newPostLabel, seperatorView, uploadRecordedButton, nextButton)
         
         backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 10, paddingLeft: 10)
@@ -843,37 +833,16 @@ extension NewSongViewController {
         timerLabel.anchor(centerX: timerView.centerXAnchor, centerY: timerView.centerYAnchor)
     }
     
-    func configureWaveformView() {
+    func configureAudioPlayerView() {
+        soundView.addViews(playView)
+        playView.addViews(playButton, scrollView, centerLine, forwardButton, backwardButton, audioSlider, optionsButton)
+        
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.isScrollEnabled = false
-        soundView.addSubview(waveformView)
-        waveformView.addSubview(scrollView)
-        
-        waveformContentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.isUserInteractionEnabled = false
+        waveformContentView.isUserInteractionEnabled = false
         scrollView.addSubview(waveformContentView)
-        
-        waveformView.layer.cornerRadius = 10
-        waveformView.layer.shadowColor = UIColor.black.cgColor
-        waveformView.layer.shadowOpacity = 0.4
-        waveformView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        waveformView.layer.shadowRadius = 4
-        
-        waveformView.anchor(top: timerView.bottomAnchor, left: soundView.leftAnchor, right: soundView.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, height: 75)
-        scrollView.anchor(left: waveformView.leftAnchor, right: waveformView.rightAnchor, centerY: waveformView.centerYAnchor, height: 50)
-        waveformContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, height: 50)
-        
-        waveformContentView.widthAnchor.constraint(equalToConstant: waveformView.frame.width).isActive = true
-        
-        let centerLine = UIView()
-        centerLine.backgroundColor = .lightGray
-        waveformView.addSubview(centerLine)
-        centerLine.anchor(left: waveformView.leftAnchor, right: waveformView.rightAnchor, centerY: waveformView.centerYAnchor, height: 1)
-    }
-    
-    func configureAudioPlayerView() {
-        soundView.addViews(playView)
-        playView.addViews(playButton, forwardButton, backwardButton, audioSlider, optionsButton)
         
         playView.layer.cornerRadius = 10
         playView.layer.shadowColor = UIColor.black.cgColor
@@ -881,12 +850,17 @@ extension NewSongViewController {
         playView.layer.shadowOffset = CGSize(width: 0, height: 2)
         playView.layer.shadowRadius = 4
         
+        playView.anchor(top: timerView.bottomAnchor, left: soundView.leftAnchor, right: soundView.rightAnchor, paddingTop: 60, paddingLeft: 20, paddingRight: 20, height: 150)
         optionsButton.anchor(top: playView.topAnchor, right: playView.rightAnchor, paddingTop: 10, paddingRight: 10)
-        playView.anchor(top: timerView.bottomAnchor, left: soundView.leftAnchor, right: soundView.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, height: 150)
         playButton.anchor(centerX: playView.centerXAnchor, centerY: playView.centerYAnchor)
         forwardButton.anchor(left: playButton.rightAnchor, centerY: playView.centerYAnchor, paddingLeft: 30)
         backwardButton.anchor(right: playButton.leftAnchor, centerY: playView.centerYAnchor, paddingRight: 30)
         audioSlider.anchor(top: playButton.bottomAnchor, left: playView.leftAnchor, right: playView.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingRight: 20)
+        
+        scrollView.anchor(left: playView.leftAnchor, right: playView.rightAnchor, centerY: playView.centerYAnchor, height: 100)
+        waveformContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, height: 100)
+        waveformContentView.widthAnchor.constraint(equalToConstant: playView.frame.width).isActive = true
+        centerLine.anchor(left: playView.leftAnchor, right: playView.rightAnchor, centerY: playView.centerYAnchor, height: 1)
     }
     
     func configureVideoView() {

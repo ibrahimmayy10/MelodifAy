@@ -15,7 +15,7 @@ protocol SignInViewControllerProtocol: AnyObject {
 
 class SignInViewController: UIViewController {
     
-    private let imageView = ImageViews(imageName: "logo")
+    private let imageView = ImageViews(imageName: "melodi")
     
     private let emailTextField = TextFields(placeHolder: "Email", secureText: false, textType: .emailAddress, maxLength: 1000)
     private let passwordTextField = TextFields(placeHolder: "Şifre", secureText: true, textType: .password, maxLength: 8)
@@ -23,13 +23,13 @@ class SignInViewController: UIViewController {
     private let registerButton: UIButton =  {
         let button = UIButton(type: .system)
         button.setTitle("Hesabın yok mu?", for: .normal)
-        button.setTitleColor(.systemGreen, for: .normal)
+        button.setTitleColor(UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255), for: .normal)
         return button
     }()
     
     lazy var signInButton : UIButton =  {
         let button = UIButton(type: .system)
-        button.backgroundColor = .systemGreen
+        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         button.layer.cornerRadius = 10
         button.setTitle("Giriş Yap", for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -108,7 +108,7 @@ class SignInViewController: UIViewController {
 
 extension SignInViewController {
     func configureWithExt() {
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
         emailTextField.autocorrectionType = .no
         emailTextField.autocapitalizationType = .none

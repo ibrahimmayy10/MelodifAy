@@ -7,16 +7,12 @@
 
 import UIKit
 
-//protocol PreviewViewControllerProtocol: AnyObject {
-//    func setUsername(name: String)
-//}
-
 class PreviewViewController: UIViewController {
     
-    private let previewLabel = Labels(textLabel: "Önizleme", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
-    private let nameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 16), textColorLabel: .darkGray)
-    private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
-    private let explanationLabel = Labels(textLabel: "Şarkı kartınız bu şekilde görünecek", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
+    private let previewLabel = Labels(textLabel: "Önizleme", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .white)
+    private let nameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 16), textColorLabel: .lightGray)
+    private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .white)
+    private let explanationLabel = Labels(textLabel: "Şarkı kartınız bu şekilde görünecek", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .white)
     
     private let imageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "logo"))
@@ -30,12 +26,8 @@ class PreviewViewController: UIViewController {
     private let songView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         view.layer.cornerRadius = 15
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.4
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowRadius = 4
         return view
     }()
     
@@ -44,7 +36,7 @@ class PreviewViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Tamam", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemOrange
+        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         button.layer.cornerRadius = 20
         return button
     }()
@@ -53,13 +45,9 @@ class PreviewViewController: UIViewController {
     var songName = String()
     var name = String()
     
-//    private var viewModel: PreviewViewModel?
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        viewModel = PreviewViewModel(view: self)
-        
+                
         setup()
         configureWithExt()
         addTargetButtons()
@@ -78,13 +66,11 @@ class PreviewViewController: UIViewController {
 
 extension PreviewViewController {
     func setup() {
-//        viewModel?.getUserName()
-        
         nameLabel.text = name
         songNameLabel.text = songName
         imageView.image = coverImage
         
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         navigationController?.navigationBar.isHidden = true
     }
     
@@ -94,7 +80,7 @@ extension PreviewViewController {
         
         previewLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10)
         songView.anchor(top: previewLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 40, paddingRight: 40, height: 400)
-        imageView.anchor(top: songView.topAnchor, left: songView.leftAnchor, right: songView.rightAnchor, height: 300)
+        imageView.anchor(top: songView.topAnchor, left: songView.leftAnchor, right: songView.rightAnchor, paddingTop: 5, paddingLeft: 5, paddingRight: 5, height: 300)
         songNameLabel.anchor(top: imageView.bottomAnchor, left: songView.leftAnchor, paddingTop: 20, paddingLeft: 20)
         nameLabel.anchor(top: songNameLabel.bottomAnchor, left: songView.leftAnchor, paddingTop: 20, paddingLeft: 20)
         
@@ -102,9 +88,3 @@ extension PreviewViewController {
         okButton.anchor(top: explanationLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 30, paddingRight: 30, height: 40)
     }
 }
-
-//extension PreviewViewController: PreviewViewControllerProtocol {
-//    func setUsername(name: String) {
-//        nameLabel.text = name
-//    }
-//}

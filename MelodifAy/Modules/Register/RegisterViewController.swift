@@ -21,7 +21,7 @@ class RegisterViewController: UIViewController {
         imageView.image = UIImage(systemName: "person.crop.circle.fill.badge.plus")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .gray
+        imageView.tintColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 50
         return imageView
@@ -37,14 +37,14 @@ class RegisterViewController: UIViewController {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Zaten hesabın var mı?", for: .normal)
-        button.setTitleColor(.systemGreen, for: .normal)
+        button.setTitleColor(UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255), for: .normal)
         return button
     }()
     
     private let registerButton : UIButton =  {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .systemGreen
+        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         button.layer.cornerRadius = 10
         button.setTitle("Kayıt Ol", for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -139,7 +139,7 @@ class RegisterViewController: UIViewController {
 extension RegisterViewController {
     func configureWithExt() {
         navigationController?.navigationBar.isHidden = true
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
         emailTextField.autocapitalizationType = .none
         emailTextField.autocorrectionType = .no
@@ -157,12 +157,12 @@ extension RegisterViewController {
         contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor).isActive = true
         
         imageView.anchor(top: contentView.topAnchor, centerX: contentView.centerXAnchor, paddingTop: 20, width: 100, height: 100)
-        nameTextField.anchor(top: imageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15, height: 40)
-        surnameTextField.anchor(top: nameTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15, height: 40)
-        usernameTextField.anchor(top: surnameTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15, height: 40)
-        emailTextField.anchor(top: usernameTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15, height: 40)
-        passwordTextField.anchor(top: emailTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15, height: 40)
-        registerButton.anchor(top: passwordTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, height: 40)
+        nameTextField.anchor(top: imageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 15, paddingRight: 15, height: 40)
+        surnameTextField.anchor(top: nameTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 15, paddingRight: 15, height: 40)
+        usernameTextField.anchor(top: surnameTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 15, paddingRight: 15, height: 40)
+        emailTextField.anchor(top: usernameTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 15, paddingRight: 15, height: 40)
+        passwordTextField.anchor(top: emailTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 15, paddingRight: 15, height: 40)
+        registerButton.anchor(top: passwordTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 30, paddingLeft: 20, paddingRight: 20, height: 40)
         activityIndicator.anchor(centerX: registerButton.centerXAnchor, centerY: registerButton.centerYAnchor)
         signInButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, centerX: view.centerXAnchor)
     }
@@ -247,19 +247,6 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
             self.selectedImage = selectedImage
             imageView.contentMode = .scaleAspectFill
             self.imageView.image = selectedImage
-            
-//            if let imageData = selectedImage.jpegData(compressionQuality: 0.5) {
-//                let tempDirectory = FileManager.default.temporaryDirectory
-//                let fileName = UUID().uuidString + ".jpg"
-//                let fileURL = tempDirectory.appendingPathComponent(fileName)
-//                
-//                do {
-//                    try imageData.write(to: fileURL)
-//                    self.selectedImageURL = fileURL
-//                } catch {
-//                    print("resim url e dönüştürülürken hata oluştu")
-//                }
-//            }
         }
         picker.dismiss(animated: true)
     }

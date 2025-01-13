@@ -16,11 +16,11 @@ protocol MusicDetailsDelegate: AnyObject {
 
 class MusicDetailsViewController: UIViewController {
     
-    private let playLabel = Labels(textLabel: "Şarkı oynatılıyor", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
-    private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 16), textColorLabel: .darkGray)
-    private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
-    private let currentTimeLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 12), textColorLabel: .black)
-    private let remainingTimeLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 12), textColorLabel: .black)
+    private let playLabel = Labels(textLabel: "Şarkı oynatılıyor", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .white)
+    private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 16), textColorLabel: .lightGray)
+    private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .white)
+    private let currentTimeLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 12), textColorLabel: .white)
+    private let remainingTimeLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 12), textColorLabel: .white)
     
     private let dismissButton: UIButton = {
         let button = UIButton()
@@ -28,7 +28,7 @@ class MusicDetailsViewController: UIViewController {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium, scale: .large)
         let largeImage = UIImage(systemName: "chevron.down", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         return button
     }()
     
@@ -38,7 +38,7 @@ class MusicDetailsViewController: UIViewController {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium, scale: .large)
         let largeImage = UIImage(systemName: "ellipsis", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         return button
     }()
     
@@ -48,7 +48,7 @@ class MusicDetailsViewController: UIViewController {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .medium, scale: .large)
         let largeImage = UIImage(systemName: "pause.circle.fill", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         return button
     }()
     
@@ -58,7 +58,7 @@ class MusicDetailsViewController: UIViewController {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium, scale: .large)
         let largeImage = UIImage(systemName: "forward.end.fill", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         return button
     }()
     
@@ -68,7 +68,7 @@ class MusicDetailsViewController: UIViewController {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium, scale: .large)
         let largeImage = UIImage(systemName: "backward.end.fill", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         return button
     }()
     
@@ -78,7 +78,7 @@ class MusicDetailsViewController: UIViewController {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium, scale: .large)
         let largeImage = UIImage(systemName: "arrow.rectanglepath", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         return button
     }()
     
@@ -88,7 +88,7 @@ class MusicDetailsViewController: UIViewController {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium, scale: .large)
         let largeImage = UIImage(systemName: "shuffle", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         return button
     }()
     
@@ -97,7 +97,7 @@ class MusicDetailsViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Videoyu izle", for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = .white
+        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         button.layer.cornerRadius = 20
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowOffset = CGSize(width: 0, height: 2)
@@ -129,7 +129,7 @@ class MusicDetailsViewController: UIViewController {
     private let loadingIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.translatesAutoresizingMaskIntoConstraints = false
-        indicator.color = .black
+        indicator.color = .white
         indicator.hidesWhenStopped = true
         return indicator
     }()
@@ -209,23 +209,23 @@ class MusicDetailsViewController: UIViewController {
     @objc func mixButton_Clicked() {
         if mixButton.tag == 0 {
             mixButton.tag = 1
-            mixButton.tintColor = .systemGreen
+            mixButton.tintColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
             
             guard let delegate = delegate as? AccountViewController else { return }
             delegate.playRandomSong()
         } else {
             mixButton.tag = 0
-            mixButton.tintColor = .black
+            mixButton.tintColor = .white
         }
     }
     
     @objc func restartButton_Clicked() {
         if restartButton.tag == 0 {
             restartButton.tag = 1
-            restartButton.tintColor = .systemGreen
+            restartButton.tintColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         } else {
             restartButton.tag = 0
-            restartButton.tintColor = .black
+            restartButton.tintColor = .white
         }
     }
     
@@ -268,6 +268,7 @@ class MusicDetailsViewController: UIViewController {
         loadingIndicator.startAnimating()
         
         dismissButton.alpha = 0.3
+        editButton.alpha = 0.3
         watchVideoButton.alpha = 0.3
         playLabel.alpha = 0.3
         coverPhotoImageView.alpha = 0.3
@@ -287,6 +288,7 @@ class MusicDetailsViewController: UIViewController {
         loadingIndicator.stopAnimating()
         
         dismissButton.alpha = 1.0
+        editButton.alpha = 1.0
         watchVideoButton.alpha = 1.0
         playLabel.alpha = 1.0
         coverPhotoImageView.alpha = 1.0
@@ -363,7 +365,7 @@ class MusicDetailsViewController: UIViewController {
 
 extension MusicDetailsViewController {
     func setup() {
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         view.clipsToBounds = true
         view.layer.cornerRadius = 15
         navigationController?.navigationBar.isHidden = true

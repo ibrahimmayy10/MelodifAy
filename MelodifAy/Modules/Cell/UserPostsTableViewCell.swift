@@ -1,17 +1,17 @@
 //
-//  MyPostsTableViewCell.swift
+//  UserPostsTableViewCell.swift
 //  MelodifAy
 //
-//  Created by İbrahim Ay on 27.11.2024.
+//  Created by İbrahim Ay on 13.01.2025.
 //
 
 import UIKit
 
-class MyPostsTableViewCell: UITableViewCell {
+class UserPostsTableViewCell: UITableViewCell {
     
     static let cellID = "postCell"
     
-    private let myPostImageView: UIImageView = {
+    private let postImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
@@ -54,20 +54,20 @@ class MyPostsTableViewCell: UITableViewCell {
     }
     
     func configureWithExt() {
-        contentView.addViews(myPostImageView, heartImageView, songNameLabel, nameLabel, likeCountLabel)
+        contentView.addViews(postImageView, heartImageView, songNameLabel, nameLabel, likeCountLabel)
         
         contentView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
-        myPostImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor, paddingTop: 5, paddingLeft: 5, paddingBottom: 5, width: 65)
-        songNameLabel.anchor(top: contentView.topAnchor, left: myPostImageView.rightAnchor, paddingTop: 15, paddingLeft: 10)
-        nameLabel.anchor(top: songNameLabel.bottomAnchor, left: myPostImageView.rightAnchor, paddingLeft: 10)
+        postImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor, paddingTop: 5, paddingLeft: 5, paddingBottom: 5, width: 60)
+        songNameLabel.anchor(top: contentView.topAnchor, left: postImageView.rightAnchor, paddingTop: 15, paddingLeft: 10)
+        nameLabel.anchor(top: songNameLabel.bottomAnchor, left: postImageView.rightAnchor, paddingLeft: 10)
         heartImageView.anchor(right: contentView.rightAnchor, centerY: contentView.centerYAnchor, paddingRight: 10, width: 20, height: 20)
         likeCountLabel.anchor(right: heartImageView.leftAnchor, centerY: contentView.centerYAnchor)
     }
     
     func configure(music: MusicModel) {
         nameLabel.text = music.name
-        myPostImageView.sd_setImage(with: URL(string: music.coverPhotoURL))
+        postImageView.sd_setImage(with: URL(string: music.coverPhotoURL))
         songNameLabel.text = music.songName
     }
 

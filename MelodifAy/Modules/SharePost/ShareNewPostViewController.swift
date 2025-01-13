@@ -11,9 +11,9 @@ import Lottie
 
 class ShareNewPostViewController: UIViewController {
     
-    private let shareLabel = Labels(textLabel: "Şarkını paylaş", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
+    private let shareLabel = Labels(textLabel: "Şarkını paylaş", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .white)
     private let explanationLabel = Labels(textLabel: "Şarkı sözlerini ekleyebilirsiniz...", fontLabel: .systemFont(ofSize: 17), textColorLabel: .systemGray4)
-    private let selectionImageLabel = Labels(textLabel: "Şarkınıza bir kapak fotoğrafı ekleyin", fontLabel: .systemFont(ofSize: 17), textColorLabel: .black)
+    private let selectionImageLabel = Labels(textLabel: "Şarkınıza bir kapak fotoğrafı ekleyin", fontLabel: .systemFont(ofSize: 17), textColorLabel: .white)
     
     private let backButton: UIButton = {
         let button = UIButton()
@@ -21,7 +21,7 @@ class ShareNewPostViewController: UIViewController {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium, scale: .large)
         let largeImage = UIImage(systemName: "chevron.backward", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         return button
     }()
     
@@ -30,7 +30,7 @@ class ShareNewPostViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Paylaş", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemOrange
+        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         button.layer.cornerRadius = 20
         return button
     }()
@@ -52,8 +52,9 @@ class ShareNewPostViewController: UIViewController {
     private let lyricsTextView: UITextView = {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.textColor = .black
+        textView.textColor = .white
         textView.font = .systemFont(ofSize: 17)
+        textView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
         return textView
     }()
@@ -67,7 +68,7 @@ class ShareNewPostViewController: UIViewController {
     
     private let seperatorView = SeperatorView(color: .systemGray4)
     
-    private let imageView = ImageViews(imageName: "logo")
+    private let imageView = ImageViews(imageName: "melodi")
     
     private let selectionImageViewContainer: UIView = {
         let container = UIView()
@@ -84,7 +85,7 @@ class ShareNewPostViewController: UIViewController {
     private let selectionImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "photo"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.tintColor = .darkGray
+        imageView.tintColor = .lightGray
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -215,7 +216,7 @@ class ShareNewPostViewController: UIViewController {
 
 extension ShareNewPostViewController {
     func configureWithExt() {
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
         lyricsTextView.delegate = self
         imageView.contentMode = .scaleToFill
@@ -236,10 +237,10 @@ extension ShareNewPostViewController {
         lyricsTextView.anchor(top: songNameTextField.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20, paddingLeft: 16, paddingRight: 20, height: 60)
         explanationLabel.anchor(top: lyricsTextView.topAnchor, left: lyricsTextView.leftAnchor, paddingTop: 8, paddingLeft: 4)
         seperatorView.anchor(top: lyricsTextView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 5, paddingLeft: 20, paddingRight: 20, height: 1)
-        selectionImageLabel.anchor(top: seperatorView.bottomAnchor, left: contentView.leftAnchor, paddingTop: 20, paddingLeft: 20)
+        selectionImageLabel.anchor(top: seperatorView.bottomAnchor, left: contentView.leftAnchor, paddingTop: 30, paddingLeft: 20)
         selectionImageViewContainer.anchor(top: selectionImageLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 20, paddingLeft: 20, width: 150, height: 150)
         selectionImageView.anchor(centerX: selectionImageViewContainer.centerXAnchor, centerY: selectionImageViewContainer.centerYAnchor, width: 100, height: 100)
-        shareButton.anchor(top: selectionImageViewContainer.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, height: 40)
+        shareButton.anchor(top: selectionImageViewContainer.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 40, paddingLeft: 20, paddingRight: 20, height: 40)
         activityIndicator.anchor(top: shareButton.topAnchor, left: shareButton.leftAnchor, right: shareButton.rightAnchor, bottom: shareButton.bottomAnchor)
         imageView.anchor(bottom: view.bottomAnchor, centerX: view.centerXAnchor, width: 120, height: 120)
     }
