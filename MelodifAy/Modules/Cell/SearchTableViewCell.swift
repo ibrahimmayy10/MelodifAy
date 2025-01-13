@@ -19,8 +19,8 @@ class SearchTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 17), textColorLabel: .black)
-    private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 16), textColorLabel: .darkGray)
+    private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 17), textColorLabel: .white)
+    private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 16), textColorLabel: .lightGray)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -46,7 +46,7 @@ class SearchTableViewCell: UITableViewCell {
     func configureWithExt() {
         contentView.addViews(photoImageView, songNameLabel, nameLabel)
         
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
         photoImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor, paddingTop: 5, paddingLeft: 10, paddingBottom: 5, width: 60)
         songNameLabel.anchor(top: contentView.topAnchor, left: photoImageView.rightAnchor, paddingTop: 15, paddingLeft: 10)

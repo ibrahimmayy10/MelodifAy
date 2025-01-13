@@ -13,8 +13,7 @@
 		171DF00B2CC1333600523459 /* EditPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171DF00A2CC1333600523459 /* EditPostViewController.swift */; };
 		171E07F92CCE6B0400425271 /* EditVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171E07F82CCE6B0400425271 /* EditVideoViewModel.swift */; };
 		17379D302CCBDF5000D4A1CD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17379D2F2CCBDF5000D4A1CD /* CameraViewController.swift */; };
-		174155A62CF4C48F005E70BB /* PreviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174155A52CF4C48F005E70BB /* PreviewViewModel.swift */; };
-		174155A82CF4C4D9005E70BB /* ServicePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174155A72CF4C4D8005E70BB /* ServicePreview.swift */; };
+		173C497D2D35627E00214082 /* UserPostsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173C497C2D35627E00214082 /* UserPostsTableViewCell.swift */; };
 		1746CD482CB0245A00B3701A /* CreateSongWithAIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD472CB0245A00B3701A /* CreateSongWithAIViewController.swift */; };
 		1746CD4A2CB029A700B3701A /* SeperatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD492CB029A700B3701A /* SeperatorView.swift */; };
 		1746CD4E2CB0346E00B3701A /* CreateSongWithAIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */; };
@@ -69,8 +68,7 @@
 		171E07F82CCE6B0400425271 /* EditVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditVideoViewModel.swift; sourceTree = "<group>"; };
 		1723CE752CFC98E40020E398 /* MelodifAy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MelodifAy.entitlements; sourceTree = "<group>"; };
 		17379D2F2CCBDF5000D4A1CD /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
-		174155A52CF4C48F005E70BB /* PreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewModel.swift; sourceTree = "<group>"; };
-		174155A72CF4C4D8005E70BB /* ServicePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePreview.swift; sourceTree = "<group>"; };
+		173C497C2D35627E00214082 /* UserPostsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPostsTableViewCell.swift; sourceTree = "<group>"; };
 		1746CD472CB0245A00B3701A /* CreateSongWithAIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSongWithAIViewController.swift; sourceTree = "<group>"; };
 		1746CD492CB029A700B3701A /* SeperatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeperatorView.swift; sourceTree = "<group>"; };
 		1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSongWithAIViewModel.swift; sourceTree = "<group>"; };
@@ -177,6 +175,7 @@
 			children = (
 				174D74E02CF7393F00C93DFE /* MyPostsTableViewCell.swift */,
 				179B36EE2CFE04D200BA7DE8 /* SearchTableViewCell.swift */,
+				173C497C2D35627E00214082 /* UserPostsTableViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -203,8 +202,6 @@
 			isa = PBXGroup;
 			children = (
 				176C55FA2CEF59EB00585BD4 /* PreviewViewController.swift */,
-				174155A52CF4C48F005E70BB /* PreviewViewModel.swift */,
-				174155A72CF4C4D8005E70BB /* ServicePreview.swift */,
 			);
 			path = PreviewScreen;
 			sourceTree = "<group>";
@@ -537,10 +534,10 @@
 				17379D302CCBDF5000D4A1CD /* CameraViewController.swift in Sources */,
 				1746CD4E2CB0346E00B3701A /* CreateSongWithAIViewModel.swift in Sources */,
 				17EB246F2CF5E3FE0048D58B /* ServiceAccount.swift in Sources */,
+				173C497D2D35627E00214082 /* UserPostsTableViewCell.swift in Sources */,
 				17B1B03C2CC6B403004488BF /* AudioProcessor.swift in Sources */,
 				17D8E1882CAEC950008F06CD /* ViewExtensions.swift in Sources */,
 				177EF64E2CAEF1680015F3CB /* SignInViewModel.swift in Sources */,
-				174155A82CF4C4D9005E70BB /* ServicePreview.swift in Sources */,
 				174D74E12CF7393F00C93DFE /* MyPostsTableViewCell.swift in Sources */,
 				174DAC7A2D0C823300AE558D /* UserDetailsViewController.swift in Sources */,
 				176C55FB2CEF59EB00585BD4 /* PreviewViewController.swift in Sources */,
@@ -551,7 +548,6 @@
 				1746CD482CB0245A00B3701A /* CreateSongWithAIViewController.swift in Sources */,
 				17EB246D2CF5E3F30048D58B /* AccountViewModel.swift in Sources */,
 				17EB24712CF5E4B50048D58B /* UserModel.swift in Sources */,
-				174155A62CF4C48F005E70BB /* PreviewViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

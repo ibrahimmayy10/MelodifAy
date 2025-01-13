@@ -20,14 +20,12 @@ class SearchViewController: BaseViewController {
     
     private let bottomBar = BottomBarView()
     
-    private let seperatorView = SeperatorView(color: .lightGray)
-    
-    private let searchLabel = Labels(textLabel: "Şarkı veya Sanatçı Ara", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
+    private let searchLabel = Labels(textLabel: "Şarkı veya Sanatçı Ara", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .white)
     
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         tableView.register(SearchTableViewCell.self, forCellReuseIdentifier: SearchTableViewCell.cellID)
         return tableView
     }()
@@ -37,6 +35,7 @@ class SearchViewController: BaseViewController {
         searchBar.delegate = self
         searchBar.placeholder = "Şarkı veya sanatçı ara"
         searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.barTintColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         return searchBar
     }()
     
@@ -49,8 +48,8 @@ class SearchViewController: BaseViewController {
         viewModel = SearchViewModel(view: self)
         
         setup()
-        configureWithExt()
         configureBottomBar()
+        configureWithExt()
         setDelegate()
         addTargetButtons()
         
@@ -79,7 +78,7 @@ class SearchViewController: BaseViewController {
 
 extension SearchViewController {
     func setup() {
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         navigationController?.navigationBar.isHidden = true
         
         viewModel?.getDataUsers()
@@ -90,13 +89,12 @@ extension SearchViewController {
         let searchViewModel = BottomBarViewModel(selectedTab: .search(isSelected: true))
         bottomBar.viewModel = searchViewModel
         bottomBar.delegate = self
-        bottomBar.backgroundColor = .white
+        bottomBar.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
-        view.addViews(bottomBar, seperatorView)
+        view.addViews(bottomBar)
         bottomBar.translatesAutoresizingMaskIntoConstraints = false
         
         bottomBar.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, height: 60)
-        seperatorView.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: bottomBar.topAnchor, height: 1)
     }
     
     func configureWithExt() {
@@ -104,7 +102,7 @@ extension SearchViewController {
         
         searchLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10)
         searchBar.anchor(top: searchLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 10, paddingRight: 10, height: 50)
-        tableView.anchor(top: searchBar.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
+        tableView.anchor(top: searchBar.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: bottomBar.topAnchor)
     }
 }
 
@@ -145,7 +143,8 @@ extension SearchViewController: UISearchBarDelegate {
         
         let filteredUsers = viewModel?.users.filter {
             $0.name.lowercased().contains(searchText.lowercased()) ||
-            $0.surname.lowercased().contains(searchText.lowercased())
+            $0.surname.lowercased().contains(searchText.lowercased()) ||
+            $0.username.lowercased().contains(searchText.lowercased())
         } ?? []
         
         searchResults = filteredMusics.map { .music($0) } + filteredUsers.map { .user($0) }

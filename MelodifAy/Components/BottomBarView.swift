@@ -100,17 +100,22 @@ class BottomBarView: UIView {
     }
     
     private func setupView() {
+        let seperatorView = SeperatorView(color: .lightGray)
+        
         let stackView = UIStackView(arrangedSubviews: [homeButton, searchButton, accountButton])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
-        addSubview(stackView)
+        addViews(stackView, seperatorView)
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        seperatorView.translatesAutoresizingMaskIntoConstraints = false
+        
+        seperatorView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, height: 1)
         stackView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor)
         
-        homeButton.tintColor = .black
-        searchButton.tintColor = .black
-        accountButton.tintColor = .black
+        homeButton.tintColor = .white
+        searchButton.tintColor = .white
+        accountButton.tintColor = .white
         
         homeButton.addTarget(self, action: #selector(didTapHomeButton), for: .touchUpInside)
         searchButton.addTarget(self, action: #selector(didTapSearchButton), for: .touchUpInside)

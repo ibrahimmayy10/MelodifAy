@@ -16,10 +16,10 @@ protocol EditPostViewControllerDelegate: AnyObject {
 
 class EditPostViewController: UIViewController {
     
-    private let optionsLabel = Labels(textLabel: "Seçenekler", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
-    private let skipSilenceLabel = Labels(textLabel: "Sessiz Anları Atla", fontLabel: .systemFont(ofSize: 17), textColorLabel: .black)
-    private let enhanceRecordingLabel = Labels(textLabel: "Kayıt İyileştirme", fontLabel: .systemFont(ofSize: 17), textColorLabel: .black)
-    private let speedLabel = Labels(textLabel: "OYNATMA HIZI", fontLabel: .systemFont(ofSize: 14), textColorLabel: .darkGray)
+    private let optionsLabel = Labels(textLabel: "Seçenekler", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .white)
+    private let skipSilenceLabel = Labels(textLabel: "Sessiz Anları Atla", fontLabel: .systemFont(ofSize: 17), textColorLabel: .white)
+    private let enhanceRecordingLabel = Labels(textLabel: "Kayıt İyileştirme", fontLabel: .systemFont(ofSize: 17), textColorLabel: .white)
+    private let speedLabel = Labels(textLabel: "OYNATMA HIZI", fontLabel: .systemFont(ofSize: 14), textColorLabel: .lightGray)
     
     private let speedSlider: UISlider = {
         let slider = UISlider()
@@ -47,7 +47,7 @@ class EditPostViewController: UIViewController {
     private let dismissButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
-        button.tintColor = .darkGray
+        button.tintColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -55,7 +55,7 @@ class EditPostViewController: UIViewController {
     private let speedView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .systemGray5
+        view.backgroundColor = .darkGray
         view.layer.cornerRadius = 10
         return view
     }()
@@ -63,7 +63,7 @@ class EditPostViewController: UIViewController {
     private let enhanceRecordingView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .systemGray5
+        view.backgroundColor = .darkGray
         view.layer.cornerRadius = 10
         return view
     }()
@@ -244,7 +244,7 @@ class EditPostViewController: UIViewController {
 
 extension EditPostViewController {
     func configureWithExt() {
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         view.layer.cornerRadius = 16
         view.clipsToBounds = true
         

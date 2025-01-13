@@ -9,19 +9,22 @@ import UIKit
 
 class UserDetailsViewController: UIViewController {
     
-    private let nameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .black)
+    private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 18), textColorLabel: .white)
+    private let usernameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 20), textColorLabel: .white)
     
-    private let followingLabel = Labels(textLabel: "Takip", fontLabel: .systemFont(ofSize: 14), textColorLabel: .black)
-    private let followingCountLabel = Labels(textLabel: "200", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .black)
-    private let followerLabel = Labels(textLabel: "Takipçi", fontLabel: .systemFont(ofSize: 14), textColorLabel: .black)
-    private let followerCountLabel = Labels(textLabel: "300", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .black)
+    private let followingLabel = Labels(textLabel: "Takip", fontLabel: .systemFont(ofSize: 14), textColorLabel: .white)
+    private let followingCountLabel = Labels(textLabel: "200", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
+    private let followerLabel = Labels(textLabel: "Takipçi", fontLabel: .systemFont(ofSize: 14), textColorLabel: .white)
+    private let followerCountLabel = Labels(textLabel: "300", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
+    private let musicLabel = Labels(textLabel: "Şarkı", fontLabel: .systemFont(ofSize: 14), textColorLabel: .white)
+    private let musicCountLabel = Labels(textLabel: "10", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
     
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 35
-        imageView.tintColor = .gray
+        imageView.layer.cornerRadius = 45
+        imageView.tintColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         return imageView
     }()
     
@@ -31,7 +34,7 @@ class UserDetailsViewController: UIViewController {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium, scale: .large)
         let largeImage = UIImage(systemName: "chevron.backward", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         return button
     }()
     
@@ -40,17 +43,16 @@ class UserDetailsViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Takip Et", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemGray3
+        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         button.layer.cornerRadius = 10
-        button.tintColor = .black
         return button
     }()
     
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = .white
-        tableView.register(MyPostsTableViewCell.self, forCellReuseIdentifier: MyPostsTableViewCell.cellID)
+        tableView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
+        tableView.register(UserPostsTableViewCell.self, forCellReuseIdentifier: UserPostsTableViewCell.cellID)
         return tableView
     }()
     
@@ -77,7 +79,7 @@ class UserDetailsViewController: UIViewController {
 
 extension UserDetailsViewController {
     func setup() {
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         navigationController?.navigationBar.isHidden = true
         
         setUserInfo()
@@ -94,19 +96,23 @@ extension UserDetailsViewController {
             profileImageView.contentMode = .scaleAspectFit
         }
         
+        usernameLabel.text = user.username
         nameLabel.text = user.name + " " + user.surname
     }
     
     func configureWithExt() {
-        view.addViews(backButton, profileImageView, nameLabel, followButton, followerLabel, followerCountLabel, followingLabel, followingCountLabel)
+        view.addViews(backButton, profileImageView, musicLabel, musicCountLabel, usernameLabel, followButton, followerLabel, followerCountLabel, followingLabel, followingCountLabel, nameLabel)
         
         backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 10, paddingLeft: 10)
-        profileImageView.anchor(top: backButton.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20, width: 70, height: 70)
-        nameLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10)
-        followerLabel.anchor(top: nameLabel.bottomAnchor, left: nameLabel.leftAnchor, paddingTop: 15, paddingLeft: -10)
+        usernameLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10)
+        profileImageView.anchor(top: usernameLabel.bottomAnchor, left: view.leftAnchor, paddingTop: 30, paddingLeft: 20, width: 90, height: 90)
+        nameLabel.anchor(top: profileImageView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
+        musicLabel.anchor(top: usernameLabel.bottomAnchor, left: profileImageView.rightAnchor, paddingTop: 20, paddingLeft: 20)
+        musicCountLabel.anchor(top: musicLabel.bottomAnchor, centerX: musicLabel.centerXAnchor, paddingTop: 5)
+        followerLabel.anchor(top: usernameLabel.bottomAnchor, left: musicLabel.rightAnchor, paddingTop: 20, paddingLeft: 50)
         followerCountLabel.anchor(top: followerLabel.bottomAnchor, centerX: followerLabel.centerXAnchor, paddingTop: 5)
-        followingLabel.anchor(top: nameLabel.bottomAnchor, left: followerLabel.rightAnchor, paddingTop: 15, paddingLeft: 25)
+        followingLabel.anchor(top: usernameLabel.bottomAnchor, left: followerLabel.rightAnchor, paddingTop: 20, paddingLeft: 50)
         followingCountLabel.anchor(top: followingLabel.bottomAnchor, centerX: followingLabel.centerXAnchor, paddingTop: 5)
-        followButton.anchor(top: followerCountLabel.bottomAnchor, left: nameLabel.leftAnchor, paddingTop: 20, width: 120, height: 30)
+        followButton.anchor(top: nameLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, height: 40)
     }
 }

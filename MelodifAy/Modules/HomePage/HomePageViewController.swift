@@ -17,13 +17,11 @@ class HomePageViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.tintColor = .white
-        button.backgroundColor = .systemGreen
+        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         button.layer.cornerRadius = 25
         return button
     }()
     
-    private let seperatorView = SeperatorView(color: .lightGray)
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,25 +45,24 @@ extension HomePageViewController {
     func configureWithExt() {
         view.addViews(newPostButton)
         
-        newPostButton.anchor(right: view.rightAnchor, bottom: seperatorView.topAnchor, paddingRight: 10, paddingBottom: 10, width: 50, height: 50)
+        newPostButton.anchor(right: view.rightAnchor, bottom: bottomBar.topAnchor, paddingRight: 10, paddingBottom: 10, width: 50, height: 50)
     }
 }
 
 extension HomePageViewController {
     func configureBottomBar() {
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         navigationController?.navigationBar.isHidden = true
         
         let homeViewModel = BottomBarViewModel(selectedTab: .home(isSelected: true))
         bottomBar.viewModel = homeViewModel
         bottomBar.delegate = self
-        bottomBar.backgroundColor = .white
+        bottomBar.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
-        view.addViews(bottomBar, seperatorView)
+        view.addViews(bottomBar)
         bottomBar.translatesAutoresizingMaskIntoConstraints = false
         
         bottomBar.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, height: 60)
-        seperatorView.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: bottomBar.topAnchor, height: 1)
     }
 }
 

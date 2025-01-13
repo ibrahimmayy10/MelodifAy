@@ -35,7 +35,7 @@ class TextFields: UITextField, UITextFieldDelegate {
     
     func setTextField(textPlaceHolder: String, secureText: Bool, textType: UITextContentType,maxLength : Int){
         attributedPlaceholder = NSAttributedString(string: textPlaceHolder, attributes: [.foregroundColor: UIColor.systemGray4])
-        textColor = .black
+        textColor = .white
         borderStyle = .none
         isSecureTextEntry = secureText
         textContentType = textType
