@@ -14,7 +14,7 @@ class BottomSheetPresentationController: UIPresentationController {
     
     override var frameOfPresentedViewInContainerView: CGRect {
         guard let containerView = containerView else { return .zero }
-        return CGRect(x: 0, y: containerView.bounds.height * 0.6, width: containerView.bounds.width, height: containerView.bounds.height * 0.4)
+        return CGRect(x: 0, y: containerView.bounds.height * 0.4, width: containerView.bounds.width, height: containerView.bounds.height * 0.6)
     }
     
     override func presentationTransitionWillBegin() {

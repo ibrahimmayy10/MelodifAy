@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol UserDetailsViewControllerProtocol: AnyObject {
+    func reloadDataTableView()
+}
+
 class UserDetailsViewController: UIViewController {
     
     private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 18), textColorLabel: .white)
@@ -57,14 +61,23 @@ class UserDetailsViewController: UIViewController {
     }()
     
     var user: UserModel?
+    private var viewModel: UserDetailsViewModel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        viewModel = UserDetailsViewModel(view: self)
+        
+        setDelegate()
         configureWithExt()
         setup()
         addTargetButtons()
         
+    }
+    
+    func setDelegate() {
+        tableView.dataSource = self
+        tableView.delegate = self
     }
     
     func addTargetButtons() {
@@ -83,6 +96,7 @@ extension UserDetailsViewController {
         navigationController?.navigationBar.isHidden = true
         
         setUserInfo()
+        viewModel?.getDataMusic(userID: user?.userID ?? "")
     }
     
     func setUserInfo() {
@@ -101,7 +115,7 @@ extension UserDetailsViewController {
     }
     
     func configureWithExt() {
-        view.addViews(backButton, profileImageView, musicLabel, musicCountLabel, usernameLabel, followButton, followerLabel, followerCountLabel, followingLabel, followingCountLabel, nameLabel)
+        view.addViews(backButton, profileImageView, musicLabel, musicCountLabel, usernameLabel, followButton, followerLabel, followerCountLabel, followingLabel, followingCountLabel, nameLabel, tableView)
         
         backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 10, paddingLeft: 10)
         usernameLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10)
@@ -114,5 +128,31 @@ extension UserDetailsViewController {
         followingLabel.anchor(top: usernameLabel.bottomAnchor, left: followerLabel.rightAnchor, paddingTop: 20, paddingLeft: 50)
         followingCountLabel.anchor(top: followingLabel.bottomAnchor, centerX: followingLabel.centerXAnchor, paddingTop: 5)
         followButton.anchor(top: nameLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, height: 40)
+        tableView.anchor(top: followButton.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, paddingTop: 10)
+    }
+}
+
+extension UserDetailsViewController: UserDetailsViewControllerProtocol {
+    func reloadDataTableView() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+}
+
+extension UserDetailsViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel?.musics.count ?? 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: UserPostsTableViewCell.cellID, for: indexPath) as! UserPostsTableViewCell
+        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+        cell.configure(music: music)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 75
     }
 }

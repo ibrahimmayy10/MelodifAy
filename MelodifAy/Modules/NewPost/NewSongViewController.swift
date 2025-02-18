@@ -21,7 +21,7 @@ class NewSongViewController: UIViewController {
     }()
     
     private let newPostLabel = Labels(textLabel: "Yeni Gönderi", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .white)
-    private let timerLabel = Labels(textLabel: "00.00", fontLabel: .boldSystemFont(ofSize: 32), textColorLabel: .white)
+    private let timerLabel = Labels(textLabel: "00.00", fontLabel: .boldSystemFont(ofSize: 26), textColorLabel: .white)
     private let videoLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 30), textColorLabel: .white)
     
     let segmentedControl: UISegmentedControl = {
@@ -50,89 +50,26 @@ class NewSongViewController: UIViewController {
     let timerView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
-        view.layer.cornerRadius = 80
+        view.layer.cornerRadius = 70
         view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    let playView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
-        view.isHidden = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    let buttonsView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
-        view.layer.cornerRadius = 30
-        view.isHidden = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        return view
-    }()
-    
-    let audioRecordingStartButtonView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
-        view.layer.cornerRadius = 60
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
     
     private let audioRecordingStartButton: UIButton = {
         let button = UIButton()
         
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 80, weight: .bold, scale: .large)
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 70, weight: .bold, scale: .large)
         let largeImage = UIImage(systemName: "mic.circle.fill", withConfiguration: largeConfig)
         
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .white
+        button.tintColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         button.layer.cornerRadius = 10
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowRadius = 4
+        button.layer.shadowOpacity = 0.3
         
-        return button
-    }()
-    
-    private let audioRecordingPlayButton: UIButton = {
-        let button = UIButton()
-        
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 35, weight: .bold, scale: .large)
-        let largeImage = UIImage(systemName: "play.circle.fill", withConfiguration: largeConfig)
-        
-        button.setImage(largeImage, for: .normal)
-        button.tintColor = .lightGray
-        button.layer.cornerRadius = 10
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.isHidden = true
-        
-        return button
-    }()
-    
-    private let audioRecordingPauseButton: UIButton = {
-        let button = UIButton()
-        
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 35, weight: .bold, scale: .large)
-        let largeImage = UIImage(systemName: "stop.circle.fill", withConfiguration: largeConfig)
-        
-        button.setImage(largeImage, for: .normal)
-        button.tintColor = .lightGray
-        button.layer.cornerRadius = 10
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        button.isHidden = true
-        
-        return button
-    }()
-    
-    private let optionsButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
-        button.tintColor = .white
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.isHidden = true
         return button
     }()
         
@@ -142,59 +79,6 @@ class NewSongViewController: UIViewController {
         button.tintColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
-    }()
-    
-    private let nextButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "arrow.forward"), for: .normal)
-        button.tintColor = .white
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    private let playButton: UIButton = {
-        let button = UIButton()
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .bold, scale: .large)
-        let largeImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
-        button.setImage(largeImage, for: .normal)
-        button.isHidden = true
-        button.tintColor = .white
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    private let forwardButton: UIButton = {
-        let button = UIButton()
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)
-        let largeImage = UIImage(systemName: "goforward.15", withConfiguration: largeConfig)
-        button.setImage(largeImage, for: .normal)
-        button.isHidden = true
-        button.tintColor = .white
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    private let backwardButton: UIButton = {
-        let button = UIButton()
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)
-        let largeImage = UIImage(systemName: "gobackward.15", withConfiguration: largeConfig)
-        button.setImage(largeImage, for: .normal)
-        button.isHidden = true
-        button.tintColor = .white
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    private let audioSlider: UISlider = {
-        let slider = UISlider()
-        slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.isHidden = true
-        slider.minimumValue = 0
-        slider.tintColor = .gray
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 14, weight: .bold)
-        let largeCircleImage = UIImage(systemName: "circle.fill", withConfiguration: largeConfig)?.withTintColor(.white, renderingMode: .alwaysOriginal)
-        slider.setThumbImage(largeCircleImage, for: .normal)
-        return slider
     }()
     
     private let cameraButton: UIButton = {
@@ -207,6 +91,21 @@ class NewSongViewController: UIViewController {
         return button
     }()
     
+    private let existingRecordButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = UIColor(red: 17/255, green: 57/255, blue: 113/255, alpha: 1.0)
+        button.setTitle("Mevcut Ses Kaydı", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        button.layer.cornerRadius = 25
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowRadius = 4
+        button.layer.shadowOpacity = 0.3
+        return button
+    }()
+    
     private let seperatorView = SeperatorView(color: .lightGray)
     
     let scrollView = UIScrollView()
@@ -215,8 +114,9 @@ class NewSongViewController: UIViewController {
     private let centerLine: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .gray
+        view.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         view.isUserInteractionEnabled = false
+        view.isHidden = true
         return view
     }()
     
@@ -224,16 +124,16 @@ class NewSongViewController: UIViewController {
     var waveformXOffset: CGFloat = 0.0
     
     private var audioRecorder: AVAudioRecorder?
-    private var audioPlayer: AVAudioPlayer?
     var recordedAudioURL: URL?
     var selectedAudioURL: URL?
     
     private var timer: Timer?
     private var elapsedTime: Int = 0
+    private var totalTime: String = ""
     private var progressUpdateTimer: Timer?
     
     private let progressLayer = CAShapeLayer()
-    private let maxRecordingTime: Int = 180
+    private let maxRecordingTime: Int = 300
     
     private var isAnimating = false
     private var isSeeking: Bool = false
@@ -243,12 +143,10 @@ class NewSongViewController: UIViewController {
     var selectedVideoURL: URL?
     
     var playbackSpeed: Float = 1.0
-    
-    let viewModel = NewSongViewModel()
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         configureTopBar()
         configureSegmentedControl()
         configureWithExt()
@@ -257,6 +155,8 @@ class NewSongViewController: UIViewController {
         configureVideoView()
         addTargetButtons()
         setupCircularProgress()
+        
+        existingRecordButton.isHidden = recordedAudioURL == nil
         
     }
     
@@ -290,54 +190,21 @@ class NewSongViewController: UIViewController {
         progressLayer.path = circularPath.cgPath
     }
     
-    @objc func audioSliderValueChanged(_ slider: UISlider) {
-        guard let player = audioPlayer else { return }
-        player.currentTime = TimeInterval(slider.value)
-        updateProgress()
-    }
-    
-    func startUpdatingProgress() {
-        progressUpdateTimer?.invalidate()
-
-        progressUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 60.0, repeats: true) { [weak self] _ in
-            self?.updateProgress()
-        }
-    }
-
-    func updateProgress() {
-        guard let player = audioPlayer else { return }
-        
-        audioSlider.value = Float(player.currentTime)
-        
-        let minutes = Int(player.currentTime) / 60
-        let seconds = Int(player.currentTime) % 60
-        timerLabel.text = String(format: "%02d:%02d", minutes, seconds)
-    }
-    
     func addTargetButtons() {
         backButton.addTarget(self, action: #selector(backButton_Clicked), for: .touchUpInside)
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         uploadRecordedButton.addTarget(self, action: #selector(uploadRecordedButton_Clicked), for: .touchUpInside)
         audioRecordingStartButton.addTarget(self, action: #selector(audioRecordingButton_Clicked), for: .touchUpInside)
-        playButton.addTarget(self, action: #selector(playButton_Clicked), for: .touchUpInside)
-        forwardButton.addTarget(self, action: #selector(forwardButton_Clicked), for: .touchUpInside)
-        backwardButton.addTarget(self, action: #selector(backwardButton_Clicked), for: .touchUpInside)
-        audioRecordingPlayButton.addTarget(self, action: #selector(audioRecordingPlayButton_Clicked), for: .touchUpInside)
-        audioRecordingPauseButton.addTarget(self, action: #selector(audioRecordingPauseButton_Clicked), for: .touchUpInside)
-        optionsButton.addTarget(self, action: #selector(optionsButton_Clicked), for: .touchUpInside)
-        audioSlider.addTarget(self, action: #selector(audioSliderValueChanged(_:)), for: .valueChanged)
         cameraButton.addTarget(self, action: #selector(cameraButton_Clicked), for: .touchUpInside)
-        nextButton.addTarget(self, action: #selector(nextButton_Clicked), for: .touchUpInside)
+        existingRecordButton.addTarget(self, action: #selector(existingRecordButton_Clicked), for: .touchUpInside)
     }
     
-    @objc func nextButton_Clicked() {
-        guard ((recordedAudioURL?.absoluteString.isEmpty) != nil) else {
-            self.showAlert(message: "Herhangi bir kayıt bulunamadı")
-            return
-        }
-        let vc = ShareNewPostViewController()
-        vc.newPostURL = recordedAudioURL
-        navigationController?.pushViewController(vc, animated: true)
+    @objc func existingRecordButton_Clicked() {
+        let vc = AudioRecordingPreviewViewController()
+        vc.modalPresentationStyle = .custom
+        vc.transitioningDelegate = self
+        vc.audioURL = self.recordedAudioURL
+        self.present(vc, animated: true)
     }
 
     func showAlert(message: String) {
@@ -353,86 +220,8 @@ class NewSongViewController: UIViewController {
         present(navController, animated: true)
     }
     
-    @objc func optionsButton_Clicked() {
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        alert.addAction(UIAlertAction(title: "Paylaş", style: .default, handler: { action in
-            self.shareAudio()
-        }))
-        
-        alert.addAction(UIAlertAction(title: "Taslağı Kaydet", style: .default, handler: { action in
-            guard let recordedAudioURL = self.recordedAudioURL else { return }
-                        
-            self.viewModel.saveDraft(url: recordedAudioURL) { success in
-                if success {
-                    let successImageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
-                    successImageView.tintColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
-                    successImageView.alpha = 0.0
-                    successImageView.translatesAutoresizingMaskIntoConstraints = false
-                    self.soundView.addSubview(successImageView)
-                    
-                    successImageView.anchor(centerX: self.soundView.centerXAnchor, centerY: self.soundView.centerYAnchor, width: 100, height: 100)
-                    
-                    UIView.animate(withDuration: 0.5, animations: {
-                        successImageView.alpha = 1.0
-                    }) { _ in
-                        UIView.animate(withDuration: 0.5, delay: 1.0, options: [], animations: {
-                            successImageView.alpha = 0.0
-                        }, completion: { _ in
-                            successImageView.removeFromSuperview()
-                        })
-                    }
-                } else {
-                    self.makeAlert(message: "Ses taslağı kaydedilirken bir hata oluştu.")
-                }
-            }
-        }))
-        
-        alert.addAction(UIAlertAction(title: "Seçenekler", style: .default, handler: { action in
-            let optionsVC = EditPostViewController()
-            optionsVC.modalPresentationStyle = .custom
-            optionsVC.transitioningDelegate = self
-            optionsVC.playbackSpeed = self.playbackSpeed
-            optionsVC.audioURL = self.recordedAudioURL
-            optionsVC.delegate = self
-            self.present(optionsVC, animated: true, completion: nil)
-        }))
-        
-        alert.addAction(UIAlertAction(title: "İptal", style: .cancel, handler: nil))
-        
-        if let popoverController = alert.popoverPresentationController {
-            popoverController.sourceView = self.view
-            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            popoverController.permittedArrowDirections = []
-        }
-        
-        present(alert, animated: true, completion: nil)
-    }
-    
     func convertUrlToString(url: URL) -> String {
         return url.absoluteString
-    }
-    
-    func shareAudio() {
-        let activityViewController = UIActivityViewController(activityItems: [recordedAudioURL], applicationActivities: nil)
-        
-        if let popoverController = activityViewController.popoverPresentationController {
-            popoverController.sourceView = self.view
-            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            popoverController.permittedArrowDirections = []
-        }
-        
-        present(activityViewController, animated: true, completion: nil)
-    }
-    
-    @objc func forwardButton_Clicked() {
-        guard let player = audioPlayer else { return }
-        player.currentTime += 15
-    }
-    
-    @objc func backwardButton_Clicked() {
-        guard let player = audioPlayer else { return }
-        player.currentTime -= 15
     }
     
     @objc func backButton_Clicked() {
@@ -476,73 +265,11 @@ class NewSongViewController: UIViewController {
     }
     
     @objc func audioRecordingButton_Clicked() {
-        if audioPlayer != nil {
-            stopAndResetPlayback()
-        }
-        
         if audioRecorder?.isRecording == true {
             stopRecording()
         } else {
             startRecording()
         }
-    }
-    
-    func stopAndResetPlayback() {
-        audioPlayer?.stop()
-        audioPlayer = nil
-        progressUpdateTimer?.invalidate()
-        progressUpdateTimer = nil
-        audioSlider.value = 0
-        
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
-        let largeImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
-        playButton.setImage(largeImage, for: .normal)
-        playButton.tag = 0
-    }
-    
-    @objc func playButton_Clicked() {
-        if playButton.tag == 0 {
-            let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .bold, scale: .large)
-            let largeImage = UIImage(systemName: "pause.fill", withConfiguration: largeConfig)
-            playButton.setImage(largeImage, for: .normal)
-            playButton.tag = 1
-            
-            guard let url = recordedAudioURL else { return }
-            
-            do {
-                if audioPlayer == nil {
-                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-                    try AVAudioSession.sharedInstance().setActive(true)
-                    
-                    audioPlayer = try AVAudioPlayer(contentsOf: url)
-                    audioPlayer?.delegate = self
-                    audioPlayer?.enableRate = true
-                    audioPlayer?.rate = playbackSpeed
-                    audioPlayer?.prepareToPlay()
-                    audioSlider.maximumValue = Float(audioPlayer?.duration ?? 0)
-                }
-                
-                audioPlayer?.play()
-                
-                startUpdatingProgress()
-                print("Ses çalınıyor.")
-            } catch {
-                print("DEBUG: Ses çalma hatası: \(error)")
-            }
-        } else {
-            let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .bold, scale: .large)
-            let largeImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
-            playButton.setImage(largeImage, for: .normal)
-            playButton.tag = 0
-            
-            pausePlayback()
-        }
-    }
-    
-    func pausePlayback() {
-        audioPlayer?.pause()
-        progressUpdateTimer?.invalidate()
-        progressUpdateTimer = nil
     }
     
     @objc func uploadRecordedButton_Clicked() {
@@ -564,16 +291,8 @@ class NewSongViewController: UIViewController {
         resetWaveform()
         waveformContentView.isHidden = false
         centerLine.isHidden = false
-        audioRecordingPlayButton.isHidden = false
-        buttonsView.isHidden = false
-        audioRecordingPauseButton.isHidden = false
-        optionsButton.isHidden = true
-        playView.isHidden = false
-        audioSlider.isHidden = true
-        playButton.isHidden = true
-        forwardButton.isHidden = true
-        backwardButton.isHidden = true
         isRecordingPaused = false
+        existingRecordButton.isHidden = true
         
         UIView.animate(withDuration: 0.5, animations: {
             self.audioRecordingStartButton.transform = self.audioRecordingStartButton.transform.scaledBy(x: 1.2, y: 1.2)
@@ -587,7 +306,14 @@ class NewSongViewController: UIViewController {
             return
         }
         
-        let audioFilename = getDocumentsDirectory().appendingPathComponent("recording.m4a")
+        let recordingPath = "\(UUID().uuidString)/\(Date().timeIntervalSince1970)/recording.m4a"
+        let audioFilename = getDocumentsDirectory().appendingPathComponent(recordingPath)
+        
+        try? FileManager.default.createDirectory(at: audioFilename.deletingLastPathComponent(),
+                                                   withIntermediateDirectories: true)
+            
+        recordedAudioURL = audioFilename
+        
         let settings = [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
             AVSampleRateKey: 12000,
@@ -615,15 +341,14 @@ class NewSongViewController: UIViewController {
     
     @objc func updateTimer() {
         elapsedTime += 1
-        let remainingTime = maxRecordingTime - elapsedTime
         
-        if remainingTime <= 0 {
+        if elapsedTime == maxRecordingTime {
             stopRecording()
             return
         }
         
-        let minutes = remainingTime / 60
-        let seconds = remainingTime % 60
+        let minutes = elapsedTime / 60
+        let seconds = elapsedTime % 60
         timerLabel.text = String(format: "%02d:%02d", minutes, seconds)
         
         let progress = CGFloat(elapsedTime) / CGFloat(maxRecordingTime)
@@ -669,7 +394,7 @@ class NewSongViewController: UIViewController {
     }
     
     func updateWaveform(_ level: CGFloat) {
-        let maxBarHeight: CGFloat = 100
+        let maxBarHeight: CGFloat = 150
         let minBarHeight: CGFloat = 5
         let centerY: CGFloat = maxBarHeight / 2
         
@@ -677,10 +402,10 @@ class NewSongViewController: UIViewController {
         let topOffset = centerY - barHeight / 2
         
         let newBar = UIView()
-        newBar.backgroundColor = .gray
+        newBar.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
         newBar.translatesAutoresizingMaskIntoConstraints = false
         
-        newBar.frame = CGRect(x: waveformXOffset, y: topOffset, width: 2, height: barHeight)
+        newBar.frame = CGRect(x: waveformXOffset, y: topOffset, width: 3, height: barHeight)
         waveformContentView.addSubview(newBar)
         waveformBars.append(newBar)
         
@@ -710,27 +435,24 @@ class NewSongViewController: UIViewController {
         
         timer?.invalidate()
         timer = nil
-                
-        playView.isHidden = false
-        audioSlider.isHidden = false
-        playButton.isHidden = false
-        forwardButton.isHidden = false
-        backwardButton.isHidden = false
-        optionsButton.isHidden = false
+        
         waveformContentView.isHidden = true
         centerLine.isHidden = true
-        audioRecordingPlayButton.isHidden = true
-        buttonsView.isHidden = true
-        audioRecordingPauseButton.isHidden = true
+        existingRecordButton.isHidden = false
         isRecordingPaused = false
         
         elapsedTime += 1
+        totalTime = timerLabel.text ?? ""
         
         progressLayer.strokeEnd = 0
-
-        print("Kayıt durduruldu")
         
-        recordedAudioURL = getDocumentsDirectory().appendingPathComponent("recording.m4a")
+        print("Kayıt durduruldu")
+        let vc = AudioRecordingPreviewViewController()
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = self
+        vc.audioURL = self.recordedAudioURL
+        self.present(navController, animated: true)
     }
     
     func resetWaveform() {
@@ -787,12 +509,11 @@ class NewSongViewController: UIViewController {
 extension NewSongViewController {
     func configureTopBar() {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
-        view.addViews(backButton, newPostLabel, seperatorView, uploadRecordedButton, nextButton)
+        view.addViews(backButton, newPostLabel, seperatorView, uploadRecordedButton)
         
         backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 10, paddingLeft: 10)
         newPostLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10)
-        nextButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, right: view.rightAnchor, paddingTop: 10, paddingRight: 10)
-        uploadRecordedButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, right: nextButton.leftAnchor, paddingTop: 10, paddingRight: 20)
+        uploadRecordedButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, right: view.rightAnchor, paddingTop: 10, paddingRight: 10)
         seperatorView.anchor(top: newPostLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, height: 1)
     }
     
@@ -804,20 +525,12 @@ extension NewSongViewController {
     
     private func configureWithExt() {
         view.addViews(videoView, soundView)
-        soundView.addViews(audioRecordingStartButtonView, buttonsView, audioRecordingPlayButton, audioRecordingPauseButton)
-        audioRecordingStartButtonView.addSubview(audioRecordingStartButton)
+        soundView.addViews(audioRecordingStartButton, existingRecordButton)
         videoView.anchor(top: segmentedControl.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
         soundView.anchor(top: segmentedControl.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
                 
-        audioRecordingStartButtonView.anchor(bottom: soundView.safeAreaLayoutGuide.bottomAnchor, centerX: soundView.centerXAnchor, paddingBottom: 10, width: 120, height: 120)
-        audioRecordingStartButton.anchor(top: audioRecordingStartButtonView.topAnchor, left: audioRecordingStartButtonView.leftAnchor, right: audioRecordingStartButtonView.rightAnchor, bottom: audioRecordingStartButtonView.bottomAnchor)
-        buttonsView.anchor(left: soundView.leftAnchor, right: soundView.rightAnchor, centerY: audioRecordingStartButtonView.centerYAnchor, paddingLeft: 20, paddingRight: 20, height: 60)
-        audioRecordingPlayButton.anchor(right: buttonsView.rightAnchor, centerY: buttonsView.centerYAnchor)
-        audioRecordingPauseButton.anchor(left: buttonsView.leftAnchor, centerY: buttonsView.centerYAnchor)
-        
-        audioRecordingStartButtonView.layer.zPosition = 1
-        audioRecordingStartButton.layer.zPosition = 1
-        buttonsView.isUserInteractionEnabled = false
+        existingRecordButton.anchor(bottom: audioRecordingStartButton.topAnchor, centerX: view.centerXAnchor, paddingBottom: 20, width: 200, height: 50)
+        audioRecordingStartButton.anchor(bottom: soundView.safeAreaLayoutGuide.bottomAnchor, centerX: view.centerXAnchor, paddingBottom: 10)
     }
     
     private func configureTimerLabel() {
@@ -829,13 +542,12 @@ extension NewSongViewController {
         timerView.layer.shadowOffset = CGSize(width: 0, height: 2)
         timerView.layer.shadowRadius = 4
         
-        timerView.anchor(top: segmentedControl.bottomAnchor, centerX: soundView.centerXAnchor, paddingTop: 20, width: 160, height: 160)
+        timerView.anchor(top: segmentedControl.bottomAnchor, centerX: soundView.centerXAnchor, paddingTop: 20, width: 140, height: 140)
         timerLabel.anchor(centerX: timerView.centerXAnchor, centerY: timerView.centerYAnchor)
     }
     
     func configureAudioPlayerView() {
-        soundView.addViews(playView)
-        playView.addViews(playButton, scrollView, centerLine, forwardButton, backwardButton, audioSlider, optionsButton)
+        soundView.addViews(scrollView, centerLine)
         
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsHorizontalScrollIndicator = false
@@ -844,23 +556,10 @@ extension NewSongViewController {
         waveformContentView.isUserInteractionEnabled = false
         scrollView.addSubview(waveformContentView)
         
-        playView.layer.cornerRadius = 10
-        playView.layer.shadowColor = UIColor.black.cgColor
-        playView.layer.shadowOpacity = 0.4
-        playView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        playView.layer.shadowRadius = 4
-        
-        playView.anchor(top: timerView.bottomAnchor, left: soundView.leftAnchor, right: soundView.rightAnchor, paddingTop: 60, paddingLeft: 20, paddingRight: 20, height: 150)
-        optionsButton.anchor(top: playView.topAnchor, right: playView.rightAnchor, paddingTop: 10, paddingRight: 10)
-        playButton.anchor(centerX: playView.centerXAnchor, centerY: playView.centerYAnchor)
-        forwardButton.anchor(left: playButton.rightAnchor, centerY: playView.centerYAnchor, paddingLeft: 30)
-        backwardButton.anchor(right: playButton.leftAnchor, centerY: playView.centerYAnchor, paddingRight: 30)
-        audioSlider.anchor(top: playButton.bottomAnchor, left: playView.leftAnchor, right: playView.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingRight: 20)
-        
-        scrollView.anchor(left: playView.leftAnchor, right: playView.rightAnchor, centerY: playView.centerYAnchor, height: 100)
-        waveformContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, height: 100)
-        waveformContentView.widthAnchor.constraint(equalToConstant: playView.frame.width).isActive = true
-        centerLine.anchor(left: playView.leftAnchor, right: playView.rightAnchor, centerY: playView.centerYAnchor, height: 1)
+        scrollView.anchor(top: timerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 60, height: 150)
+        waveformContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, height: 150)
+        waveformContentView.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+        centerLine.anchor(left: view.leftAnchor, right: view.rightAnchor, centerY: scrollView.centerYAnchor, height: 1)
     }
     
     func configureVideoView() {
@@ -932,58 +631,9 @@ extension NewSongViewController: AVAudioRecorderDelegate {
     }
 }
 
-extension NewSongViewController: AVAudioPlayerDelegate {
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        stopAndResetPlayback()
-        
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .bold, scale: .large)
-        let largeImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
-        playButton.setImage(largeImage, for: .normal)
-        playButton.tag = 0
-        
-        print("Ses çalma tamamlandı")
-    }
-}
-
 extension NewSongViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         return BottomSheetPresentationController(presentedViewController: presented, presenting: presenting)
-    }
-}
-
-extension NewSongViewController: EditPostViewControllerDelegate {
-    func didUpdatePlaybackSpeed(to speed: Float) {
-        playbackSpeed = speed
-        print("Playback speed updated to: \(speed)")
-        
-        if let audioPlayer = audioPlayer {
-            audioPlayer.enableRate = true
-            audioPlayer.rate = speed
-        }
-    }
-    
-    func didSkipSilenceSwitchValueChanged(to url: URL) {
-        self.recordedAudioURL = url
-        print("Sessiz kısımaların atıldığı ses urli: \(self.recordedAudioURL)")
-    }
-    
-    func enhanceAudio(enabled: Bool) {
-        if enabled {
-            enhanceAudioSettings()
-        } else {
-            resetAudioSettings()
-        }
-    }
-    
-    private func enhanceAudioSettings() {
-        audioPlayer?.volume = 1.2
-        print("Ses ayarları iyileştirildi")
-    }
-    
-    private func resetAudioSettings() {
-        audioPlayer?.volume = 1.0
-        
-        print("Ses ayarları sıfırlandı.")
     }
 }
 
