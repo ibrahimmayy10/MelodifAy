@@ -145,7 +145,7 @@ class EditVideoViewController: UIViewController {
     private let videoPlayer = AVPlayer()
     private var playerLayer = AVPlayerLayer()
     
-    private let newSongViewModel = NewSongViewModel()
+//    private let newSongViewModel = NewSongViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -186,7 +186,7 @@ class EditVideoViewController: UIViewController {
         playButton.addTarget(self, action: #selector(playButton_Clicked), for: .touchUpInside)
         forwardButton.addTarget(self, action: #selector(forwardButton_Clicked), for: .touchUpInside)
         backwardButton.addTarget(self, action: #selector(backwardButton_Clicked), for: .touchUpInside)
-        saveDraftButton.addTarget(self, action: #selector(saveDraftButton_Clicked), for: .touchUpInside)
+//        saveDraftButton.addTarget(self, action: #selector(saveDraftButton_Clicked), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(nextButton_Clicked), for: .touchUpInside)
     }
     
@@ -197,38 +197,38 @@ class EditVideoViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    @objc func saveDraftButton_Clicked() {
-        guard let videoURL = videoURL else { return }
-        
-        saveDraftButton.setTitle("", for: .normal)
-        activityIndicator.startAnimating()
-        newSongViewModel.saveDraft(url: videoURL) { success in
-            self.activityIndicator.stopAnimating()
-            self.saveDraftButton.setTitle("Taslağı kaydet", for: .normal)
-            
-            if success {
-                let successImageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
-                successImageView.tintColor = .systemOrange
-                successImageView.alpha = 0.0
-                successImageView.translatesAutoresizingMaskIntoConstraints = false
-                self.view.addSubview(successImageView)
-                
-                successImageView.anchor(centerX: self.view.centerXAnchor, centerY: self.view.centerYAnchor, width: 100, height: 100)
-                
-                UIView.animate(withDuration: 0.5, animations: {
-                    successImageView.alpha = 1.0
-                }) { _ in
-                    UIView.animate(withDuration: 0.5, delay: 1.0, options: [], animations: {
-                        successImageView.alpha = 0.0
-                    }, completion: { _ in
-                        successImageView.removeFromSuperview()
-                    })
-                }
-            } else {
-                self.makeAlert(message: "Ses taslağı kaydedilirken bir hata oluştu.")
-            }
-        }
-    }
+//    @objc func saveDraftButton_Clicked() {
+//        guard let videoURL = videoURL else { return }
+//        
+//        saveDraftButton.setTitle("", for: .normal)
+//        activityIndicator.startAnimating()
+//        newSongViewModel.saveDraft(url: videoURL) { success in
+//            self.activityIndicator.stopAnimating()
+//            self.saveDraftButton.setTitle("Taslağı kaydet", for: .normal)
+//            
+//            if success {
+//                let successImageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
+//                successImageView.tintColor = .systemOrange
+//                successImageView.alpha = 0.0
+//                successImageView.translatesAutoresizingMaskIntoConstraints = false
+//                self.view.addSubview(successImageView)
+//                
+//                successImageView.anchor(centerX: self.view.centerXAnchor, centerY: self.view.centerYAnchor, width: 100, height: 100)
+//                
+//                UIView.animate(withDuration: 0.5, animations: {
+//                    successImageView.alpha = 1.0
+//                }) { _ in
+//                    UIView.animate(withDuration: 0.5, delay: 1.0, options: [], animations: {
+//                        successImageView.alpha = 0.0
+//                    }, completion: { _ in
+//                        successImageView.removeFromSuperview()
+//                    })
+//                }
+//            } else {
+//                self.makeAlert(message: "Ses taslağı kaydedilirken bir hata oluştu.")
+//            }
+//        }
+//    }
     
     @objc func shareButton_Clicked() {
         let activityViewController = UIActivityViewController(activityItems: [videoURL], applicationActivities: nil)

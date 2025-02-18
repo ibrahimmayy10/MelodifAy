@@ -21,9 +21,9 @@
 		174D74E12CF7393F00C93DFE /* MyPostsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174D74E02CF7393F00C93DFE /* MyPostsTableViewCell.swift */; };
 		174DAC7A2D0C823300AE558D /* UserDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174DAC792D0C823300AE558D /* UserDetailsViewController.swift */; };
 		176499A52CB1654E004D38A9 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 176499A42CB1654E004D38A9 /* GoogleGenerativeAI */; };
+		176706112D64A6B3009CB390 /* AudioRecordingPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176706102D64A6B3009CB390 /* AudioRecordingPreviewViewController.swift */; };
 		176C55FB2CEF59EB00585BD4 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176C55FA2CEF59EB00585BD4 /* PreviewViewController.swift */; };
 		177282D32CB6847600247853 /* NewSongViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177282D22CB6847600247853 /* NewSongViewController.swift */; };
-		177282D52CB6848900247853 /* NewSongViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177282D42CB6848900247853 /* NewSongViewModel.swift */; };
 		177EF64C2CAEF1590015F3CB /* SignInService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177EF64B2CAEF1590015F3CB /* SignInService.swift */; };
 		177EF64E2CAEF1680015F3CB /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177EF64D2CAEF1680015F3CB /* SignInViewModel.swift */; };
 		177EF6512CAEF6530015F3CB /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177EF6502CAEF6530015F3CB /* HomePageViewController.swift */; };
@@ -42,6 +42,9 @@
 		17A66F4D2CF89FDB005898D3 /* MusicDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A66F4C2CF89FDB005898D3 /* MusicDetailsViewController.swift */; };
 		17A66F4F2CF8A0BD005898D3 /* AnimationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A66F4E2CF8A0BD005898D3 /* AnimationHelper.swift */; };
 		17B1B03C2CC6B403004488BF /* AudioProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B1B03B2CC6B403004488BF /* AudioProcessor.swift */; };
+		17BD0ED62D3919B9004966B4 /* UserDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BD0ED52D3919B9004966B4 /* UserDetailsViewModel.swift */; };
+		17BD0ED82D3919D1004966B4 /* ServiceUserDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BD0ED72D3919D1004966B4 /* ServiceUserDetails.swift */; };
+		17BD0EDE2D3939FC004966B4 /* DraftModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BD0EDD2D3939FC004966B4 /* DraftModel.swift */; };
 		17D8E1782CAEC119008F06CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17D8E16E2CAEC119008F06CD /* Assets.xcassets */; };
 		17D8E1792CAEC119008F06CD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 17D8E16F2CAEC119008F06CD /* GoogleService-Info.plist */; };
 		17D8E17B2CAEC119008F06CD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17D8E1722CAEC119008F06CD /* LaunchScreen.storyboard */; };
@@ -75,9 +78,9 @@
 		1746CD502CB034BC00B3701A /* MusicModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicModel.swift; sourceTree = "<group>"; };
 		174D74E02CF7393F00C93DFE /* MyPostsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPostsTableViewCell.swift; sourceTree = "<group>"; };
 		174DAC792D0C823300AE558D /* UserDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailsViewController.swift; sourceTree = "<group>"; };
+		176706102D64A6B3009CB390 /* AudioRecordingPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecordingPreviewViewController.swift; sourceTree = "<group>"; };
 		176C55FA2CEF59EB00585BD4 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		177282D22CB6847600247853 /* NewSongViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSongViewController.swift; sourceTree = "<group>"; };
-		177282D42CB6848900247853 /* NewSongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSongViewModel.swift; sourceTree = "<group>"; };
 		177EF64B2CAEF1590015F3CB /* SignInService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInService.swift; sourceTree = "<group>"; };
 		177EF64D2CAEF1680015F3CB /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		177EF6502CAEF6530015F3CB /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
@@ -96,6 +99,9 @@
 		17A66F4C2CF89FDB005898D3 /* MusicDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicDetailsViewController.swift; sourceTree = "<group>"; };
 		17A66F4E2CF8A0BD005898D3 /* AnimationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationHelper.swift; sourceTree = "<group>"; };
 		17B1B03B2CC6B403004488BF /* AudioProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioProcessor.swift; sourceTree = "<group>"; };
+		17BD0ED52D3919B9004966B4 /* UserDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailsViewModel.swift; sourceTree = "<group>"; };
+		17BD0ED72D3919D1004966B4 /* ServiceUserDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceUserDetails.swift; sourceTree = "<group>"; };
+		17BD0EDD2D3939FC004966B4 /* DraftModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraftModel.swift; sourceTree = "<group>"; };
 		17D8E1412CAEC078008F06CD /* MelodifAy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MelodifAy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17D8E16D2CAEC119008F06CD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		17D8E16E2CAEC119008F06CD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -153,10 +159,10 @@
 			isa = PBXGroup;
 			children = (
 				177282D22CB6847600247853 /* NewSongViewController.swift */,
-				177282D42CB6848900247853 /* NewSongViewModel.swift */,
 				171DF00A2CC1333600523459 /* EditPostViewController.swift */,
 				17912D032CC5529200ED572B /* BottomSheetPresentationController.swift */,
 				17B1B03B2CC6B403004488BF /* AudioProcessor.swift */,
+				176706102D64A6B3009CB390 /* AudioRecordingPreviewViewController.swift */,
 			);
 			path = NewPost;
 			sourceTree = "<group>";
@@ -166,6 +172,7 @@
 			children = (
 				1746CD502CB034BC00B3701A /* MusicModel.swift */,
 				17EB24702CF5E4B50048D58B /* UserModel.swift */,
+				17BD0EDD2D3939FC004966B4 /* DraftModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -184,6 +191,8 @@
 			isa = PBXGroup;
 			children = (
 				174DAC792D0C823300AE558D /* UserDetailsViewController.swift */,
+				17BD0ED52D3919B9004966B4 /* UserDetailsViewModel.swift */,
+				17BD0ED72D3919D1004966B4 /* ServiceUserDetails.swift */,
 			);
 			path = UserDetails;
 			sourceTree = "<group>";
@@ -509,19 +518,22 @@
 				17A66F4D2CF89FDB005898D3 /* MusicDetailsViewController.swift in Sources */,
 				177282D32CB6847600247853 /* NewSongViewController.swift in Sources */,
 				17A2FF2C2D09C13400C3EF46 /* BaseViewController.swift in Sources */,
+				17BD0ED82D3919D1004966B4 /* ServiceUserDetails.swift in Sources */,
 				17D8E18A2CAECBBB008F06CD /* ImageViews.swift in Sources */,
 				17A32AAC2CAFEF680010A7DC /* AccountViewController.swift in Sources */,
 				171E07F92CCE6B0400425271 /* EditVideoViewModel.swift in Sources */,
 				1746CD512CB034BC00B3701A /* MusicModel.swift in Sources */,
 				171DF00B2CC1333600523459 /* EditPostViewController.swift in Sources */,
 				17A66F4F2CF8A0BD005898D3 /* AnimationHelper.swift in Sources */,
+				17BD0ED62D3919B9004966B4 /* UserDetailsViewModel.swift in Sources */,
 				17A32AAE2CAFF0030010A7DC /* BottomBarView.swift in Sources */,
 				1746CD4A2CB029A700B3701A /* SeperatorView.swift in Sources */,
 				17912D042CC5529200ED572B /* BottomSheetPresentationController.swift in Sources */,
+				17BD0EDE2D3939FC004966B4 /* DraftModel.swift in Sources */,
 				17A436652CAEE4FC001DEF62 /* RegisterViewModel.swift in Sources */,
+				176706112D64A6B3009CB390 /* AudioRecordingPreviewViewController.swift in Sources */,
 				179B36ED2CFE000100BA7DE8 /* ServiceSearch.swift in Sources */,
 				1714CB202D0066B600C4930B /* MusicPlayerService.swift in Sources */,
-				177282D52CB6848900247853 /* NewSongViewModel.swift in Sources */,
 				17D8E17D2CAEC119008F06CD /* AppDelegate.swift in Sources */,
 				17D8E17E2CAEC119008F06CD /* SceneDelegate.swift in Sources */,
 				17D8E1912CAED64A008F06CD /* RegisterViewController.swift in Sources */,
