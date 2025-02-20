@@ -74,7 +74,7 @@ class EditVideoViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.setImage(UIImage(systemName: "arrow.forward"), for: .normal)
         button.tintColor = .white
-        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
+        button.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         button.layer.cornerRadius = 20
         
         button.titleEdgeInsets = UIEdgeInsets(top: 0, left: button.bounds.size.width - 60, bottom: 0, right: 0)

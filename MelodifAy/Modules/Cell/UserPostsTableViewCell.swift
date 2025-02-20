@@ -28,9 +28,9 @@ class UserPostsTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 17), textColorLabel: .white)
-    private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 16), textColorLabel: .lightGray)
-    private let likeCountLabel = Labels(textLabel: "250", fontLabel: .boldSystemFont(ofSize: 16), textColorLabel: .white)
+    private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 16), textColorLabel: .white)
+    private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 14), textColorLabel: .lightGray)
+    private let likeCountLabel = Labels(textLabel: "250", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -58,8 +58,8 @@ class UserPostsTableViewCell: UITableViewCell {
         
         contentView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
-        postImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor, paddingTop: 5, paddingLeft: 5, paddingBottom: 5, width: 60)
-        songNameLabel.anchor(top: contentView.topAnchor, left: postImageView.rightAnchor, paddingTop: 15, paddingLeft: 10)
+        postImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor, paddingTop: 10, paddingLeft: 5, paddingBottom: 10, width: 55)
+        songNameLabel.anchor(top: contentView.topAnchor, left: postImageView.rightAnchor, paddingTop: 20, paddingLeft: 10)
         nameLabel.anchor(top: songNameLabel.bottomAnchor, left: postImageView.rightAnchor, paddingLeft: 10)
         heartImageView.anchor(right: contentView.rightAnchor, centerY: contentView.centerYAnchor, paddingRight: 10, width: 20, height: 20)
         likeCountLabel.anchor(right: heartImageView.leftAnchor, centerY: contentView.centerYAnchor)
