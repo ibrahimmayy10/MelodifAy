@@ -22,7 +22,6 @@
 		174DAC7A2D0C823300AE558D /* UserDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174DAC792D0C823300AE558D /* UserDetailsViewController.swift */; };
 		1751E2DB2D6756C70083B8B7 /* ButtonExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1751E2DA2D6756C70083B8B7 /* ButtonExtension.swift */; };
 		175361432D6657CD009148EC /* micro.json in Resources */ = {isa = PBXBuildFile; fileRef = 175361422D6657CD009148EC /* micro.json */; };
-		176499A52CB1654E004D38A9 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 176499A42CB1654E004D38A9 /* GoogleGenerativeAI */; };
 		176706112D64A6B3009CB390 /* AudioRecordingPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176706102D64A6B3009CB390 /* AudioRecordingPreviewViewController.swift */; };
 		176C55FB2CEF59EB00585BD4 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176C55FA2CEF59EB00585BD4 /* PreviewViewController.swift */; };
 		177282D32CB6847600247853 /* NewSongViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177282D22CB6847600247853 /* NewSongViewController.swift */; };
@@ -41,11 +40,11 @@
 		17A436652CAEE4FC001DEF62 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A436642CAEE4FC001DEF62 /* RegisterViewModel.swift */; };
 		17A66F4D2CF89FDB005898D3 /* MusicDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A66F4C2CF89FDB005898D3 /* MusicDetailsViewController.swift */; };
 		17A66F4F2CF8A0BD005898D3 /* AnimationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A66F4E2CF8A0BD005898D3 /* AnimationHelper.swift */; };
+		17A942462D687CF200C16032 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17A942452D687CF200C16032 /* Assets.xcassets */; };
 		17B1B03C2CC6B403004488BF /* AudioProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B1B03B2CC6B403004488BF /* AudioProcessor.swift */; };
 		17BD0ED62D3919B9004966B4 /* UserDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BD0ED52D3919B9004966B4 /* UserDetailsViewModel.swift */; };
 		17BD0ED82D3919D1004966B4 /* ServiceUserDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BD0ED72D3919D1004966B4 /* ServiceUserDetails.swift */; };
 		17BD0EDE2D3939FC004966B4 /* DraftModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BD0EDD2D3939FC004966B4 /* DraftModel.swift */; };
-		17D8E1782CAEC119008F06CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17D8E16E2CAEC119008F06CD /* Assets.xcassets */; };
 		17D8E1792CAEC119008F06CD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 17D8E16F2CAEC119008F06CD /* GoogleService-Info.plist */; };
 		17D8E17B2CAEC119008F06CD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17D8E1722CAEC119008F06CD /* LaunchScreen.storyboard */; };
 		17D8E17D2CAEC119008F06CD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D8E16D2CAEC119008F06CD /* AppDelegate.swift */; };
@@ -62,6 +61,20 @@
 		17F5F69C2CCFA848000052F4 /* ShareNewPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F5F69B2CCFA848000052F4 /* ShareNewPostViewController.swift */; };
 		1ECF26D23DF30FD9622CC4F6 /* Pods_MelodifAy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAF1CE99ECFBBC35521C9730 /* Pods_MelodifAy.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		17208F372D688B8E00AC6DE7 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = folder.rkassets;
+			inputFiles = (
+			);
+			isEditable = 1;
+			outputFiles = (
+			);
+			script = "# realitytool\n";
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXFileReference section */
 		170258302D08ACAB002D16EB /* MiniMusicPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniMusicPlayerViewController.swift; sourceTree = "<group>"; };
@@ -98,13 +111,13 @@
 		17A436642CAEE4FC001DEF62 /* RegisterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewModel.swift; sourceTree = "<group>"; };
 		17A66F4C2CF89FDB005898D3 /* MusicDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicDetailsViewController.swift; sourceTree = "<group>"; };
 		17A66F4E2CF8A0BD005898D3 /* AnimationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationHelper.swift; sourceTree = "<group>"; };
+		17A942452D687CF200C16032 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		17B1B03B2CC6B403004488BF /* AudioProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioProcessor.swift; sourceTree = "<group>"; };
 		17BD0ED52D3919B9004966B4 /* UserDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailsViewModel.swift; sourceTree = "<group>"; };
 		17BD0ED72D3919D1004966B4 /* ServiceUserDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceUserDetails.swift; sourceTree = "<group>"; };
 		17BD0EDD2D3939FC004966B4 /* DraftModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraftModel.swift; sourceTree = "<group>"; };
 		17D8E1412CAEC078008F06CD /* MelodifAy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MelodifAy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17D8E16D2CAEC119008F06CD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		17D8E16E2CAEC119008F06CD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		17D8E16F2CAEC119008F06CD /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		17D8E1702CAEC119008F06CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		17D8E1712CAEC119008F06CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -130,7 +143,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1ECF26D23DF30FD9622CC4F6 /* Pods_MelodifAy.framework in Frameworks */,
-				176499A52CB1654E004D38A9 /* GoogleGenerativeAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,8 +320,8 @@
 			children = (
 				17D8E16D2CAEC119008F06CD /* AppDelegate.swift */,
 				17D8E1752CAEC119008F06CD /* SceneDelegate.swift */,
-				17D8E16E2CAEC119008F06CD /* Assets.xcassets */,
 				17D8E1722CAEC119008F06CD /* LaunchScreen.storyboard */,
+				17A942452D687CF200C16032 /* Assets.xcassets */,
 			);
 			path = File;
 			sourceTree = "<group>";
@@ -407,6 +419,7 @@
 				867E8E9C9B72A721A3DBC8D7 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
+				17208F372D688B8E00AC6DE7 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -440,7 +453,6 @@
 			);
 			mainGroup = 17D8E1382CAEC078008F06CD;
 			packageReferences = (
-				176499A32CB1654E004D38A9 /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
 			);
 			productRefGroup = 17D8E1422CAEC078008F06CD /* Products */;
 			projectDirPath = "";
@@ -457,8 +469,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				175361432D6657CD009148EC /* micro.json in Resources */,
-				17D8E1782CAEC119008F06CD /* Assets.xcassets in Resources */,
 				17D8E1792CAEC119008F06CD /* GoogleService-Info.plist in Resources */,
+				17A942462D687CF200C16032 /* Assets.xcassets in Resources */,
 				17D8E17B2CAEC119008F06CD /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -587,6 +599,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J57UX88LR4;
+				ENABLE_ON_DEMAND_RESOURCES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MelodifAy/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "MelodifAy kameraya erişmek istiyor.";
@@ -619,6 +632,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J57UX88LR4;
+				ENABLE_ON_DEMAND_RESOURCES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MelodifAy/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "MelodifAy kameraya erişmek istiyor.";
@@ -782,25 +796,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		176499A32CB1654E004D38A9 /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/google-gemini/generative-ai-swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.6;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		176499A42CB1654E004D38A9 /* GoogleGenerativeAI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 176499A32CB1654E004D38A9 /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
-			productName = GoogleGenerativeAI;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 17D8E1392CAEC078008F06CD /* Project object */;
 }

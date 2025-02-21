@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import GoogleGenerativeAI
+//import GoogleGenerativeAI
 import Lottie
 
 class CreateSongWithAIViewController: UIViewController {
