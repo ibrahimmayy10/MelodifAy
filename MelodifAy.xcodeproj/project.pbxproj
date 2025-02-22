@@ -39,7 +39,8 @@
 		17A436652CAEE4FC001DEF62 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A436642CAEE4FC001DEF62 /* RegisterViewModel.swift */; };
 		17A66F4D2CF89FDB005898D3 /* MusicDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A66F4C2CF89FDB005898D3 /* MusicDetailsViewController.swift */; };
 		17A66F4F2CF8A0BD005898D3 /* AnimationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A66F4E2CF8A0BD005898D3 /* AnimationHelper.swift */; };
-		17A696AE2D68CA4100A73C32 /* micro.json in Resources */ = {isa = PBXBuildFile; fileRef = 17A696AD2D68CA4100A73C32 /* micro.json */; };
+		17A696B22D68D2CC00A73C32 /* micro.json in Resources */ = {isa = PBXBuildFile; fileRef = 17A696B12D68D2CC00A73C32 /* micro.json */; };
+		17A696B42D68D3A000A73C32 /* ButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A696B32D68D3A000A73C32 /* ButtonExtensions.swift */; };
 		17B1B03C2CC6B403004488BF /* AudioProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B1B03B2CC6B403004488BF /* AudioProcessor.swift */; };
 		17BD0ED62D3919B9004966B4 /* UserDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BD0ED52D3919B9004966B4 /* UserDetailsViewModel.swift */; };
 		17BD0ED82D3919D1004966B4 /* ServiceUserDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BD0ED72D3919D1004966B4 /* ServiceUserDetails.swift */; };
@@ -55,6 +56,7 @@
 		17D8E18C2CAECC30008F06CD /* TextFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D8E18B2CAECC30008F06CD /* TextFields.swift */; };
 		17D8E18E2CAED1ED008F06CD /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D8E18D2CAED1ED008F06CD /* Labels.swift */; };
 		17D8E1912CAED64A008F06CD /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D8E1902CAED64A008F06CD /* RegisterViewController.swift */; };
+		17E9D79E2D6A4C6A00AB48EA /* loadingAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = 17E9D79D2D6A4C6A00AB48EA /* loadingAnimation.json */; };
 		17EB246D2CF5E3F30048D58B /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EB246C2CF5E3F30048D58B /* AccountViewModel.swift */; };
 		17EB246F2CF5E3FE0048D58B /* ServiceAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EB246E2CF5E3FE0048D58B /* ServiceAccount.swift */; };
 		17EB24712CF5E4B50048D58B /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EB24702CF5E4B50048D58B /* UserModel.swift */; };
@@ -95,7 +97,8 @@
 		17A436642CAEE4FC001DEF62 /* RegisterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewModel.swift; sourceTree = "<group>"; };
 		17A66F4C2CF89FDB005898D3 /* MusicDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicDetailsViewController.swift; sourceTree = "<group>"; };
 		17A66F4E2CF8A0BD005898D3 /* AnimationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationHelper.swift; sourceTree = "<group>"; };
-		17A696AD2D68CA4100A73C32 /* micro.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = micro.json; sourceTree = "<group>"; };
+		17A696B12D68D2CC00A73C32 /* micro.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = micro.json; sourceTree = "<group>"; };
+		17A696B32D68D3A000A73C32 /* ButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonExtensions.swift; sourceTree = "<group>"; };
 		17B1B03B2CC6B403004488BF /* AudioProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioProcessor.swift; sourceTree = "<group>"; };
 		17BD0ED52D3919B9004966B4 /* UserDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailsViewModel.swift; sourceTree = "<group>"; };
 		17BD0ED72D3919D1004966B4 /* ServiceUserDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceUserDetails.swift; sourceTree = "<group>"; };
@@ -113,6 +116,7 @@
 		17D8E18B2CAECC30008F06CD /* TextFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFields.swift; sourceTree = "<group>"; };
 		17D8E18D2CAED1ED008F06CD /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
 		17D8E1902CAED64A008F06CD /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		17E9D79D2D6A4C6A00AB48EA /* loadingAnimation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = loadingAnimation.json; sourceTree = "<group>"; };
 		17EB246C2CF5E3F30048D58B /* AccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewModel.swift; sourceTree = "<group>"; };
 		17EB246E2CF5E3FE0048D58B /* ServiceAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceAccount.swift; sourceTree = "<group>"; };
 		17EB24702CF5E4B50048D58B /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
@@ -198,8 +202,9 @@
 		176B6A832CB5847C003CAA0F /* Animations */ = {
 			isa = PBXGroup;
 			children = (
-				17A696AD2D68CA4100A73C32 /* micro.json */,
 				17A66F4E2CF8A0BD005898D3 /* AnimationHelper.swift */,
+				17E9D79D2D6A4C6A00AB48EA /* loadingAnimation.json */,
+				17A696B12D68D2CC00A73C32 /* micro.json */,
 			);
 			path = Animations;
 			sourceTree = "<group>";
@@ -328,6 +333,7 @@
 			isa = PBXGroup;
 			children = (
 				17D8E1872CAEC950008F06CD /* ViewExtensions.swift */,
+				17A696B32D68D3A000A73C32 /* ButtonExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -453,10 +459,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				17A696AE2D68CA4100A73C32 /* micro.json in Resources */,
+				17A696B22D68D2CC00A73C32 /* micro.json in Resources */,
 				17D8E1782CAEC119008F06CD /* Assets.xcassets in Resources */,
 				17D8E1792CAEC119008F06CD /* GoogleService-Info.plist in Resources */,
 				17D8E17B2CAEC119008F06CD /* LaunchScreen.storyboard in Resources */,
+				17E9D79E2D6A4C6A00AB48EA /* loadingAnimation.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -518,6 +525,7 @@
 				17D8E18A2CAECBBB008F06CD /* ImageViews.swift in Sources */,
 				17A32AAC2CAFEF680010A7DC /* AccountViewController.swift in Sources */,
 				171E07F92CCE6B0400425271 /* EditVideoViewModel.swift in Sources */,
+				17A696B42D68D3A000A73C32 /* ButtonExtensions.swift in Sources */,
 				1746CD512CB034BC00B3701A /* MusicModel.swift in Sources */,
 				171DF00B2CC1333600523459 /* EditPostViewController.swift in Sources */,
 				17A66F4F2CF8A0BD005898D3 /* AnimationHelper.swift in Sources */,

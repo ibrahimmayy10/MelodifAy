@@ -8,6 +8,7 @@
 import UIKit
 import Firebase
 import SDWebImage
+import Lottie
 
 protocol AccountViewControllerProtocol: AnyObject {
     func setUserInfo(user: UserModel)
@@ -31,7 +32,7 @@ class AccountViewController: BaseViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 35
-        imageView.tintColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
+        imageView.tintColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         return imageView
     }()
     
@@ -40,15 +41,19 @@ class AccountViewController: BaseViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Düzenle", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
+        button.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         button.layer.cornerRadius = 10
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowRadius = 4
+        button.layer.shadowOpacity = 0.3
         return button
     }()
     
     let segmentedControl: UISegmentedControl = {
         let items = ["Paylaşımlarım", "Kitaplığım"]
         let segmentedControl = UISegmentedControl(items: items)
-        segmentedControl.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
+        segmentedControl.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         return segmentedControl
@@ -76,20 +81,27 @@ class AccountViewController: BaseViewController {
         return tableView
     }()
     
+    private let animationView = LottieAnimationView(name: "loadingAnimation")
+    
     private var viewModel: AccountViewModel?
     private var music: MusicModel?
     private var name = String()
+    
+    private var tableViewBottomConstraint: NSLayoutConstraint?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         viewModel = AccountViewModel(view: self)
         
+        setMiniPlayerBottomPadding(65)
+        
         configureBottomBar()
         setup()
         configureWithExt()
         configureSegmentedControl()
         configureMyPostsView()
+        configureAnimationView()
         addTargetButtons()
         setDelegate()
         
@@ -97,6 +109,23 @@ class AccountViewController: BaseViewController {
             showMiniMusicPlayer(with: currentMusic)
         }
         
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(miniPlayerVisibilityChanged),
+                                               name: NSNotification.Name("MiniPlayerVisibilityChanged"),
+                                               object: nil)
+        
+    }
+    
+    override func updateMiniPlayerConstraints(isVisible: Bool) {
+        tableViewBottomConstraint?.isActive = false
+        tableViewBottomConstraint = myPostsTableView.bottomAnchor.constraint(equalTo: myPostsView.bottomAnchor, constant: isVisible ? -65 : 0)
+        tableViewBottomConstraint?.isActive = true
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        editProfileButton.applyGradient(colors: [UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0), UIColor(red: 0.12, green: 0.12, blue: 0.12, alpha: 1.0)])
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -131,6 +160,10 @@ class AccountViewController: BaseViewController {
             myLikesView.isHidden = false
         }
     }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
 }
 
@@ -139,8 +172,43 @@ extension AccountViewController {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         navigationController?.navigationBar.isHidden = true
         
-        viewModel?.getDataUserInfo()
-        viewModel?.getDataMusicInfo()
+        toggleUIElementsVisibility(isHidden: true)
+        getAllData()
+    }
+    
+    func getAllData() {
+        animationView.play()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            guard let self = self else { return }
+            
+            viewModel?.getDataUserInfo(completion: { successfully in
+                if successfully {
+                    self.viewModel?.getDataMusicInfo(completion: { success in
+                        if success {
+                            DispatchQueue.main.async {
+                                self.toggleUIElementsVisibility(isHidden: !success)
+                                self.animationView.stop()
+                                self.animationView.isHidden = true
+                            }
+                        }
+                    })
+                }
+            })
+        }
+    }
+    
+    func toggleUIElementsVisibility(isHidden: Bool) {
+        myPostsTableView.isHidden = isHidden
+        segmentedControl.isHidden = isHidden
+        profileImageView.isHidden = isHidden
+        nameLabel.isHidden = isHidden
+        usernameLabel.isHidden = isHidden
+        editProfileButton.isHidden = isHidden
+        followerLabel.isHidden = isHidden
+        followingLabel.isHidden = isHidden
+        followingCountLabel.isHidden = isHidden
+        followerCountLabel.isHidden = isHidden
     }
     
     func configureBottomBar() {
@@ -166,6 +234,15 @@ extension AccountViewController {
         followerCountLabel.anchor(top: followerLabel.bottomAnchor, centerX: followerLabel.centerXAnchor, paddingTop: 5)
         followingLabel.anchor(top: profileImageView.bottomAnchor, left: followerLabel.rightAnchor, paddingTop: 15, paddingLeft: 30)
         followingCountLabel.anchor(top: followingLabel.bottomAnchor, centerX: followingLabel.centerXAnchor, paddingTop: 5)
+    }
+    
+    func configureAnimationView() {
+        view.addViews(animationView)
+        
+        animationView.loopMode = .loop
+        animationView.play()
+        animationView.translatesAutoresizingMaskIntoConstraints = false
+        animationView.anchor(centerX: view.centerXAnchor, centerY: view.centerYAnchor, width: 150, height: 150)
     }
     
     private func configureSegmentedControl() {

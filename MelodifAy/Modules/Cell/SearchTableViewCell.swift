@@ -19,8 +19,8 @@ class SearchTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 17), textColorLabel: .white)
-    private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 16), textColorLabel: .lightGray)
+    private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 16), textColorLabel: .white)
+    private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 14), textColorLabel: .lightGray)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -48,8 +48,8 @@ class SearchTableViewCell: UITableViewCell {
         
         contentView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
-        photoImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor, paddingTop: 5, paddingLeft: 10, paddingBottom: 5, width: 60)
-        songNameLabel.anchor(top: contentView.topAnchor, left: photoImageView.rightAnchor, paddingTop: 15, paddingLeft: 10)
+        photoImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor, paddingTop: 10, paddingLeft: 10, paddingBottom: 10, width: 50)
+        songNameLabel.anchor(top: contentView.topAnchor, left: photoImageView.rightAnchor, paddingTop: 17, paddingLeft: 10)
         nameLabel.anchor(top: songNameLabel.bottomAnchor, left: photoImageView.rightAnchor, paddingLeft: 10)
     }
     
@@ -60,7 +60,7 @@ class SearchTableViewCell: UITableViewCell {
             songNameLabel.text = music.songName
             nameLabel.text = music.name
         } else if let user = user {
-            photoImageView.layer.cornerRadius = 30
+            photoImageView.layer.cornerRadius = 25
             photoImageView.sd_setImage(with: URL(string: user.imageUrl))
             songNameLabel.text = user.name + " " + user.surname
             nameLabel.text = "Sanatçı"

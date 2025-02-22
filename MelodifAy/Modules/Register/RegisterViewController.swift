@@ -21,7 +21,7 @@ class RegisterViewController: UIViewController {
         imageView.image = UIImage(systemName: "person.crop.circle.fill.badge.plus")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
+        imageView.tintColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 50
         return imageView
@@ -37,17 +37,21 @@ class RegisterViewController: UIViewController {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Zaten hesabın var mı?", for: .normal)
-        button.setTitleColor(UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255), for: .normal)
+        button.setTitleColor(UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0), for: .normal)
         return button
     }()
     
     private let registerButton : UIButton =  {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
+        button.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         button.layer.cornerRadius = 10
         button.setTitle("Kayıt Ol", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowRadius = 4
+        button.layer.shadowOpacity = 0.3
         return button
     }()
     
@@ -82,6 +86,12 @@ class RegisterViewController: UIViewController {
         keyboardShowing()
         addTargetOnButton()
         
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        registerButton.applyGradient(colors: [UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0), UIColor(red: 0.12, green: 0.12, blue: 0.12, alpha: 1.0)])
     }
     
     deinit {

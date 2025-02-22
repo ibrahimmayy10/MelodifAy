@@ -14,7 +14,7 @@ class MiniMusicPlayerViewController: UIViewController {
     let miniPlayerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
+        view.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         return view
     }()
     
@@ -55,6 +55,26 @@ class MiniMusicPlayerViewController: UIViewController {
         configureUI()
         setupAudioSliderObserver()
         
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        addGradientLayer()
+    }
+    
+    func addGradientLayer() {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = miniPlayerView.bounds
+        gradientLayer.colors = [
+            UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0).cgColor,
+            UIColor(red: 0.12, green: 0.12, blue: 0.12, alpha: 1.0).cgColor
+        ]
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        gradientLayer.cornerRadius = 10
+
+        miniPlayerView.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     private func setupAudioSliderObserver() {
@@ -141,5 +161,25 @@ extension MiniMusicPlayerViewController: MusicDetailsDelegate {
         let largePlayImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
         let buttonImage = MusicPlayerService.shared.isPlaying ? largePauseImage : largePlayImage
         self.miniPlayButton.setImage(buttonImage, for: .normal)
+    }
+}
+
+extension MiniMusicPlayerViewController {
+    func showMiniPlayer() {
+        view.isHidden = false
+        NotificationCenter.default.post(
+            name: NSNotification.Name("MiniPlayerVisibilityChanged"),
+            object: nil,
+            userInfo: ["isVisible": true]
+        )
+    }
+    
+    func hideMiniPlayer() {
+        view.isHidden = true
+        NotificationCenter.default.post(
+            name: NSNotification.Name("MiniPlayerVisibilityChanged"),
+            object: nil,
+            userInfo: ["isVisible": false]
+        )
     }
 }

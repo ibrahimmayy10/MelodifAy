@@ -8,8 +8,8 @@
 import Foundation
 
 protocol AccountViewModelProtocol {
-    func getDataUserInfo()
-    func getDataMusicInfo()
+    func getDataUserInfo(completion: @escaping (Bool) -> Void)
+    func getDataMusicInfo(completion: @escaping (Bool) -> Void)
     var serviceAccount: ServiceAccountProtocol { get }
 }
 
@@ -23,16 +23,28 @@ class AccountViewModel: AccountViewModelProtocol {
         self.view = view
     }
     
-    func getDataUserInfo() {
+    func getDataUserInfo(completion: @escaping (Bool) -> Void) {
         serviceAccount.fetchUserInfo { user in
+            guard !user.imageUrl.isEmpty else {
+                completion(false)
+                return
+            }
+            
             self.view?.setUserInfo(user: user)
+            completion(true)
         }
     }
     
-    func getDataMusicInfo() {
+    func getDataMusicInfo(completion: @escaping (Bool) -> Void) {
         serviceAccount.fetchMusicInfo { musics in
+            guard !musics.isEmpty else {
+                completion(false)
+                return
+            }
+            
             self.musics = musics
             self.view?.reloadDataTableView()
+            completion(true)
         }
     }
 }

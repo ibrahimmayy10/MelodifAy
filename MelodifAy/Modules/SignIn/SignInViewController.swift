@@ -15,7 +15,7 @@ protocol SignInViewControllerProtocol: AnyObject {
 
 class SignInViewController: UIViewController {
     
-    private let imageView = ImageViews(imageName: "melodi")
+    private let imageView = ImageViews(imageName: "melodifaylogo")
     
     private let emailTextField = TextFields(placeHolder: "Email", secureText: false, textType: .emailAddress, maxLength: 1000)
     private let passwordTextField = TextFields(placeHolder: "Şifre", secureText: true, textType: .password, maxLength: 8)
@@ -23,16 +23,20 @@ class SignInViewController: UIViewController {
     private let registerButton: UIButton =  {
         let button = UIButton(type: .system)
         button.setTitle("Hesabın yok mu?", for: .normal)
-        button.setTitleColor(UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255), for: .normal)
+        button.setTitleColor(UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0), for: .normal)
         return button
     }()
     
     lazy var signInButton : UIButton =  {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
+        button.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         button.layer.cornerRadius = 10
         button.setTitle("Giriş Yap", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowRadius = 4
+        button.layer.shadowOpacity = 0.3
         return button
     }()
     
@@ -64,6 +68,12 @@ class SignInViewController: UIViewController {
         keyboardShowing()
         addTargetOnButton()
         
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        signInButton.applyGradient(colors: [UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0), UIColor(red: 0.12, green: 0.12, blue: 0.12, alpha: 1.0)])
     }
     
     deinit {
@@ -124,6 +134,8 @@ extension SignInViewController {
         
         contentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, right: scrollView.rightAnchor, bottom: scrollView.bottomAnchor, width: view.bounds.size.width)
         contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor).isActive = true
+        
+        imageView.contentMode = .scaleAspectFit
         
         imageView.anchor(top: contentView.topAnchor, centerX: contentView.centerXAnchor, paddingTop: 20, width: 250, height: 250)
         emailTextField.anchor(top: imageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15, height: 40)
