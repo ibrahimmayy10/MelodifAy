@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+import Lottie
 
 class HomePageViewController: UIViewController {
     
@@ -17,16 +18,19 @@ class HomePageViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.tintColor = .white
-        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
+        button.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         button.layer.cornerRadius = 25
         return button
     }()
+    
+    private let animationView = LottieAnimationView(name: "loadingAnimation")
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureBottomBar()
         configureWithExt()
+        configureAnimationView()
         addTargetButtons()
         
     }
@@ -39,14 +43,6 @@ class HomePageViewController: UIViewController {
         navigationController?.pushViewController(NewSongViewController(), animated: true)
     }
 
-}
-
-extension HomePageViewController {
-    func configureWithExt() {
-        view.addViews(newPostButton)
-        
-        newPostButton.anchor(right: view.rightAnchor, bottom: bottomBar.topAnchor, paddingRight: 10, paddingBottom: 10, width: 50, height: 50)
-    }
 }
 
 extension HomePageViewController {
@@ -63,6 +59,21 @@ extension HomePageViewController {
         bottomBar.translatesAutoresizingMaskIntoConstraints = false
         
         bottomBar.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, height: 60)
+    }
+    
+    func configureWithExt() {
+        view.addViews(newPostButton)
+        
+        newPostButton.anchor(right: view.rightAnchor, bottom: bottomBar.topAnchor, paddingRight: 10, paddingBottom: 10, width: 50, height: 50)
+    }
+    
+    func configureAnimationView() {
+        view.addViews(animationView)
+        
+        animationView.loopMode = .loop
+        animationView.play()
+        animationView.translatesAutoresizingMaskIntoConstraints = false
+        animationView.anchor(centerX: view.centerXAnchor, centerY: view.centerYAnchor, width: 150, height: 150)
     }
 }
 

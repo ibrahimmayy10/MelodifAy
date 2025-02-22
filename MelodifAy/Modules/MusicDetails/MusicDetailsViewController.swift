@@ -9,6 +9,7 @@ import UIKit
 import AVFoundation
 import AVKit
 import Firebase
+import Lottie
 
 protocol MusicDetailsDelegate: AnyObject {
     func updateMiniPlayer(with music: MusicModel, isPlaying: Bool)
@@ -97,7 +98,7 @@ class MusicDetailsViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Videoyu izle", for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
+        button.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         button.layer.cornerRadius = 20
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowOffset = CGSize(width: 0, height: 2)
@@ -126,14 +127,6 @@ class MusicDetailsViewController: UIViewController {
         return slider
     }()
     
-    private let loadingIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .large)
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        indicator.color = .white
-        indicator.hidesWhenStopped = true
-        return indicator
-    }()
-    
     private let musicView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -141,6 +134,8 @@ class MusicDetailsViewController: UIViewController {
         view.layer.cornerRadius = 10
         return view
     }()
+    
+    private let animationView = LottieAnimationView(name: "loadingAnimation")
         
     var music: MusicModel?
     var musics = [MusicModel]()
@@ -156,6 +151,12 @@ class MusicDetailsViewController: UIViewController {
         addTargetButtons()
         playMusic()
         
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        watchVideoButton.applyGradient(colors: [UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0), UIColor(red: 0.12, green: 0.12, blue: 0.12, alpha: 1.0)])
     }
     
     @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
@@ -265,41 +266,45 @@ class MusicDetailsViewController: UIViewController {
     }
     
     func isLoadingMusic() {
-        loadingIndicator.startAnimating()
+        animationView.translatesAutoresizingMaskIntoConstraints = false
+        animationView.play()
+        animationView.loopMode = .loop
         
-        dismissButton.alpha = 0.3
-        editButton.alpha = 0.3
-        watchVideoButton.alpha = 0.3
-        playLabel.alpha = 0.3
-        coverPhotoImageView.alpha = 0.3
-        nameLabel.alpha = 0.3
-        songNameLabel.alpha = 0.3
-        audioSlider.alpha = 0.3
-        forwardButton.alpha = 0.3
-        backwardButton.alpha = 0.3
-        playButton.alpha = 0.3
-        restartButton.alpha = 0.3
-        mixButton.alpha = 0.3
-        
-        loadingIndicator.alpha = 1.0
+        dismissButton.isHidden = true
+        editButton.isHidden = true
+        currentTimeLabel.isHidden = true
+        remainingTimeLabel.isHidden = true
+        watchVideoButton.isHidden = true
+        playLabel.isHidden = true
+        coverPhotoImageView.isHidden = true
+        nameLabel.isHidden = true
+        songNameLabel.isHidden = true
+        audioSlider.isHidden = true
+        forwardButton.isHidden = true
+        backwardButton.isHidden = true
+        playButton.isHidden = true
+        restartButton.isHidden = true
+        mixButton.isHidden = true
     }
     
     func isUploadedMusic() {
-        loadingIndicator.stopAnimating()
+        animationView.stop()
+        animationView.isHidden = true
         
-        dismissButton.alpha = 1.0
-        editButton.alpha = 1.0
-        watchVideoButton.alpha = 1.0
-        playLabel.alpha = 1.0
-        coverPhotoImageView.alpha = 1.0
-        nameLabel.alpha = 1.0
-        songNameLabel.alpha = 1.0
-        audioSlider.alpha = 1.0
-        forwardButton.alpha = 1.0
-        backwardButton.alpha = 1.0
-        playButton.alpha = 1.0
-        restartButton.alpha = 1.0
-        mixButton.alpha = 1.0
+        dismissButton.isHidden = false
+        editButton.isHidden = false
+        currentTimeLabel.isHidden = false
+        remainingTimeLabel.isHidden = false
+        playLabel.isHidden = false
+        coverPhotoImageView.isHidden = false
+        nameLabel.isHidden = false
+        songNameLabel.isHidden = false
+        audioSlider.isHidden = false
+        forwardButton.isHidden = false
+        backwardButton.isHidden = false
+        playButton.isHidden = false
+        restartButton.isHidden = false
+        mixButton.isHidden = false
     }
     
     func formatTime(_ time: Double) -> String {
@@ -379,10 +384,10 @@ extension MusicDetailsViewController {
     }
     
     func configureWithExt() {
-        view.addViews(dismissButton, editButton, playLabel, nameLabel, songNameLabel, audioSlider, playButton, backwardButton, forwardButton, loadingIndicator, remainingTimeLabel, currentTimeLabel, musicView, restartButton, mixButton, watchVideoButton)
+        view.addViews(dismissButton, editButton, playLabel, nameLabel, songNameLabel, audioSlider, playButton, backwardButton, forwardButton, animationView, remainingTimeLabel, currentTimeLabel, musicView, restartButton, mixButton, watchVideoButton)
         musicView.addViews(coverPhotoImageView)
         
-        loadingIndicator.anchor(centerX: view.centerXAnchor, centerY: view.centerYAnchor)
+        animationView.anchor(centerX: view.centerXAnchor, centerY: view.centerYAnchor, width: 150, height: 150)
         dismissButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 10, paddingLeft: 10)
         playLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10)
         editButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, right: view.rightAnchor, paddingTop: 10, paddingRight: 10)

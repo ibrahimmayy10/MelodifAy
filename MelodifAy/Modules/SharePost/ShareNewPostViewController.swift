@@ -30,8 +30,12 @@ class ShareNewPostViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Paylaş", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
+        button.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         button.layer.cornerRadius = 20
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowRadius = 4
+        button.layer.shadowOpacity = 0.3
         return button
     }()
     
@@ -68,7 +72,7 @@ class ShareNewPostViewController: UIViewController {
     
     private let seperatorView = SeperatorView(color: .systemGray4)
     
-    private let imageView = ImageViews(imageName: "melodi")
+    private let imageView = ImageViews(imageName: "melodifaylogo")
     
     private let selectionImageViewContainer: UIView = {
         let container = UIView()
@@ -103,6 +107,12 @@ class ShareNewPostViewController: UIViewController {
         keyboardShowing()
         addTargetButtons()
                 
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        shareButton.applyGradient(colors: [UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0), UIColor(red: 0.12, green: 0.12, blue: 0.12, alpha: 1.0)])
     }
     
     deinit {
@@ -219,7 +229,7 @@ extension ShareNewPostViewController {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
         lyricsTextView.delegate = self
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFit
         
         view.addViews(scrollView, backButton, shareLabel, imageView)
         scrollView.addSubview(contentView)
@@ -240,7 +250,7 @@ extension ShareNewPostViewController {
         selectionImageLabel.anchor(top: seperatorView.bottomAnchor, left: contentView.leftAnchor, paddingTop: 30, paddingLeft: 20)
         selectionImageViewContainer.anchor(top: selectionImageLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 20, paddingLeft: 20, width: 150, height: 150)
         selectionImageView.anchor(centerX: selectionImageViewContainer.centerXAnchor, centerY: selectionImageViewContainer.centerYAnchor, width: 100, height: 100)
-        shareButton.anchor(top: selectionImageViewContainer.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 40, paddingLeft: 20, paddingRight: 20, height: 40)
+        shareButton.anchor(top: selectionImageViewContainer.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 40, paddingLeft: 20, paddingRight: 20, height: 50)
         activityIndicator.anchor(top: shareButton.topAnchor, left: shareButton.leftAnchor, right: shareButton.rightAnchor, bottom: shareButton.bottomAnchor)
         imageView.anchor(bottom: view.bottomAnchor, centerX: view.centerXAnchor, width: 120, height: 120)
     }

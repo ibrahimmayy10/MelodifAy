@@ -7,6 +7,7 @@
 
 import UIKit
 import AVFoundation
+import Lottie
 
 class NewSongViewController: UIViewController {
     
@@ -27,7 +28,7 @@ class NewSongViewController: UIViewController {
     let segmentedControl: UISegmentedControl = {
         let items = ["Video", "Ses"]
         let segmentedControl = UISegmentedControl(items: items)
-        segmentedControl.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
+        segmentedControl.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         return segmentedControl
@@ -49,28 +50,30 @@ class NewSongViewController: UIViewController {
     
     let timerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
+        view.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         view.layer.cornerRadius = 70
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowRadius = 4
+        view.layer.shadowOpacity = 0.3
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private let audioRecordingStartButton: UIButton = {
-        let button = UIButton()
-        
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 70, weight: .bold, scale: .large)
-        let largeImage = UIImage(systemName: "mic.circle.fill", withConfiguration: largeConfig)
-        
-        button.setImage(largeImage, for: .normal)
-        button.tintColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
-        button.layer.cornerRadius = 10
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOffset = CGSize(width: 0, height: 2)
-        button.layer.shadowRadius = 4
-        button.layer.shadowOpacity = 0.3
-        
-        return button
+    private let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .bold, scale: .large)
+        imageView.image = UIImage(systemName: "mic.fill", withConfiguration: largeConfig)
+        imageView.tintColor = .white
+        return imageView
+    }()
+    
+    private let logoImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "melodifaylogo")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
         
     private let uploadRecordedButton: UIButton = {
@@ -87,14 +90,14 @@ class NewSongViewController: UIViewController {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 40, weight: .bold, scale: .large)
         let largeImage = UIImage(systemName: "camera.circle.fill", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
-        button.tintColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
+        button.tintColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         return button
     }()
     
     private let existingRecordButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor(red: 17/255, green: 57/255, blue: 113/255, alpha: 1.0)
+        button.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         button.setTitle("Mevcut Ses Kaydı", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -106,44 +109,23 @@ class NewSongViewController: UIViewController {
         return button
     }()
     
+    private var animationView = LottieAnimationView(name: "micro")
+    
     private let seperatorView = SeperatorView(color: .lightGray)
-    
-    let scrollView = UIScrollView()
-    let waveformContentView = UIView()
-    
-    private let centerLine: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
-        view.isUserInteractionEnabled = false
-        view.isHidden = true
-        return view
-    }()
-    
-    var waveformBars = [UIView]()
-    var waveformXOffset: CGFloat = 0.0
     
     private var audioRecorder: AVAudioRecorder?
     var recordedAudioURL: URL?
-    var selectedAudioURL: URL?
     
     private var timer: Timer?
     private var elapsedTime: Int = 0
-    private var totalTime: String = ""
-    private var progressUpdateTimer: Timer?
     
     private let progressLayer = CAShapeLayer()
     private let maxRecordingTime: Int = 300
     
-    private var isAnimating = false
-    private var isSeeking: Bool = false
     private var isRecordingPaused = false
     
-    private var videoPlayer: AVPlayer?
     var selectedVideoURL: URL?
-    
-    var playbackSpeed: Float = 1.0
-        
+            
     override func viewDidLoad() {
         super.viewDidLoad()
                 
@@ -151,7 +133,6 @@ class NewSongViewController: UIViewController {
         configureSegmentedControl()
         configureWithExt()
         configureTimerLabel()
-        configureAudioPlayerView()
         configureVideoView()
         addTargetButtons()
         setupCircularProgress()
@@ -164,11 +145,27 @@ class NewSongViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         updateCircularProgressFrame()
+        addGradientLayer()
+        existingRecordButton.applyGradient(colors: [UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0), UIColor(red: 0.12, green: 0.12, blue: 0.12, alpha: 1.0)])
+    }
+    
+    func addGradientLayer() {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = timerView.bounds
+        gradientLayer.colors = [
+            UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0).cgColor,
+            UIColor(red: 0.12, green: 0.12, blue: 0.12, alpha: 1.0).cgColor
+        ]
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        gradientLayer.cornerRadius = 70
+
+        timerView.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     func setupCircularProgress() {
         progressLayer.fillColor = UIColor.clear.cgColor
-        progressLayer.strokeColor = UIColor.white.cgColor
+        progressLayer.strokeColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0).cgColor
         progressLayer.lineWidth = 5
         progressLayer.strokeEnd = 0
         progressLayer.lineCap = .round
@@ -194,9 +191,12 @@ class NewSongViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButton_Clicked), for: .touchUpInside)
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         uploadRecordedButton.addTarget(self, action: #selector(uploadRecordedButton_Clicked), for: .touchUpInside)
-        audioRecordingStartButton.addTarget(self, action: #selector(audioRecordingButton_Clicked), for: .touchUpInside)
         cameraButton.addTarget(self, action: #selector(cameraButton_Clicked), for: .touchUpInside)
         existingRecordButton.addTarget(self, action: #selector(existingRecordButton_Clicked), for: .touchUpInside)
+        
+        timerView.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(audioRecordingButton_Clicked))
+        timerView.addGestureRecognizer(tapGesture)
     }
     
     @objc func existingRecordButton_Clicked() {
@@ -206,22 +206,12 @@ class NewSongViewController: UIViewController {
         vc.audioURL = self.recordedAudioURL
         self.present(vc, animated: true)
     }
-
-    func showAlert(message: String) {
-        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
-    }
     
     @objc func cameraButton_Clicked() {
         let vc = CameraViewController()
         let navController = UINavigationController(rootViewController: vc)
         navController.modalPresentationStyle = .fullScreen
         present(navController, animated: true)
-    }
-    
-    func convertUrlToString(url: URL) -> String {
-        return url.absoluteString
     }
     
     @objc func backButton_Clicked() {
@@ -235,32 +225,6 @@ class NewSongViewController: UIViewController {
         } else {
             videoView.isHidden = true
             soundView.isHidden = false
-        }
-    }
-    
-    @objc func audioRecordingPlayButton_Clicked() {
-        if isRecordingPaused {
-            audioRecorder?.record()
-            
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-            isRecordingPaused = false
-            
-            print("kayıt devam ediyor")
-        }
-    }
-    
-    @objc func audioRecordingPauseButton_Clicked() {
-        if !isRecordingPaused {
-            guard let recorder = audioRecorder, recorder.isRecording else {
-                print("Kayıt devam etmiyor, durdurulacak bir şey yok.")
-                return
-            }
-            
-            audioRecorder?.pause()
-            timer?.invalidate()
-            
-            print("Kayıt duraklatıldı.")
-            isRecordingPaused = true
         }
     }
     
@@ -288,15 +252,14 @@ class NewSongViewController: UIViewController {
     }
     
     func startRecording() {
-        resetWaveform()
-        waveformContentView.isHidden = false
-        centerLine.isHidden = false
+        animationView.isHidden = false
+        animationView.loopMode = .loop
+        animationView.play()
+        
         isRecordingPaused = false
         existingRecordButton.isHidden = true
-        
-        UIView.animate(withDuration: 0.5, animations: {
-            self.audioRecordingStartButton.transform = self.audioRecordingStartButton.transform.scaledBy(x: 1.2, y: 1.2)
-        })
+        imageView.isHidden = true
+        timerLabel.isHidden = false
         
         do {
             try AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .default, options: .defaultToSpeaker)
@@ -333,7 +296,6 @@ class NewSongViewController: UIViewController {
             
             print("kayıt başladı")
             
-            Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(updateAudioMeter), userInfo: nil, repeats: true)
         } catch {
             print("kayıt yapılamadı")
         }
@@ -353,75 +315,6 @@ class NewSongViewController: UIViewController {
         
         let progress = CGFloat(elapsedTime) / CGFloat(maxRecordingTime)
         progressLayer.strokeEnd = progress
-        
-        if !isAnimating {
-            animateRecordingButton()
-        }
-    }
-    
-    func animateRecordingButton() {
-        isAnimating = true
-        UIView.animate(withDuration: 0.5, animations: {
-            self.audioRecordingStartButton.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-        }) { _ in
-            UIView.animate(withDuration: 0.5, animations: {
-                self.audioRecordingStartButton.transform = .identity
-            }) { _ in
-                self.isAnimating = false
-            }
-        }
-    }
-    
-    @objc func updateAudioMeter() {
-        guard let recorder = audioRecorder, !isRecordingPaused else { return }
-        recorder.updateMeters()
-        
-        let averagePower = recorder.averagePower(forChannel: 0)
-        let normalizedPower = normalizedPowerLevel(fromDecibels: averagePower)
-                
-        updateWaveform(normalizedPower)
-    }
-    
-    func normalizedPowerLevel(fromDecibels decibels: Float) -> CGFloat {
-        let minDecibels: Float = -80.0
-        
-        if decibels < minDecibels {
-            return 0.0
-        } else {
-            let level = pow(10.0, 0.05 * decibels)
-            return CGFloat(level)
-        }
-    }
-    
-    func updateWaveform(_ level: CGFloat) {
-        let maxBarHeight: CGFloat = 150
-        let minBarHeight: CGFloat = 5
-        let centerY: CGFloat = maxBarHeight / 2
-        
-        let barHeight = max(minBarHeight, level * maxBarHeight)
-        let topOffset = centerY - barHeight / 2
-        
-        let newBar = UIView()
-        newBar.backgroundColor = UIColor(red: 17 / 255, green: 57 / 255, blue: 113 / 255, alpha: 255 / 255)
-        newBar.translatesAutoresizingMaskIntoConstraints = false
-        
-        newBar.frame = CGRect(x: waveformXOffset, y: topOffset, width: 3, height: barHeight)
-        waveformContentView.addSubview(newBar)
-        waveformBars.append(newBar)
-        
-        waveformXOffset += 4
-        
-        scrollView.contentSize = CGSize(width: waveformXOffset, height: maxBarHeight)
-        
-        if waveformXOffset > scrollView.frame.width {
-            let newOffset = CGPoint(x: waveformXOffset - scrollView.frame.width, y: 0)
-            scrollView.setContentOffset(newOffset, animated: false)
-        }
-        
-        if let firstBar = waveformBars.first, firstBar.frame.maxX < scrollView.contentOffset.x {
-            firstBar.removeFromSuperview()
-            waveformBars.removeFirst()
-        }
     }
     
     func stopRecording() {
@@ -430,49 +323,30 @@ class NewSongViewController: UIViewController {
             return
         }
         
+        animationView.isHidden = true
+        animationView.stop()
+        
         audioRecorder?.stop()
         audioRecorder = nil
         
         timer?.invalidate()
         timer = nil
         
-        waveformContentView.isHidden = true
-        centerLine.isHidden = true
+        timerLabel.isHidden = true
         existingRecordButton.isHidden = false
+        imageView.isHidden = false
         isRecordingPaused = false
         
         elapsedTime += 1
-        totalTime = timerLabel.text ?? ""
         
         progressLayer.strokeEnd = 0
         
-        print("Kayıt durduruldu")
         let vc = AudioRecordingPreviewViewController()
         let navController = UINavigationController(rootViewController: vc)
         navController.modalPresentationStyle = .custom
         navController.transitioningDelegate = self
         vc.audioURL = self.recordedAudioURL
         self.present(navController, animated: true)
-    }
-    
-    func resetWaveform() {
-        for bar in waveformBars {
-            bar.removeFromSuperview()
-        }
-        waveformBars.removeAll()
-        
-        waveformXOffset = 0.0
-        
-        scrollView.contentOffset = .zero
-        scrollView.contentSize = CGSize(width: 0, height: 50)
-        
-        waveformContentView.subviews.forEach { $0.removeFromSuperview() }
-    }
-
-    func formatTime(_ timeInSeconds: Int) -> String {
-        let minutes = timeInSeconds / 60
-        let seconds = timeInSeconds % 60
-        return String(format: "%02d:%02d", minutes, seconds)
     }
     
     private func startAnimatingText() {
@@ -525,41 +399,26 @@ extension NewSongViewController {
     
     private func configureWithExt() {
         view.addViews(videoView, soundView)
-        soundView.addViews(audioRecordingStartButton, existingRecordButton)
+        soundView.addViews(existingRecordButton, logoImageView)
         videoView.anchor(top: segmentedControl.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
         soundView.anchor(top: segmentedControl.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
                 
-        existingRecordButton.anchor(bottom: audioRecordingStartButton.topAnchor, centerX: view.centerXAnchor, paddingBottom: 20, width: 200, height: 50)
-        audioRecordingStartButton.anchor(bottom: soundView.safeAreaLayoutGuide.bottomAnchor, centerX: view.centerXAnchor, paddingBottom: 10)
+        existingRecordButton.anchor(top: segmentedControl.bottomAnchor, centerX: view.centerXAnchor, paddingTop: 20, width: 200, height: 50)
+        logoImageView.anchor(bottom: soundView.bottomAnchor, centerX: soundView.centerXAnchor, paddingBottom: 20, width: 130, height: 100)
     }
     
     private func configureTimerLabel() {
-        soundView.addSubview(timerView)
-        timerView.addViews(timerLabel)
-        
-        timerView.layer.shadowColor = UIColor.black.cgColor
-        timerView.layer.shadowOpacity = 0.4
-        timerView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        timerView.layer.shadowRadius = 4
-        
-        timerView.anchor(top: segmentedControl.bottomAnchor, centerX: soundView.centerXAnchor, paddingTop: 20, width: 140, height: 140)
+        soundView.addViews(timerView)
+        timerView.addViews(timerLabel, imageView, animationView)
+
+        animationView.isHidden = true
+        timerLabel.isHidden = true
+        animationView.translatesAutoresizingMaskIntoConstraints = false
+            
+        timerView.anchor(centerX: animationView.centerXAnchor, centerY: animationView.centerYAnchor, width: 140, height: 140)
+        animationView.anchor(centerX: view.centerXAnchor, centerY: view.centerYAnchor, width: 190, height: 190)
         timerLabel.anchor(centerX: timerView.centerXAnchor, centerY: timerView.centerYAnchor)
-    }
-    
-    func configureAudioPlayerView() {
-        soundView.addViews(scrollView, centerLine)
-        
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.showsHorizontalScrollIndicator = false
-        scrollView.isScrollEnabled = false
-        scrollView.isUserInteractionEnabled = false
-        waveformContentView.isUserInteractionEnabled = false
-        scrollView.addSubview(waveformContentView)
-        
-        scrollView.anchor(top: timerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 60, height: 150)
-        waveformContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, height: 150)
-        waveformContentView.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-        centerLine.anchor(left: view.leftAnchor, right: view.rightAnchor, centerY: scrollView.centerYAnchor, height: 1)
+        imageView.anchor(centerX: timerView.centerXAnchor, centerY: timerView.centerYAnchor)
     }
     
     func configureVideoView() {
@@ -634,14 +493,6 @@ extension NewSongViewController: AVAudioRecorderDelegate {
 extension NewSongViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         return BottomSheetPresentationController(presentedViewController: presented, presenting: presenting)
-    }
-}
-
-extension NewSongViewController {
-    func makeAlert(message: String) {
-        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Tamam", style: .default))
-        present(alert, animated: true)
     }
 }
 

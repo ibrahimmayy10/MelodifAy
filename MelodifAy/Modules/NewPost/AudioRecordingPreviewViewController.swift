@@ -66,7 +66,7 @@ class AudioRecordingPreviewViewController: UIViewController {
     private let shareButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor(red: 17/255, green: 57/255, blue: 113/255, alpha: 1.0)
+        button.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         button.setTitle("Paylaş", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -168,6 +168,8 @@ class AudioRecordingPreviewViewController: UIViewController {
             let stepWidth = speedSlider.bounds.width / CGFloat(sliderSteps.count - 1)
             tickView.center.x = speedSlider.frame.minX + CGFloat(index) * stepWidth
         }
+        
+        shareButton.applyGradient(colors: [UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0), UIColor(red: 0.12, green: 0.12, blue: 0.12, alpha: 1.0)])
     }
     
     func setupSlider() {

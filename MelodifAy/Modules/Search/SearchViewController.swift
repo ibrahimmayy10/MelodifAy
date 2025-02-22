@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Lottie
 
 protocol SearchViewControllerProtocol: AnyObject {
     func reloadDataTableView()
@@ -39,17 +40,24 @@ class SearchViewController: BaseViewController {
         return searchBar
     }()
     
+    private let animationView = LottieAnimationView(name: "loadingAnimation")
+    
     private var viewModel: SearchViewModel?
     var searchResults = [SearchResult]()
+    
+    private var tableViewBottomConstraint: NSLayoutConstraint?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setMiniPlayerBottomPadding(65)
         
         viewModel = SearchViewModel(view: self)
         
         setup()
         configureBottomBar()
         configureWithExt()
+        configureAnimationView()
         setDelegate()
         addTargetButtons()
         
@@ -57,6 +65,17 @@ class SearchViewController: BaseViewController {
             showMiniMusicPlayer(with: currentMusic)
         }
         
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(miniPlayerVisibilityChanged),
+                                               name: NSNotification.Name("MiniVisibilityChanged"),
+                                               object: nil)
+        
+    }
+    
+    override func updateMiniPlayerConstraints(isVisible: Bool) {
+        tableViewBottomConstraint?.isActive = false
+        tableViewBottomConstraint = tableView.bottomAnchor.constraint(equalTo: bottomBar.topAnchor, constant: isVisible ? -65 : 0)
+        tableViewBottomConstraint?.isActive = true
     }
     
     func addTargetButtons() {
@@ -73,6 +92,10 @@ class SearchViewController: BaseViewController {
         tableView.delegate = self
         tableView.dataSource = self
     }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
 }
 
@@ -81,8 +104,32 @@ extension SearchViewController {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         navigationController?.navigationBar.isHidden = true
         
-        viewModel?.getDataUsers()
-        viewModel?.getDataMusics()
+        toggleUIElementsVisibility(isHidden: true)
+        getAllData()
+    }
+    
+    func getAllData() {
+        animationView.play()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            guard let self = self else { return }
+            
+            viewModel?.getDataUsers()
+            viewModel?.getDataMusics()
+            
+            DispatchQueue.main.async {
+                self.animationView.stop()
+                self.animationView.isHidden = true
+                
+                self.toggleUIElementsVisibility(isHidden: false)
+            }
+        }
+    }
+    
+    func toggleUIElementsVisibility(isHidden: Bool) {
+        tableView.isHidden = isHidden
+        searchBar.isHidden = isHidden
+        searchLabel.isHidden = isHidden
     }
     
     func configureBottomBar() {
@@ -103,6 +150,15 @@ extension SearchViewController {
         searchLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10)
         searchBar.anchor(top: searchLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 10, paddingRight: 10, height: 50)
         tableView.anchor(top: searchBar.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: bottomBar.topAnchor)
+    }
+    
+    func configureAnimationView() {
+        view.addViews(animationView)
+        
+        animationView.loopMode = .loop
+        animationView.play()
+        animationView.translatesAutoresizingMaskIntoConstraints = false
+        animationView.anchor(centerX: view.centerXAnchor, centerY: view.centerYAnchor, width: 150, height: 150)
     }
 }
 
