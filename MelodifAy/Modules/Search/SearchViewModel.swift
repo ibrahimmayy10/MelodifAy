@@ -26,15 +26,19 @@ class SearchViewModel: SearchViewModelProtocol {
     
     func getDataUsers() {
         serviceSearch.fetchUsers { users in
-            self.users = users
-            self.view?.reloadDataTableView()
+            DispatchQueue.main.async {
+                self.users = users
+                self.view?.reloadDataTableView()
+            }
         }
     }
     
     func getDataMusics() {
         serviceSearch.fetchMusics { musics in
-            self.musics = musics
-            self.view?.reloadDataTableView()
+            DispatchQueue.main.async {
+                self.musics = musics
+                self.view?.reloadDataTableView()
+            }
         }
     }
 }

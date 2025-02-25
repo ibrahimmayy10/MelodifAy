@@ -12,26 +12,28 @@ import Lottie
 
 protocol AccountViewControllerProtocol: AnyObject {
     func setUserInfo(user: UserModel)
-    func reloadDataTableView()
+    func reloadDataCollectionView()
 }
 
 class AccountViewController: BaseViewController {
     
     private let bottomBar = BottomBarView()
     
-    private let nameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 18), textColorLabel: .white)
-    private let usernameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 17), textColorLabel: .lightGray)
+    private let nameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 16), textColorLabel: .white)
+    private let usernameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 14), textColorLabel: .lightGray)
+    private let myPostLabel = Labels(textLabel: "Paylaşımlarım", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
+    private let myLikesLabel = Labels(textLabel: "Beğendiklerim", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
     
-    private let followingLabel = Labels(textLabel: "Takip", fontLabel: .systemFont(ofSize: 14), textColorLabel: .white)
-    private let followingCountLabel = Labels(textLabel: "200", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
-    private let followerLabel = Labels(textLabel: "Takipçi", fontLabel: .systemFont(ofSize: 14), textColorLabel: .white)
-    private let followerCountLabel = Labels(textLabel: "300", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
+    private let followingLabel = Labels(textLabel: "Takip", fontLabel: .systemFont(ofSize: 13), textColorLabel: .white)
+    private let followingCountLabel = Labels(textLabel: "200", fontLabel: .boldSystemFont(ofSize: 12), textColorLabel: .white)
+    private let followerLabel = Labels(textLabel: "Takipçi", fontLabel: .systemFont(ofSize: 13), textColorLabel: .white)
+    private let followerCountLabel = Labels(textLabel: "300", fontLabel: .boldSystemFont(ofSize: 12), textColorLabel: .white)
     
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 35
+        imageView.layer.cornerRadius = 50
         imageView.tintColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
         return imageView
     }()
@@ -50,35 +52,58 @@ class AccountViewController: BaseViewController {
         return button
     }()
     
-    let segmentedControl: UISegmentedControl = {
-        let items = ["Paylaşımlarım", "Kitaplığım"]
-        let segmentedControl = UISegmentedControl(items: items)
-        segmentedControl.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
-        segmentedControl.selectedSegmentIndex = 0
-        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
-        return segmentedControl
+    private let seeAllMyPostsButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Tümünü Gör", for: .normal)
+        button.setTitleColor(UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0), for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        return button
     }()
     
-    let myPostsView: UIView = {
+    private let seeAllMyLikesButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Tümünü Gör", for: .normal)
+        button.setTitleColor(UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0), for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        return button
+    }()
+    
+    private let postCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 5
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
+        collectionView.register(UserCollectionViewCell.self, forCellWithReuseIdentifier: UserCollectionViewCell.cellID)
+        return collectionView
+    }()
+    
+    private let myLikesCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 5
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
+        collectionView.register(MyLikesCollectionViewCell.self, forCellWithReuseIdentifier: MyLikesCollectionViewCell.cellID)
+        return collectionView
+    }()
+    
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    private let contentView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    }()
-    
-    let myLikesView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let myPostsTableView: UITableView = {
-        let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
-        tableView.register(MyPostsTableViewCell.self, forCellReuseIdentifier: MyPostsTableViewCell.cellID)
-        return tableView
     }()
     
     private let animationView = LottieAnimationView(name: "loadingAnimation")
@@ -94,16 +119,17 @@ class AccountViewController: BaseViewController {
         
         viewModel = AccountViewModel(view: self)
         
-        setMiniPlayerBottomPadding(65)
+        setMiniPlayerBottomPadding(55)
         
         configureBottomBar()
         setup()
         configureWithExt()
-        configureSegmentedControl()
-        configureMyPostsView()
+        configureCollectionView()
         configureAnimationView()
         addTargetButtons()
         setDelegate()
+        
+        
         
         if let currentMusic = MusicPlayerService.shared.music {
             showMiniMusicPlayer(with: currentMusic)
@@ -118,7 +144,7 @@ class AccountViewController: BaseViewController {
     
     override func updateMiniPlayerConstraints(isVisible: Bool) {
         tableViewBottomConstraint?.isActive = false
-        tableViewBottomConstraint = myPostsTableView.bottomAnchor.constraint(equalTo: myPostsView.bottomAnchor, constant: isVisible ? -65 : 0)
+//        tableViewBottomConstraint = myPostsTableView.bottomAnchor.constraint(equalTo: myPostsView.bottomAnchor, constant: isVisible ? -65 : 0)
         tableViewBottomConstraint?.isActive = true
     }
     
@@ -133,12 +159,14 @@ class AccountViewController: BaseViewController {
     }
     
     func setDelegate() {
-        myPostsTableView.delegate = self
-        myPostsTableView.dataSource = self
+        postCollectionView.delegate = self
+        postCollectionView.dataSource = self
+        
+        myLikesCollectionView.delegate = self
+        myLikesCollectionView.dataSource = self
     }
     
     func addTargetButtons() {
-        segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         editProfileButton.addTarget(self, action: #selector(editProfileButton_Clicked), for: .touchUpInside)
     }
     
@@ -148,16 +176,6 @@ class AccountViewController: BaseViewController {
             navigationController?.pushViewController(SignInViewController(), animated: true)
         } catch {
             print("lfdösşfş")
-        }
-    }
-    
-    @objc func segmentChanged(_ sender: UISegmentedControl) {
-        if sender.selectedSegmentIndex == 0 {
-            myPostsView.isHidden = false
-            myLikesView.isHidden = true
-        } else {
-            myPostsView.isHidden = true
-            myLikesView.isHidden = false
         }
     }
     
@@ -199,16 +217,7 @@ extension AccountViewController {
     }
     
     func toggleUIElementsVisibility(isHidden: Bool) {
-        myPostsTableView.isHidden = isHidden
-        segmentedControl.isHidden = isHidden
-        profileImageView.isHidden = isHidden
-        nameLabel.isHidden = isHidden
-        usernameLabel.isHidden = isHidden
-        editProfileButton.isHidden = isHidden
-        followerLabel.isHidden = isHidden
-        followingLabel.isHidden = isHidden
-        followingCountLabel.isHidden = isHidden
-        followerCountLabel.isHidden = isHidden
+        scrollView.isHidden = isHidden
     }
     
     func configureBottomBar() {
@@ -217,23 +226,52 @@ extension AccountViewController {
         bottomBar.delegate = self
         bottomBar.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
+        bottomBar.layer.cornerRadius = 30
+        bottomBar.layer.shadowColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1.0).cgColor
+        bottomBar.layer.shadowOffset = CGSize(width: 0, height: 2)
+        bottomBar.layer.shadowRadius = 4
+        bottomBar.layer.shadowOpacity = 0.3
+        
         view.addViews(bottomBar)
         bottomBar.translatesAutoresizingMaskIntoConstraints = false
         
-        bottomBar.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, height: 60)
+        bottomBar.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingLeft: 10, paddingRight: 10, paddingBottom: 5, height: 60)
     }
     
     func configureWithExt() {
-        view.addViews(profileImageView, nameLabel, usernameLabel, followerLabel, followerCountLabel, followingLabel, followingCountLabel, editProfileButton)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addViews(profileImageView, nameLabel, usernameLabel, followerLabel, followerCountLabel, followingLabel, followingCountLabel, editProfileButton)
         
-        profileImageView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20, width: 70, height: 70)
-        nameLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: profileImageView.rightAnchor, paddingTop: 30, paddingLeft: 15)
-        usernameLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor, paddingTop: 5, paddingLeft: 15)
-        editProfileButton.anchor(top: profileImageView.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20, width: 160, height: 30)
-        followerLabel.anchor(top: profileImageView.bottomAnchor, left: editProfileButton.rightAnchor, paddingTop: 15, paddingLeft: 30)
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
+        contentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, right: scrollView.rightAnchor, bottom: scrollView.bottomAnchor, width: view.bounds.size.width, height: 1000)
+        
+        profileImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 20, paddingLeft: 20, width: 100, height: 100)
+        
+        nameLabel.anchor(left: profileImageView.rightAnchor, bottom: usernameLabel.topAnchor, paddingLeft: 15)
+        usernameLabel.anchor(left: profileImageView.rightAnchor, centerY: profileImageView.centerYAnchor, paddingLeft: 15)
+        
+        editProfileButton.anchor(top: profileImageView.bottomAnchor, left: contentView.leftAnchor, paddingTop: 25, paddingLeft: 20, width: 140, height: 30)
+        
+        followerLabel.anchor(top: usernameLabel.bottomAnchor, left: profileImageView.rightAnchor, paddingTop: 15, paddingLeft: 30)
         followerCountLabel.anchor(top: followerLabel.bottomAnchor, centerX: followerLabel.centerXAnchor, paddingTop: 5)
-        followingLabel.anchor(top: profileImageView.bottomAnchor, left: followerLabel.rightAnchor, paddingTop: 15, paddingLeft: 30)
+        
+        followingLabel.anchor(top: usernameLabel.bottomAnchor, left: followerLabel.rightAnchor, paddingTop: 15, paddingLeft: 30)
         followingCountLabel.anchor(top: followingLabel.bottomAnchor, centerX: followingLabel.centerXAnchor, paddingTop: 5)
+    }
+    
+    func configureCollectionView() {
+        contentView.addViews(postCollectionView, myPostLabel, seeAllMyPostsButton, myLikesCollectionView, myLikesLabel, seeAllMyLikesButton)
+        
+        myPostLabel.anchor(top: editProfileButton.bottomAnchor, left: contentView.leftAnchor, paddingTop: 20, paddingLeft: 10)
+        seeAllMyPostsButton.anchor(top: editProfileButton.bottomAnchor, right: contentView.rightAnchor, paddingTop: 15, paddingRight: 10)
+        postCollectionView.anchor(top: myPostLabel.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 5, paddingLeft: 5, paddingRight: 5, height: 220)
+        
+        myLikesLabel.anchor(top: postCollectionView.bottomAnchor, left: contentView.leftAnchor, paddingTop: 20, paddingLeft: 10)
+        seeAllMyLikesButton.anchor(top: postCollectionView.bottomAnchor, right: contentView.rightAnchor, paddingTop: 15, paddingRight: 10)
+        myLikesCollectionView.anchor(top: myLikesLabel.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 5, paddingLeft: 5, paddingRight: 5, height: 220)
+        
+        view.bringSubviewToFront(bottomBar)
     }
     
     func configureAnimationView() {
@@ -243,20 +281,6 @@ extension AccountViewController {
         animationView.play()
         animationView.translatesAutoresizingMaskIntoConstraints = false
         animationView.anchor(centerX: view.centerXAnchor, centerY: view.centerYAnchor, width: 150, height: 150)
-    }
-    
-    private func configureSegmentedControl() {
-        view.addSubview(segmentedControl)
-        myLikesView.isHidden = true
-        segmentedControl.anchor(top: editProfileButton.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 30, paddingLeft: 10, paddingRight: 10)
-    }
-    
-    private func configureMyPostsView() {
-        view.addViews(myPostsView)
-        myPostsView.addSubview(myPostsTableView)
-        
-        myPostsView.anchor(top: segmentedControl.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: bottomBar.topAnchor)
-        myPostsTableView.anchor(top: myPostsView.topAnchor, left: myPostsView.leftAnchor, right: myPostsView.rightAnchor, bottom: myPostsView.bottomAnchor)
     }
 }
 
@@ -290,45 +314,68 @@ extension AccountViewController: AccountViewControllerProtocol {
         }
     }
     
-    func reloadDataTableView() {
+    func reloadDataCollectionView() {
         DispatchQueue.main.async {
-            self.myPostsTableView.reloadData()
+            self.postCollectionView.reloadData()
+            self.myLikesCollectionView.reloadData()
         }
     }
 }
 
-extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel?.musics.count ?? 1
+extension AccountViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if collectionView == postCollectionView {
+            return viewModel?.musics.count ?? 1
+        } else if collectionView == myLikesCollectionView {
+            return viewModel?.musics.count ?? 1
+        } else {
+            return 1
+        }
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MyPostsTableViewCell.cellID, for: indexPath) as! MyPostsTableViewCell
-        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
-        cell.configure(music: music)
-        return cell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if collectionView == postCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserCollectionViewCell.cellID, for: indexPath) as! UserCollectionViewCell
+            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+            cell.configure(music: music)
+            return cell
+        } else if collectionView == myLikesCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyLikesCollectionViewCell.cellID, for: indexPath) as! MyLikesCollectionViewCell
+            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+            cell.configure(music: music)
+            return cell
+        } else {
+            return UICollectionViewCell()
+        }
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
-        
-        if let cell = tableView.cellForRow(at: indexPath) {
-            AnimationHelper.animateCell(cell: cell, in: self.view) {
-                let vc = MusicDetailsViewController()
-                self.music = music
-                vc.music = music
-                vc.musics = self.viewModel?.musics ?? []
-                vc.delegate = self
-                vc.modalPresentationStyle = .overFullScreen
-                vc.modalTransitionStyle = .crossDissolve
-                self.present(vc, animated: true)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == postCollectionView || collectionView == myLikesCollectionView {
+            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+            
+            if let cell = collectionView.cellForItem(at: indexPath) {
+                AnimationHelper.animateCell(cell: cell, in: self.view) {
+                    let vc = MusicDetailsViewController()
+                    self.music = music
+                    vc.music = music
+                    vc.musics = self.viewModel?.musics ?? []
+                    vc.delegate = self
+                    vc.modalPresentationStyle = .overFullScreen
+                    vc.modalTransitionStyle = .crossDissolve
+                    self.present(vc, animated: true)
+                }
             }
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if collectionView == postCollectionView || collectionView == myLikesCollectionView {
+            return CGSize(width: 150, height: 210)
+        } else {
+            return CGSize()
+        }
     }
+    
 }
 
 extension AccountViewController: MusicDetailsDelegate {

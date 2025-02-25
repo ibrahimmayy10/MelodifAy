@@ -19,7 +19,7 @@ class SearchTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 16), textColorLabel: .white)
+    private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
     private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 14), textColorLabel: .lightGray)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

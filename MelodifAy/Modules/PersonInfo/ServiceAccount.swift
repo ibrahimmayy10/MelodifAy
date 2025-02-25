@@ -17,50 +17,59 @@ class ServiceAccount: ServiceAccountProtocol {
     let firestore = Firestore.firestore()
     
     func fetchUserInfo(completion: @escaping (UserModel) -> Void) {
-        guard let user = Auth.auth().currentUser else { return }
-        let currentUserID = user.uid
-        
-        firestore.collection("Users").document(currentUserID).getDocument { document, error in
-            if error != nil {
-                print(error?.localizedDescription ?? "")
-            } else if let document = document, let data = document.data() {
-                guard let name = data["name"] as? String,
-                      let userID = data["userID"] as? String,
-                      let surname = data["surname"] as? String,
-                      let username = data["username"] as? String,
-                      let imageUrl = data["imageUrl"] as? String else { return }
-                
-                let userModel = UserModel(userID: userID, name: name, surname: surname, username: username, imageUrl: imageUrl)
-                completion(userModel)
+        DispatchQueue.global(qos: .background).async {
+            guard let user = Auth.auth().currentUser else { return }
+            let currentUserID = user.uid
+            
+            self.firestore.collection("Users").document(currentUserID).getDocument { document, error in
+                if error != nil {
+                    print(error?.localizedDescription ?? "")
+                } else if let document = document, let data = document.data() {
+                    guard let name = data["name"] as? String,
+                          let userID = data["userID"] as? String,
+                          let surname = data["surname"] as? String,
+                          let username = data["username"] as? String,
+                          let imageUrl = data["imageUrl"] as? String else { return }
+                    
+                    let userModel = UserModel(userID: userID, name: name, surname: surname, username: username, imageUrl: imageUrl)
+                    
+                    DispatchQueue.main.async {
+                        completion(userModel)
+                    }
+                }
             }
         }
     }
     
     func fetchMusicInfo(completion: @escaping ([MusicModel]) -> Void) {
-        guard let user = Auth.auth().currentUser else { return }
-        let currentUserID = user.uid
-        
-        firestore.collection("Musics").whereField("userID", isEqualTo: currentUserID).getDocuments { snapshot, error in
-            if let documents = snapshot?.documents {
-                var musics = [MusicModel]()
-                
-                for document in documents {
-                    let data = document.data()
+        DispatchQueue.global(qos: .background).async {
+            guard let user = Auth.auth().currentUser else { return }
+            let currentUserID = user.uid
+            
+            self.firestore.collection("Musics").whereField("userID", isEqualTo: currentUserID).getDocuments { snapshot, error in
+                if let documents = snapshot?.documents {
+                    var musics = [MusicModel]()
                     
-                    guard let coverPhotoURL = data["coverPhotoURL"] as? String,
-                          let lyrics = data["lyrics"] as? String,
-                          let musicID = data["musicID"] as? String,
-                          let musicUrl = data["musicUrl"] as? String,
-                          let songName = data["songName"] as? String,
-                          let name = data["name"] as? String,
-                          let musicFileType = data["musicFileType"] as? String,
-                          let userID = data["userID"] as? String else { return }
+                    for document in documents {
+                        let data = document.data()
+                        
+                        guard let coverPhotoURL = data["coverPhotoURL"] as? String,
+                              let lyrics = data["lyrics"] as? String,
+                              let musicID = data["musicID"] as? String,
+                              let musicUrl = data["musicUrl"] as? String,
+                              let songName = data["songName"] as? String,
+                              let name = data["name"] as? String,
+                              let musicFileType = data["musicFileType"] as? String,
+                              let userID = data["userID"] as? String else { return }
+                        
+                        let musicModel = MusicModel(coverPhotoURL: coverPhotoURL, lyrics: lyrics, musicID: musicID, musicUrl: musicUrl, songName: songName, name: name, userID: userID, musicFileType: musicFileType)
+                        musics.append(musicModel)
+                    }
                     
-                    let musicModel = MusicModel(coverPhotoURL: coverPhotoURL, lyrics: lyrics, musicID: musicID, musicUrl: musicUrl, songName: songName, name: name, userID: userID, musicFileType: musicFileType)
-                    musics.append(musicModel)
+                    DispatchQueue.main.async {
+                        completion(musics)
+                    }
                 }
-                
-                completion(musics)
             }
         }
     }
