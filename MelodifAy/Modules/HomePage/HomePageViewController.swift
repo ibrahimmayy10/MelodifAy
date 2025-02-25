@@ -9,6 +9,10 @@ import UIKit
 import Firebase
 import Lottie
 
+protocol HomePageViewControllerProtocol: AnyObject {
+    func reloadDataTableView()
+}
+
 class HomePageViewController: UIViewController {
     
     private let bottomBar = BottomBarView()
@@ -25,9 +29,14 @@ class HomePageViewController: UIViewController {
     
     private let animationView = LottieAnimationView(name: "loadingAnimation")
     
+    private var viewModel: HomePageViewModel?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        viewModel = HomePageViewModel(view: self)
+        
+        setup()
         configureBottomBar()
         configureWithExt()
         configureAnimationView()
@@ -46,6 +55,10 @@ class HomePageViewController: UIViewController {
 }
 
 extension HomePageViewController {
+    func setup() {
+        viewModel?.getDataMusics()
+    }
+    
     func configureBottomBar() {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         navigationController?.navigationBar.isHidden = true
@@ -55,10 +68,16 @@ extension HomePageViewController {
         bottomBar.delegate = self
         bottomBar.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
+        bottomBar.layer.cornerRadius = 30
+        bottomBar.layer.shadowColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1.0).cgColor
+        bottomBar.layer.shadowOffset = CGSize(width: 0, height: 2)
+        bottomBar.layer.shadowRadius = 4
+        bottomBar.layer.shadowOpacity = 0.3
+        
         view.addViews(bottomBar)
         bottomBar.translatesAutoresizingMaskIntoConstraints = false
         
-        bottomBar.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, height: 60)
+        bottomBar.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingLeft: 10, paddingRight: 10, paddingBottom: 5, height: 60)
     }
     
     func configureWithExt() {
@@ -89,5 +108,10 @@ extension HomePageViewController: BottomBarViewProtocol {
     func didTapAccountButton() {
         navigationController?.pushViewController(AccountViewController(), animated: false)
     }
-    
+}
+
+extension HomePageViewController: HomePageViewControllerProtocol {
+    func reloadDataTableView() {
+        
+    }
 }

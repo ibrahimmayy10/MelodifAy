@@ -30,8 +30,10 @@ class AccountViewModel: AccountViewModelProtocol {
                 return
             }
             
-            self.view?.setUserInfo(user: user)
-            completion(true)
+            DispatchQueue.main.async {
+                self.view?.setUserInfo(user: user)
+                completion(true)
+            }
         }
     }
     
@@ -42,9 +44,11 @@ class AccountViewModel: AccountViewModelProtocol {
                 return
             }
             
-            self.musics = musics
-            self.view?.reloadDataTableView()
-            completion(true)
+            DispatchQueue.main.async {
+                self.musics = musics
+                self.view?.reloadDataCollectionView()
+                completion(true)
+            }
         }
     }
 }
