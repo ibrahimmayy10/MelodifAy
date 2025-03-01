@@ -10,18 +10,6 @@ import UIKit
 class UserCollectionViewCell: UICollectionViewCell {
     static let cellID = "userPostCell"
     
-    private let postView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
-        view.layer.cornerRadius = 10
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowRadius = 4
-        view.layer.shadowOpacity = 0.3
-        return view
-    }()
-    
     private let postImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -74,11 +62,11 @@ class UserCollectionViewCell: UICollectionViewCell {
             gradientLayer?.cornerRadius = 10
             
             if let gradientLayer = gradientLayer {
-                postView.layer.insertSublayer(gradientLayer, at: 0)
+                contentView.layer.insertSublayer(gradientLayer, at: 0)
             }
         }
         
-        gradientLayer?.frame = postView.bounds
+        gradientLayer?.frame = contentView.bounds
     }
     
     override func prepareForReuse() {
@@ -90,16 +78,15 @@ class UserCollectionViewCell: UICollectionViewCell {
     }
     
     func configureWithExt() {
-        contentView.addSubview(postView)
-        postView.addViews(postImageView, heartImageView, songNameLabel, nameLabel, likeCountLabel)
+        contentView.addViews(postImageView, heartImageView, songNameLabel, nameLabel, likeCountLabel)
         
         contentView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
+        contentView.layer.cornerRadius = 10
         
-        postView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, bottom: contentView.bottomAnchor, paddingTop: 5, paddingLeft: 5, paddingRight: 5, paddingBottom: 5)
-        postImageView.anchor(top: postView.topAnchor, left: postView.leftAnchor, right: postView.rightAnchor, paddingTop: 5, paddingLeft: 5, paddingRight: 5, height: 130)
-        songNameLabel.anchor(top: postImageView.bottomAnchor, left: postView.leftAnchor, paddingTop: 10, paddingLeft: 10)
-        nameLabel.anchor(top: songNameLabel.bottomAnchor, left: postView.leftAnchor, paddingTop: 5, paddingLeft: 10)
-        heartImageView.anchor(top: songNameLabel.bottomAnchor, right: postView.rightAnchor, paddingTop: 5, paddingRight: 10, width: 15, height: 15)
+        postImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 5, paddingLeft: 5, paddingRight: 5, height: 130)
+        songNameLabel.anchor(top: postImageView.bottomAnchor, left: contentView.leftAnchor, paddingTop: 10, paddingLeft: 10)
+        nameLabel.anchor(top: songNameLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 5, paddingLeft: 10)
+        heartImageView.anchor(top: songNameLabel.bottomAnchor, right: contentView.rightAnchor, paddingTop: 5, paddingRight: 10, width: 15, height: 15)
         likeCountLabel.anchor(right: heartImageView.leftAnchor, centerY: heartImageView.centerYAnchor)
     }
     

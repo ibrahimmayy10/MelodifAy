@@ -179,6 +179,10 @@ class BottomBarView: UIView {
     }
     
     private func setupView() {
+        backgroundColor = UIColor(red: 0.108, green: 0.108, blue: 0.108, alpha: 0.97)
+        
+        layer.cornerRadius = 30
+        
         setupButton(homeButton, imageView: homeImageView, label: homeLabel, stackView: homeStackView, axis: .horizontal)
         setupButton(searchButton, imageView: searchImageView, label: searchLabel, stackView: searchStackView, axis: .vertical)
         setupButton(accountButton, imageView: accountImageView, label: accountLabel, stackView: accountStackView, axis: .horizontal, isReversed: true)
