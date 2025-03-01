@@ -50,7 +50,7 @@ class SearchViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setMiniPlayerBottomPadding(55)
+        setMiniPlayerBottomPadding(70)
         
         viewModel = SearchViewModel(view: self)
         
@@ -136,13 +136,6 @@ extension SearchViewController {
         let searchViewModel = BottomBarViewModel(selectedTab: .search(isSelected: true))
         bottomBar.viewModel = searchViewModel
         bottomBar.delegate = self
-        bottomBar.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
-        
-        bottomBar.layer.cornerRadius = 30
-        bottomBar.layer.shadowColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1.0).cgColor
-        bottomBar.layer.shadowOffset = CGSize(width: 0, height: 2)
-        bottomBar.layer.shadowRadius = 4
-        bottomBar.layer.shadowOpacity = 0.3
         
         view.addViews(bottomBar)
         bottomBar.translatesAutoresizingMaskIntoConstraints = false

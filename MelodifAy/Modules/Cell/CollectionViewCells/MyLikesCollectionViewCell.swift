@@ -10,18 +10,6 @@ import UIKit
 class MyLikesCollectionViewCell: UICollectionViewCell {
     static let cellID = "userLikeCell"
     
-    private let myLikesView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
-        view.layer.cornerRadius = 10
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowRadius = 4
-        view.layer.shadowOpacity = 0.3
-        return view
-    }()
-    
     private let myLikeImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -74,11 +62,11 @@ class MyLikesCollectionViewCell: UICollectionViewCell {
             gradientLayer?.cornerRadius = 10
             
             if let gradientLayer = gradientLayer {
-                myLikesView.layer.insertSublayer(gradientLayer, at: 0)
+                contentView.layer.insertSublayer(gradientLayer, at: 0)
             }
         }
         
-        gradientLayer?.frame = myLikesView.bounds
+        gradientLayer?.frame = contentView.bounds
     }
     
     override func prepareForReuse() {
@@ -89,16 +77,15 @@ class MyLikesCollectionViewCell: UICollectionViewCell {
     }
     
     func configureWithExt() {
-        contentView.addSubview(myLikesView)
-        myLikesView.addViews(myLikeImageView, heartImageView, songNameLabel, nameLabel, likeCountLabel)
+        contentView.addViews(myLikeImageView, heartImageView, songNameLabel, nameLabel, likeCountLabel)
         
         contentView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
+        contentView.layer.cornerRadius = 10
         
-        myLikesView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, bottom: contentView.bottomAnchor, paddingTop: 5, paddingLeft: 5, paddingRight: 5, paddingBottom: 5)
-        myLikeImageView.anchor(top: myLikesView.topAnchor, left: myLikesView.leftAnchor, right: myLikesView.rightAnchor, paddingTop: 5, paddingLeft: 5, paddingRight: 5, height: 130)
-        songNameLabel.anchor(top: myLikeImageView.bottomAnchor, left: myLikesView.leftAnchor, paddingTop: 10, paddingLeft: 10)
-        nameLabel.anchor(top: songNameLabel.bottomAnchor, left: myLikesView.leftAnchor, paddingTop: 5, paddingLeft: 10)
-        heartImageView.anchor(top: songNameLabel.bottomAnchor, right: myLikesView.rightAnchor, paddingTop: 5, paddingRight: 10, width: 15, height: 15)
+        myLikeImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 5, paddingLeft: 5, paddingRight: 5, height: 130)
+        songNameLabel.anchor(top: myLikeImageView.bottomAnchor, left: contentView.leftAnchor, paddingTop: 10, paddingLeft: 10)
+        nameLabel.anchor(top: songNameLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 5, paddingLeft: 10)
+        heartImageView.anchor(top: songNameLabel.bottomAnchor, right: contentView.rightAnchor, paddingTop: 5, paddingRight: 10, width: 15, height: 15)
         likeCountLabel.anchor(right: heartImageView.leftAnchor, centerY: heartImageView.centerYAnchor)
     }
     
