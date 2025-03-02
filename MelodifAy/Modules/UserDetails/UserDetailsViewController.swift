@@ -173,9 +173,18 @@ extension UserDetailsViewController {
             guard let self = self else { return }
             
             viewModel?.getDataMusic(userID: user?.userID ?? "", completion: { success in
-                if success {
+                guard let musics = self.viewModel?.musics else { return }
+                if !musics.isEmpty {
+                    if success {
+                        DispatchQueue.main.async {
+                            self.toggleUIElementsVisibility(isHidden: !success)
+                            self.animationView.stop()
+                            self.animationView.isHidden = true
+                        }
+                    }
+                } else {
                     DispatchQueue.main.async {
-                        self.toggleUIElementsVisibility(isHidden: !success)
+                        self.toggleUIElementsVisibility(isHidden: false)
                         self.animationView.stop()
                         self.animationView.isHidden = true
                     }

@@ -55,6 +55,5 @@ class PlaylistsForYouCollectionViewCell: UICollectionViewCell {
     
     func configure(music: MusicModel) {
         playlistImageView.sd_setImage(with: URL(string: music.coverPhotoURL))
-//        playlistNameLabel.text = music.songName
     }
 }
