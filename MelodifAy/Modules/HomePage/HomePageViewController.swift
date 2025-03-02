@@ -13,7 +13,7 @@ protocol HomePageViewControllerProtocol: AnyObject {
     func reloadDataCollectionView()
 }
 
-class HomePageViewController: UIViewController {
+class HomePageViewController: BaseViewController {
     
     private let bottomBar = BottomBarView()
     
@@ -154,6 +154,8 @@ class HomePageViewController: UIViewController {
         return imageView
     }()
     
+    private var newPostButtonBottomConstraint: NSLayoutConstraint?
+    
     private let animationView = LottieAnimationView(name: "loadingAnimation")
     
     private var viewModel: HomePageViewModel?
@@ -162,6 +164,8 @@ class HomePageViewController: UIViewController {
         super.viewDidLoad()
         
         viewModel = HomePageViewModel(view: self)
+        
+        setMiniPlayerBottomPadding(65)
         
         setup()
         configureTopBar()
@@ -172,6 +176,21 @@ class HomePageViewController: UIViewController {
         addTargetButtons()
         setDelegate()
         
+        if let currentMusic = MusicPlayerService.shared.music {
+            showMiniMusicPlayer(with: currentMusic)
+        }
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(miniPlayerVisibilityChanged),
+                                               name: NSNotification.Name("MiniVisibilityChanged"),
+                                               object: nil)
+        
+    }
+    
+    override func updateMiniPlayerConstraints(isVisible: Bool) {
+        newPostButtonBottomConstraint?.isActive = false
+        newPostButtonBottomConstraint = newPostButton.bottomAnchor.constraint(equalTo: bottomBar.topAnchor, constant: isVisible ? -75 : 0)
+        newPostButtonBottomConstraint?.isActive = true
     }
     
     func setDelegate() {
@@ -211,19 +230,6 @@ extension HomePageViewController {
         
         toggleUIElementsVisibility(isHidden: true)
         getAllData()
-    }
-    
-    func applyGradientBackground() {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = [
-            UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 0.3).cgColor,
-            UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0).cgColor
-        ]
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
-        gradientLayer.frame = view.bounds
-        
-        view.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     func getAllData() {
@@ -280,7 +286,7 @@ extension HomePageViewController {
         view.addViews(bottomBar)
         bottomBar.translatesAutoresizingMaskIntoConstraints = false
         
-        bottomBar.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingLeft: 10, paddingRight: 10, paddingBottom: 5, height: 60)
+        bottomBar.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingLeft: 10, paddingRight: 10, paddingBottom: 5, height: 55)
     }
     
     func configureWithExt() {
@@ -330,6 +336,10 @@ extension HomePageViewController {
 extension HomePageViewController: BottomBarViewProtocol {
     func didTapHomeButton() {
         
+    }
+    
+    func didTapFeedButton() {
+        navigationController?.pushViewController(FeedViewController(), animated: false)
     }
     
     func didTapSearchButton() {
@@ -410,18 +420,29 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
-        
-        if let cell = collectionView.cellForItem(at: indexPath) {
-            AnimationHelper.animateCell(cell: cell, in: self.view) {
-                let vc = MusicDetailsViewController()
-//                self.music = music
-                vc.music = music
-                vc.musics = self.viewModel?.musics ?? []
-//                vc.delegate = self
-                vc.modalPresentationStyle = .overFullScreen
-                vc.modalTransitionStyle = .crossDissolve
-                self.present(vc, animated: true)
+        if collectionView == recommendedCollectionView {
+            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+            
+            if let cell = collectionView.cellForItem(at: indexPath) {
+                AnimationHelper.animateCell(cell: cell, in: self.view) {
+                    let vc = MusicDetailsViewController()
+                    vc.music = music
+                    vc.musics = self.viewModel?.musics ?? []
+                    vc.delegate = self
+                    vc.modalPresentationStyle = .overFullScreen
+                    vc.modalTransitionStyle = .crossDissolve
+                    self.present(vc, animated: true)
+                }
+            }
+        } else if collectionView == singerYouLikeCollectionView {
+            let user = viewModel?.users[indexPath.row] ?? UserModel(userID: "", name: "", surname: "", username: "", imageUrl: "")
+            
+            if let cell = collectionView.cellForItem(at: indexPath) {
+                AnimationHelper.animateCell(cell: cell, in: self.view) {
+                    let vc = UserDetailsViewController()
+                    vc.user = user
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
             }
         }
     }
@@ -444,4 +465,22 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
         }
     }
     
+}
+
+extension HomePageViewController: MusicDetailsDelegate {
+    func updateMiniPlayer(with music: MusicModel, isPlaying: Bool) {
+        MusicPlayerService.shared.music = music
+        
+        MiniMusicPlayerViewController.shared.miniMusicNameLabel.text = music.songName
+        MiniMusicPlayerViewController.shared.miniNameLabel.text = music.name
+        
+        guard let url = URL(string: music.coverPhotoURL) else { return }
+        MiniMusicPlayerViewController.shared.imageView.sd_setImage(with: url)
+        
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium, scale: .large)
+        let largePauseImage = UIImage(systemName: "pause.fill", withConfiguration: largeConfig)
+        let largePlayImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
+        let buttonImage = MusicPlayerService.shared.isPlaying ? largePauseImage : largePlayImage
+        MiniMusicPlayerViewController.shared.miniPlayButton.setImage(buttonImage, for: .normal)
+    }
 }

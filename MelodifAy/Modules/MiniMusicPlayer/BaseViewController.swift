@@ -15,6 +15,8 @@ class BaseViewController: UIViewController {
     
     private var tableViewBottomConstraint: NSLayoutConstraint?
     
+    private var newPostButtonBottomConstraint: NSLayoutConstraint?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -50,7 +52,8 @@ class BaseViewController: UIViewController {
     }
     
     func updateMiniPlayerConstraints(isVisible: Bool) {
-        tableViewBottomConstraint?.constant = isVisible ? -65 : 0
+        tableViewBottomConstraint?.constant = isVisible ? -70 : 0
+        newPostButtonBottomConstraint?.constant = isVisible ? -75 : 0
     }
     
     override func viewDidLayoutSubviews() {

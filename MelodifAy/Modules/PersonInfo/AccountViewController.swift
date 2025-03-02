@@ -119,7 +119,7 @@ class AccountViewController: BaseViewController {
         
         viewModel = AccountViewModel(view: self)
         
-        setMiniPlayerBottomPadding(70)
+        setMiniPlayerBottomPadding(65)
         
         configureBottomBar()
         setup()
@@ -203,9 +203,23 @@ extension AccountViewController {
             viewModel?.getDataUserInfo(completion: { successfully in
                 if successfully {
                     self.viewModel?.getDataMusicInfo(completion: { success in
-                        if success {
+                        guard let musics = self.viewModel?.musics else { return }
+                        
+                        if !musics.isEmpty {
+                            if success {
+                                DispatchQueue.main.async {
+                                    self.toggleUIElementsVisibility(isHidden: !success)
+                                    self.animationView.stop()
+                                    self.animationView.isHidden = true
+                                }
+                            }
+                        } else {
                             DispatchQueue.main.async {
-                                self.toggleUIElementsVisibility(isHidden: !success)
+                                self.toggleUIElementsVisibility(isHidden: false)
+                                self.myPostLabel.isHidden = true
+                                self.myLikesLabel.isHidden = true
+                                self.seeAllMyLikesButton.isHidden = true
+                                self.seeAllMyPostsButton.isHidden = true
                                 self.animationView.stop()
                                 self.animationView.isHidden = true
                             }
@@ -228,7 +242,7 @@ extension AccountViewController {
         view.addViews(bottomBar)
         bottomBar.translatesAutoresizingMaskIntoConstraints = false
         
-        bottomBar.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingLeft: 10, paddingRight: 10, paddingBottom: 5, height: 60)
+        bottomBar.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingLeft: 10, paddingRight: 10, paddingBottom: 5, height: 55)
     }
     
     func configureWithExt() {
@@ -280,6 +294,10 @@ extension AccountViewController {
 extension AccountViewController: BottomBarViewProtocol {
     func didTapHomeButton() {
         navigationController?.pushViewController(HomePageViewController(), animated: false)
+    }
+    
+    func didTapFeedButton() {
+        navigationController?.pushViewController(FeedViewController(), animated: false)
     }
     
     func didTapSearchButton() {

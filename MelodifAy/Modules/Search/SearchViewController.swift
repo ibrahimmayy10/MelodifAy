@@ -50,7 +50,7 @@ class SearchViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setMiniPlayerBottomPadding(70)
+        setMiniPlayerBottomPadding(65)
         
         viewModel = SearchViewModel(view: self)
         
@@ -74,7 +74,7 @@ class SearchViewController: BaseViewController {
     
     override func updateMiniPlayerConstraints(isVisible: Bool) {
         tableViewBottomConstraint?.isActive = false
-        tableViewBottomConstraint = tableView.bottomAnchor.constraint(equalTo: bottomBar.topAnchor, constant: isVisible ? -65 : 0)
+        tableViewBottomConstraint = tableView.bottomAnchor.constraint(equalTo: bottomBar.topAnchor, constant: isVisible ? -70 : 0)
         tableViewBottomConstraint?.isActive = true
     }
     
@@ -140,7 +140,7 @@ extension SearchViewController {
         view.addViews(bottomBar)
         bottomBar.translatesAutoresizingMaskIntoConstraints = false
         
-        bottomBar.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingLeft: 10, paddingRight: 10, paddingBottom: 5, height: 60)
+        bottomBar.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingLeft: 10, paddingRight: 10, paddingBottom: 5, height: 55)
     }
     
     func configureWithExt() {
@@ -164,6 +164,10 @@ extension SearchViewController {
 extension SearchViewController: BottomBarViewProtocol {
     func didTapHomeButton() {
         navigationController?.pushViewController(HomePageViewController(), animated: false)
+    }
+    
+    func didTapFeedButton() {
+        navigationController?.pushViewController(FeedViewController(), animated: false)
     }
     
     func didTapSearchButton() {
