@@ -189,6 +189,7 @@ extension AccountViewController {
     func setup() {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         navigationController?.navigationBar.isHidden = true
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
         toggleUIElementsVisibility(isHidden: true)
         getAllData()

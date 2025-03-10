@@ -72,10 +72,22 @@ class SearchViewController: BaseViewController {
         
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: bottomBar.frame.height + 10, right: 0)
+        tableView.scrollIndicatorInsets = tableView.contentInset
+    }
+    
     override func updateMiniPlayerConstraints(isVisible: Bool) {
         tableViewBottomConstraint?.isActive = false
-        tableViewBottomConstraint = tableView.bottomAnchor.constraint(equalTo: bottomBar.topAnchor, constant: isVisible ? -70 : 0)
+
+        let bottomAnchor = isVisible ? view.bottomAnchor : bottomBar.topAnchor
+        let bottomPadding: CGFloat = isVisible ? 0 : -10
+
+        tableViewBottomConstraint = tableView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: bottomPadding)
         tableViewBottomConstraint?.isActive = true
+
+        view.layoutIfNeeded()
     }
     
     func addTargetButtons() {
@@ -103,6 +115,7 @@ extension SearchViewController {
     func setup() {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         navigationController?.navigationBar.isHidden = true
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
         toggleUIElementsVisibility(isHidden: true)
         getAllData()
@@ -148,7 +161,9 @@ extension SearchViewController {
         
         searchLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10)
         searchBar.anchor(top: searchLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 10, paddingRight: 10, height: 50)
-        tableView.anchor(top: searchBar.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: bottomBar.topAnchor)
+        tableView.anchor(top: searchBar.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
+        
+        view.bringSubviewToFront(bottomBar)
     }
     
     func configureAnimationView() {
@@ -243,7 +258,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             
         case .user(let user):
             let vc = UserDetailsViewController()
-            vc.user = user
+            vc.userID = user.userID
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }

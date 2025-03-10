@@ -15,6 +15,7 @@ protocol FeedViewModelProtocol {
 class FeedViewModel: FeedViewModelProtocol {    
     var serviceFeed: ServiceFeedProtocol = ServiceFeed()
     var musics = [MusicModel]()
+    var users = [UserModel]()
     
     weak var view: FeedViewControllerProtocol?
     
@@ -23,7 +24,7 @@ class FeedViewModel: FeedViewModelProtocol {
     }
     
     func getDataMusicOfFollowed(completion: @escaping (Bool) -> Void) {
-        serviceFeed.fetchFollowingMusic { musics in
+        serviceFeed.fetchFollowingMusic { musics, users in
             guard !musics.isEmpty else {
                 completion(false)
                 return
@@ -31,6 +32,7 @@ class FeedViewModel: FeedViewModelProtocol {
             
             DispatchQueue.main.async {
                 self.musics = musics
+                self.users = users
                 self.view?.reloadDataTableView()
                 completion(true)
             }

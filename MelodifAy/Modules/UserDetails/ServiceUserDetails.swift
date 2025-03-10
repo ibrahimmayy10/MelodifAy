@@ -10,6 +10,7 @@ import Firebase
 
 protocol ServiceUserDetailsProtocol {
     func fetchUserPosts(userID: String, completion: @escaping ([MusicModel]) -> Void)
+    func fetchUserInfo(userID: String, completion: @escaping (UserModel?) -> Void)
 }
 
 class ServiceUserDetails: ServiceUserDetailsProtocol {
@@ -45,6 +46,33 @@ class ServiceUserDetails: ServiceUserDetailsProtocol {
                     }
                 }
             }
+        }
+    }
+    
+    func fetchUserInfo(userID: String, completion: @escaping (UserModel?) -> Void) {
+        firestore.collection("Users").document(userID).getDocument { document, error in
+            if let error = error {
+                print(error.localizedDescription)
+                completion(nil)
+                return
+            }
+            
+            guard let document = document, document.exists else {
+                completion(nil)
+                return
+            }
+            
+            guard let userID = document.get("userID") as? String,
+                  let name = document.get("name") as? String,
+                  let surname = document.get("surname") as? String,
+                  let username = document.get("username") as? String,
+                  let imageUrl = document.get("imageUrl") as? String else {
+                completion(nil)
+                return
+            }
+            
+            let userModel = UserModel(userID: userID, name: name, surname: surname, username: username, imageUrl: imageUrl)
+            completion(userModel)
         }
     }
 }

@@ -11,6 +11,7 @@ import Lottie
 
 protocol UserDetailsViewControllerProtocol: AnyObject {
     func reloadDataTableView()
+    func setUserInfo(user: UserModel)
 }
 
 class UserDetailsViewController: BaseViewController {
@@ -68,7 +69,7 @@ class UserDetailsViewController: BaseViewController {
     
     private let animationView = LottieAnimationView(name: "loadingAnimation")
     
-    var user: UserModel?
+    var userID = String()
     private var music: MusicModel?
     private var viewModel: UserDetailsViewModel?
     private var isFollowing = false
@@ -123,7 +124,7 @@ class UserDetailsViewController: BaseViewController {
     }
     
     private func checkFollowingStatus() {
-        guard let userID = user?.userID, let currentUserID = Auth.auth().currentUser?.uid else { return }
+        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
         let userRef = Firestore.firestore().collection("Users").document(userID)
         
         userRef.getDocument { document, error in
@@ -135,8 +136,7 @@ class UserDetailsViewController: BaseViewController {
     }
     
     @objc private func followButton_Clicked() {
-        guard let newUserID = user?.userID else { return }
-        viewModel?.followUser(newUserID: newUserID)
+        viewModel?.followUser(newUserID: userID)
         isFollowing.toggle()
         updateFollowButton()
     }
@@ -161,8 +161,8 @@ extension UserDetailsViewController {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         navigationController?.navigationBar.isHidden = true
         
+        viewModel?.getDataUser(userID: self.userID)
         toggleUIElementsVisibility(isHidden: true)
-        setUserInfo()
         getAllData()
     }
     
@@ -172,7 +172,7 @@ extension UserDetailsViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             guard let self = self else { return }
             
-            viewModel?.getDataMusic(userID: user?.userID ?? "", completion: { success in
+            viewModel?.getDataMusic(userID: userID, completion: { success in
                 guard let musics = self.viewModel?.musics else { return }
                 if !musics.isEmpty {
                     if success {
@@ -206,21 +206,6 @@ extension UserDetailsViewController {
         followingLabel.isHidden = isHidden
         followingCountLabel.isHidden = isHidden
         followerCountLabel.isHidden = isHidden
-    }
-    
-    func setUserInfo() {
-        guard let user = user else { return }
-        
-        if !user.imageUrl.isEmpty {
-            profileImageView.sd_setImage(with: URL(string: user.imageUrl))
-            profileImageView.contentMode = .scaleAspectFill
-        } else {
-            profileImageView.image = UIImage(systemName: "person.circle")
-            profileImageView.contentMode = .scaleAspectFit
-        }
-        
-        usernameLabel.text = user.username
-        nameLabel.text = user.name + " " + user.surname
     }
     
     func configureWithExt() {
@@ -260,6 +245,21 @@ extension UserDetailsViewController: UserDetailsViewControllerProtocol {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
+    }
+    
+    
+    
+    func setUserInfo(user: UserModel) {
+        if !user.imageUrl.isEmpty {
+            profileImageView.sd_setImage(with: URL(string: user.imageUrl))
+            profileImageView.contentMode = .scaleAspectFill
+        } else {
+            profileImageView.image = UIImage(systemName: "person.circle")
+            profileImageView.contentMode = .scaleAspectFit
+        }
+        
+        usernameLabel.text = user.username
+        nameLabel.text = user.name + " " + user.surname
     }
 }
 

@@ -7,25 +7,29 @@
 
 import UIKit
 
+protocol FeedTableViewCellDelegate: AnyObject {
+    func didTapOptionsButton(music: MusicModel)
+}
+
 class FeedTableViewCell: UITableViewCell {
 
     static let cellID = "feedCell"
-    
-    private let feedView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 10
-        view.backgroundColor = UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0)
-        return view
-    }()
     
     private let coverPhotoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         imageView.layer.cornerRadius = 10
+        return imageView
+    }()
+    
+    private let profileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 25
         return imageView
     }()
     
@@ -42,36 +46,48 @@ class FeedTableViewCell: UITableViewCell {
     private let addToLibraryButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium, scale: .large)
-        let largeImage = UIImage(systemName: "plus.circle", withConfiguration: largeConfig)
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 19, weight: .medium, scale: .large)
+        let largeImage = UIImage(systemName: "heart", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
-        button.tintColor = .lightGray
+        button.tintColor = .white
+        return button
+    }()
+    
+    private let commentButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .large)
+        let largeImage = UIImage(systemName: "message", withConfiguration: largeConfig)
+        button.setImage(largeImage, for: .normal)
+        button.tintColor = .white
         return button
     }()
     
     private let playTheSongButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .medium, scale: .large)
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .medium, scale: .large)
         let largeImage = UIImage(systemName: "play.circle.fill", withConfiguration: largeConfig)
         button.setImage(largeImage, for: .normal)
         button.tintColor = .white
         return button
     }()
     
-    private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
-    private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 14), textColorLabel: .lightGray)
+    private let usernameAndSongNameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 16), textColorLabel: .lightGray)
     
-    private var gradientLayer: CAGradientLayer?
-            
+    weak var delegate: FeedTableViewCellDelegate?
+    var music: MusicModel?
+                
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureWithExt()
+        addTargetButtons()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         configureWithExt()
+        addTargetButtons()
     }
 
     override func awakeFromNib() {
@@ -85,49 +101,38 @@ class FeedTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        updateGradientLayer()
+    func addTargetButtons() {
+        optionsButton.addTarget(self, action: #selector(optionsButton_Clicked), for: .touchUpInside)
     }
     
-    private func updateGradientLayer() {
-        if gradientLayer == nil {
-            gradientLayer = CAGradientLayer()
-            gradientLayer?.colors = [
-                UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0).cgColor,
-                UIColor(red: 0.12, green: 0.12, blue: 0.12, alpha: 1.0).cgColor
-            ]
-            gradientLayer?.startPoint = CGPoint(x: 0.5, y: 0)
-            gradientLayer?.endPoint = CGPoint(x: 0.5, y: 1)
-            gradientLayer?.cornerRadius = 10
-            
-            if let gradientLayer = gradientLayer {
-                feedView.layer.insertSublayer(gradientLayer, at: 0)
-            }
-        }
-        
-        gradientLayer?.frame = feedView.bounds
+    @objc func optionsButton_Clicked() {
+        guard let music = music else { return }
+        delegate?.didTapOptionsButton(music: music)
     }
     
     func configureWithExt() {
-        contentView.addSubview(feedView)
-        feedView.addViews(coverPhotoImageView, songNameLabel, nameLabel, optionsButton, addToLibraryButton, playTheSongButton)
+        contentView.addViews(coverPhotoImageView, profileImageView, usernameAndSongNameLabel, optionsButton, addToLibraryButton, commentButton)
+        coverPhotoImageView.addViews(playTheSongButton)
         
         contentView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
-        feedView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, bottom: contentView.bottomAnchor, paddingTop: 10, paddingLeft: 10, paddingRight: 10, paddingBottom: 10)
-        coverPhotoImageView.anchor(top: feedView.topAnchor, left: feedView.leftAnchor, bottom: feedView.bottomAnchor, width: contentView.bounds.size.width * 0.4)
-        songNameLabel.anchor(top: feedView.topAnchor, left: coverPhotoImageView.rightAnchor, paddingTop: 10, paddingLeft: 10)
-        nameLabel.anchor(top: songNameLabel.bottomAnchor, left: coverPhotoImageView.rightAnchor, paddingTop: 5, paddingLeft: 10)
-        optionsButton.anchor(top: feedView.topAnchor, right: feedView.rightAnchor, paddingTop: 10, paddingRight: 10)
-        addToLibraryButton.anchor(left: coverPhotoImageView.rightAnchor, bottom: feedView.bottomAnchor, paddingLeft: 10, paddingBottom: 10)
-        playTheSongButton.anchor(right: feedView.rightAnchor, bottom: feedView.bottomAnchor, paddingRight: 10, paddingBottom: 10)
+        profileImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 10, paddingLeft: 10, width: 50, height: 50)
+        usernameAndSongNameLabel.anchor(left: profileImageView.rightAnchor, centerY: profileImageView.centerYAnchor, paddingLeft: 10)
+        optionsButton.anchor(right: contentView.rightAnchor, centerY: profileImageView.centerYAnchor, paddingRight: 10)
+        
+        coverPhotoImageView.anchor(top: profileImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, bottom: addToLibraryButton.topAnchor, paddingTop: 10, paddingLeft: 10, paddingRight: 10, paddingBottom: 15)
+        coverPhotoImageView.heightAnchor.constraint(equalTo: coverPhotoImageView.widthAnchor, multiplier: 0.6).isActive = true
+        playTheSongButton.anchor(centerX: coverPhotoImageView.centerXAnchor, centerY: coverPhotoImageView.centerYAnchor)
+        addToLibraryButton.anchor(right: contentView.rightAnchor, bottom: contentView.bottomAnchor, paddingRight: 10, paddingBottom: 10)
+        commentButton.anchor(right: addToLibraryButton.leftAnchor, bottom: contentView.bottomAnchor, paddingRight: 10, paddingBottom: 10)
     }
     
-    func configure(music: MusicModel) {
+    func configure(music: MusicModel, user: UserModel) {
         coverPhotoImageView.sd_setImage(with: URL(string: music.coverPhotoURL))
-        songNameLabel.text = music.songName
-        nameLabel.text = music.name
+        profileImageView.sd_setImage(with: URL(string: user.imageUrl))
+        usernameAndSongNameLabel.text = "\(music.name) / \(music.songName)"
+        
+        self.music = music
     }
 
 }

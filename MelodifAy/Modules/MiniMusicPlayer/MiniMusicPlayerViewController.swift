@@ -36,6 +36,7 @@ class MiniMusicPlayerViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 10
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     

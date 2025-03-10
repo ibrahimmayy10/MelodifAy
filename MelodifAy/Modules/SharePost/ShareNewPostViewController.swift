@@ -106,6 +106,7 @@ class ShareNewPostViewController: UIViewController {
         configureWithExt()
         keyboardShowing()
         addTargetButtons()
+        setDelegate()
                 
     }
     
@@ -118,6 +119,10 @@ class ShareNewPostViewController: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func setDelegate() {
+        songNameTextField.delegate = self
     }
     
     @objc func dismissKeyboard() {
@@ -276,5 +281,12 @@ extension ShareNewPostViewController: UIImagePickerControllerDelegate, UINavigat
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true)
+    }
+}
+
+extension ShareNewPostViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
