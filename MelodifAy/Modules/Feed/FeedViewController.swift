@@ -12,7 +12,7 @@ protocol FeedViewControllerProtocol: AnyObject {
     func reloadDataTableView()
 }
 
-class FeedViewController: UIViewController {
+class FeedViewController: BaseViewController {
     
     private let bottomBar = BottomBarView()
     
@@ -30,6 +30,7 @@ class FeedViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         tableView.register(FeedTableViewCell.self, forCellReuseIdentifier: FeedTableViewCell.cellID)
+        tableView.separatorStyle = .none
         return tableView
     }()
     
@@ -56,12 +57,15 @@ class FeedViewController: UIViewController {
     private let animationView = LottieAnimationView(name: "loadingAnimation")
     
     private var viewModel: FeedViewModel?
+    
+    private var tableViewBottomConstraint: NSLayoutConstraint?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         viewModel = FeedViewModel(view: self)
         
+        setMiniPlayerBottomPadding(65)
         setup()
         configureTopBar()
         configureBottomBar()
@@ -69,6 +73,33 @@ class FeedViewController: UIViewController {
         configureAnimationView()
         setDelegate()
         
+        if let currentMusic = MusicPlayerService.shared.music {
+            showMiniMusicPlayer(with: currentMusic)
+        }
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(miniPlayerVisibilityChanged),
+                                               name: NSNotification.Name("MiniVisibilityChanged"),
+                                               object: nil)
+
+    }
+    
+    override func viewDidLayoutSubviews() { // bu kod bloğu tableView ın constraint ine dokunmadan bottomBar ın üzerinde görünmesini sağlıyor.
+        super.viewDidLayoutSubviews()
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: bottomBar.frame.height + 10, right: 0)
+        tableView.scrollIndicatorInsets = tableView.contentInset
+    }
+    
+    override func updateMiniPlayerConstraints(isVisible: Bool) {
+        tableViewBottomConstraint?.isActive = false
+
+        let bottomAnchor = isVisible ? view.bottomAnchor : bottomBar.topAnchor
+        let bottomPadding: CGFloat = isVisible ? 0 : -10
+
+        tableViewBottomConstraint = tableView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: bottomPadding)
+        tableViewBottomConstraint?.isActive = true
+
+        view.layoutIfNeeded()
     }
     
     func setDelegate() {
@@ -82,6 +113,7 @@ extension FeedViewController {
     func setup() {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         navigationController?.navigationBar.isHidden = true
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
         toggleUIElementsVisibility(isHidden: true)
         getAllData()
@@ -182,11 +214,64 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: FeedTableViewCell.cellID, for: indexPath) as! FeedTableViewCell
         let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
-        cell.configure(music: music)
+        let user = viewModel?.users.first(where: { $0.userID == music.userID }) ?? UserModel(userID: "", name: "", surname: "", username: "", imageUrl: "")
+        cell.configure(music: music, user: user)
+        cell.delegate = self 
         return cell
     }
     
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+//        
+//        if let cell = tableView.cellForRow(at: indexPath) {
+//            AnimationHelper.animateCell(cell: cell, in: self.view) {
+//                let vc = MusicDetailsViewController()
+//                vc.music = music
+//                vc.musics = self.viewModel?.musics ?? []
+//                vc.delegate = self
+//                vc.modalPresentationStyle = .overFullScreen
+//                vc.modalTransitionStyle = .crossDissolve
+//                self.present(vc, animated: true)
+//            }
+//        }
+//    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 150
+        return UITableView.automaticDimension
+    }
+}
+
+extension FeedViewController: MusicDetailsDelegate {
+    func updateMiniPlayer(with music: MusicModel, isPlaying: Bool) {
+        MusicPlayerService.shared.music = music
+        
+        MiniMusicPlayerViewController.shared.miniMusicNameLabel.text = music.songName
+        MiniMusicPlayerViewController.shared.miniNameLabel.text = music.name
+        
+        guard let url = URL(string: music.coverPhotoURL) else { return }
+        MiniMusicPlayerViewController.shared.imageView.sd_setImage(with: url)
+        
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium, scale: .large)
+        let largePauseImage = UIImage(systemName: "pause.fill", withConfiguration: largeConfig)
+        let largePlayImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
+        let buttonImage = MusicPlayerService.shared.isPlaying ? largePauseImage : largePlayImage
+        MiniMusicPlayerViewController.shared.miniPlayButton.setImage(buttonImage, for: .normal)
+    }
+}
+
+extension FeedViewController: FeedTableViewCellDelegate {
+    func didTapOptionsButton(music: MusicModel) {
+        let vc = OptionsViewController()
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = self
+        vc.music = music
+        self.present(navController, animated: true)
+    }
+}
+
+extension FeedViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return BottomSheetPresentationController(presentedViewController: presented, presenting: presenting)
     }
 }

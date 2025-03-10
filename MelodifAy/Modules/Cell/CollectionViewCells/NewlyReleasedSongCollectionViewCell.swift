@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol NewlyReleasedSongCollectionViewCellProtocol: AnyObject {
+    func didTapOptionsButton(music: MusicModel)
+}
+
 class NewlyReleasedSongCollectionViewCell: UICollectionViewCell {
     static let cellID = "newlyReleasedSongCell"
     
@@ -54,11 +58,16 @@ class NewlyReleasedSongCollectionViewCell: UICollectionViewCell {
     private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 14), textColorLabel: .lightGray)
     
     private var gradientLayer: CAGradientLayer?
+    
+    weak var delegate: NewlyReleasedSongCollectionViewCellProtocol?
+    
+    var music: MusicModel?
         
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         configureWithExt()
+        addTargetButtons()
     }
     
     required init?(coder: NSCoder) {
@@ -70,6 +79,7 @@ class NewlyReleasedSongCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         updateGradientLayer()
+        addTargetButtons()
     }
     
     private func updateGradientLayer() {
@@ -91,6 +101,15 @@ class NewlyReleasedSongCollectionViewCell: UICollectionViewCell {
         gradientLayer?.frame = contentView.bounds
     }
     
+    func addTargetButtons() {
+        optionsButton.addTarget(self, action: #selector(optionsButton_Clicked), for: .touchUpInside)
+    }
+    
+    @objc func optionsButton_Clicked() {
+        guard let music = music else { return }
+        delegate?.didTapOptionsButton(music: music)
+    }
+    
     func configureWithExt() {
         contentView.addViews(newlyReleasedSongImageView, songNameLabel, nameLabel, optionsButton, addToLibraryButton, playTheSongButton)
         
@@ -109,5 +128,7 @@ class NewlyReleasedSongCollectionViewCell: UICollectionViewCell {
         nameLabel.text = music.name
         newlyReleasedSongImageView.sd_setImage(with: URL(string: music.coverPhotoURL))
         songNameLabel.text = music.songName
+        
+        self.music = music
     }
 }

@@ -75,7 +75,6 @@ class RegisterViewController: UIViewController {
     }()
     
     var selectedImage: UIImage?
-    var selectedImageURL: URL?
     
     private let viewModel = RegisterViewModel()
 
@@ -85,6 +84,7 @@ class RegisterViewController: UIViewController {
         configureWithExt()
         keyboardShowing()
         addTargetOnButton()
+        setDelegate()
         
     }
     
@@ -97,6 +97,14 @@ class RegisterViewController: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func setDelegate() {
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        nameTextField.delegate = self
+        surnameTextField.delegate = self
+        usernameTextField.delegate = self
     }
     
     func addTargetOnButton() {
@@ -149,6 +157,7 @@ class RegisterViewController: UIViewController {
 extension RegisterViewController {
     func configureWithExt() {
         navigationController?.navigationBar.isHidden = true
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
         emailTextField.autocapitalizationType = .none
@@ -263,5 +272,12 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true)
+    }
+}
+
+extension RegisterViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

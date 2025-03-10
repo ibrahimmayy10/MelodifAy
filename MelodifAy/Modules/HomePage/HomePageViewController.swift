@@ -227,6 +227,7 @@ extension HomePageViewController {
     func setup() {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         navigationController?.navigationBar.isHidden = true
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
         toggleUIElementsVisibility(isHidden: true)
         getAllData()
@@ -412,6 +413,7 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
         } else if collectionView == newlyReleasedSongCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewlyReleasedSongCollectionViewCell.cellID, for: indexPath) as! NewlyReleasedSongCollectionViewCell
             let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+            cell.delegate = self
             cell.configure(music: music)
             return cell
         } else {
@@ -440,7 +442,7 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
             if let cell = collectionView.cellForItem(at: indexPath) {
                 AnimationHelper.animateCell(cell: cell, in: self.view) {
                     let vc = UserDetailsViewController()
-                    vc.user = user
+                    vc.userID = user.userID
                     self.navigationController?.pushViewController(vc, animated: true)
                 }
             }
@@ -482,5 +484,22 @@ extension HomePageViewController: MusicDetailsDelegate {
         let largePlayImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
         let buttonImage = MusicPlayerService.shared.isPlaying ? largePauseImage : largePlayImage
         MiniMusicPlayerViewController.shared.miniPlayButton.setImage(buttonImage, for: .normal)
+    }
+}
+
+extension HomePageViewController: NewlyReleasedSongCollectionViewCellProtocol {
+    func didTapOptionsButton(music: MusicModel) {
+        let vc = OptionsViewController()
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = self
+        vc.music = music
+        self.present(navController, animated: true)
+    }
+}
+
+extension HomePageViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return BottomSheetPresentationController(presentedViewController: presented, presenting: presenting)
     }
 }

@@ -10,6 +10,7 @@ import Firebase
 
 protocol UserDetailsViewModelProtocol {
     func getDataMusic(userID: String, completion: @escaping (Bool) -> Void)
+    func getDataUser(userID: String)
     
     var serviceUserDetails: ServiceUserDetailsProtocol { get }
 }
@@ -35,6 +36,16 @@ class UserDetailsViewModel: UserDetailsViewModelProtocol {
                 self.musics = musics
                 self.view?.reloadDataTableView()
                 completion(true)
+            }
+        }
+    }
+    
+    func getDataUser(userID: String) {
+        serviceUserDetails.fetchUserInfo(userID: userID) { user in
+            guard let user = user else { return }
+            
+            DispatchQueue.main.async {
+                self.view?.setUserInfo(user: user)
             }
         }
     }

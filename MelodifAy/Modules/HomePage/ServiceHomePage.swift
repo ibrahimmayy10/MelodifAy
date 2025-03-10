@@ -18,9 +18,6 @@ class ServiceHomePage: ServiceHomePageProtocol {
     
     func fetchMusicInfo(completion: @escaping ([MusicModel]) -> Void) {
         DispatchQueue.global(qos: .background).async {
-            guard let user = Auth.auth().currentUser else { return }
-            let currentUserID = user.uid
-            
             self.firestore.collection("Musics").getDocuments { snapshot, error in
                 if let documents = snapshot?.documents {
                     var musics = [MusicModel]()

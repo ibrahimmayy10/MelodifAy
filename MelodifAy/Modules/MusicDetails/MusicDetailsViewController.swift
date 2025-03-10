@@ -33,7 +33,7 @@ class MusicDetailsViewController: UIViewController {
         return button
     }()
     
-    private let editButton: UIButton = {
+    private let optionsButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium, scale: .large)
@@ -202,9 +202,19 @@ class MusicDetailsViewController: UIViewController {
         forwardButton.addTarget(self, action: #selector(forwardButton_Clicked), for: .touchUpInside)
         restartButton.addTarget(self, action: #selector(restartButton_Clicked), for: .touchUpInside)
         mixButton.addTarget(self, action: #selector(mixButton_Clicked), for: .touchUpInside)
+        optionsButton.addTarget(self, action: #selector(optionsButton_Clicked), for: .touchUpInside)
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         view.addGestureRecognizer(panGesture)
+    }
+    
+    @objc func optionsButton_Clicked() {
+        let vc = OptionsViewController()
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = self
+        vc.music = self.music
+        self.present(navController, animated: true)
     }
     
     @objc func mixButton_Clicked() {
@@ -271,7 +281,7 @@ class MusicDetailsViewController: UIViewController {
         animationView.loopMode = .loop
         
         dismissButton.isHidden = true
-        editButton.isHidden = true
+        optionsButton.isHidden = true
         currentTimeLabel.isHidden = true
         remainingTimeLabel.isHidden = true
         watchVideoButton.isHidden = true
@@ -292,7 +302,7 @@ class MusicDetailsViewController: UIViewController {
         animationView.isHidden = true
         
         dismissButton.isHidden = false
-        editButton.isHidden = false
+        optionsButton.isHidden = false
         currentTimeLabel.isHidden = false
         remainingTimeLabel.isHidden = false
         playLabel.isHidden = false
@@ -384,13 +394,13 @@ extension MusicDetailsViewController {
     }
     
     func configureWithExt() {
-        view.addViews(dismissButton, editButton, playLabel, nameLabel, songNameLabel, audioSlider, playButton, backwardButton, forwardButton, animationView, remainingTimeLabel, currentTimeLabel, musicView, restartButton, mixButton, watchVideoButton)
+        view.addViews(dismissButton, optionsButton, playLabel, nameLabel, songNameLabel, audioSlider, playButton, backwardButton, forwardButton, animationView, remainingTimeLabel, currentTimeLabel, musicView, restartButton, mixButton, watchVideoButton)
         musicView.addViews(coverPhotoImageView)
         
         animationView.anchor(centerX: view.centerXAnchor, centerY: view.centerYAnchor, width: 150, height: 150)
         dismissButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 10, paddingLeft: 10)
         playLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, centerX: view.centerXAnchor, paddingTop: 10)
-        editButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, right: view.rightAnchor, paddingTop: 10, paddingRight: 10)
+        optionsButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, right: view.rightAnchor, paddingTop: 10, paddingRight: 10)
         watchVideoButton.anchor(top: playLabel.bottomAnchor, centerX: view.centerXAnchor, paddingTop: 10, width: 150, height: 40)
         
         if music?.musicFileType == "video" {
@@ -414,5 +424,11 @@ extension MusicDetailsViewController {
         mixButton.anchor(left: view.leftAnchor, centerY: playButton.centerYAnchor, paddingLeft: 20)
         
         view.layoutIfNeeded()
+    }
+}
+
+extension MusicDetailsViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return BottomSheetPresentationController(presentedViewController: presented, presenting: presenting)
     }
 }
