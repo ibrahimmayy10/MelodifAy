@@ -24,7 +24,7 @@ class ImageViews: UIImageView {
     
     func configure(imageName : String) {
         translatesAutoresizingMaskIntoConstraints = false
-        contentMode = .scaleAspectFit
+        contentMode = .scaleToFill
     }
     
     func setImage(imageName : String){

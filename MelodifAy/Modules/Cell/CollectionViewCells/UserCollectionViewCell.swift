@@ -13,7 +13,7 @@ class UserCollectionViewCell: UICollectionViewCell {
     private let postImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 10
         return imageView
@@ -94,5 +94,11 @@ class UserCollectionViewCell: UICollectionViewCell {
         nameLabel.text = music.name
         postImageView.sd_setImage(with: URL(string: music.coverPhotoURL))
         songNameLabel.text = music.songName
+    }
+    
+    func configure(playlist: PlaylistModel) {
+        nameLabel.text = playlist.name
+        postImageView.sd_setImage(with: URL(string: playlist.imageUrl))
+        songNameLabel.text = playlist.playlistID
     }
 }

@@ -7,13 +7,13 @@
 
 import UIKit
 
-class RecommendedCollectionViewCell: UICollectionViewCell {
+class HomePageCollectionViewCell: UICollectionViewCell {
     static let cellID = "recommendedCell"
     
     private let recommendedImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 10
         return imageView
@@ -49,5 +49,11 @@ class RecommendedCollectionViewCell: UICollectionViewCell {
         nameLabel.text = music.name
         recommendedImageView.sd_setImage(with: URL(string: music.coverPhotoURL))
         songNameLabel.text = music.songName
+    }
+    
+    func configure(user: UserModel) {
+        nameLabel.text = user.name
+        recommendedImageView.sd_setImage(with: URL(string: user.imageUrl))
+        songNameLabel.text = user.surname
     }
 }

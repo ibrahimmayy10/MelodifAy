@@ -149,6 +149,7 @@ extension NewPlaylistViewController {
     
     func toggleUIElementsVisibility(isHidden: Bool) {
         tableView.isHidden = isHidden
+        finishButton.isHidden = isHidden
     }
     
     func configureWithExt() {

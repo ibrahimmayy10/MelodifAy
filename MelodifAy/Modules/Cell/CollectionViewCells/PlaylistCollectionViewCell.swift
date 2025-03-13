@@ -13,7 +13,7 @@ class PlaylistCollectionViewCell: UICollectionViewCell {
     private let playlistImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 10
         return imageView
