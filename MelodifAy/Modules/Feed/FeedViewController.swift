@@ -15,15 +15,7 @@ protocol FeedViewControllerProtocol: AnyObject {
 class FeedViewController: BaseViewController {
     
     private let bottomBar = BottomBarView()
-    
-    private let melodifayLabel = Labels(textLabel: "MelodifAy", fontLabel: .monospacedDigitSystemFont(ofSize: 20, weight: .heavy), textColorLabel: .white)
-    
-    private let topBarView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 0.108, green: 0.108, blue: 0.108, alpha: 1.0)
-        return view
-    }()
+    private let topBar = TopBarView()
     
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -32,26 +24,6 @@ class FeedViewController: BaseViewController {
         tableView.register(FeedTableViewCell.self, forCellReuseIdentifier: FeedTableViewCell.cellID)
         tableView.separatorStyle = .none
         return tableView
-    }()
-    
-    private let notificationButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold, scale: .medium)
-        let largeImage = UIImage(systemName: "bell.fill", withConfiguration: largeConfig)
-        button.setImage(largeImage, for: .normal)
-        button.tintColor = .white
-        return button
-    }()
-    
-    private let messageBoxButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold, scale: .medium)
-        let largeImage = UIImage(systemName: "envelope.fill", withConfiguration: largeConfig)
-        button.setImage(largeImage, for: .normal)
-        button.tintColor = .white
-        return button
     }()
     
     private let animationView = LottieAnimationView(name: "loadingAnimation")
@@ -98,7 +70,6 @@ class FeedViewController: BaseViewController {
 
         tableViewBottomConstraint = tableView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: bottomPadding)
         tableViewBottomConstraint?.isActive = true
-
         view.layoutIfNeeded()
     }
     
@@ -142,13 +113,10 @@ extension FeedViewController {
     }
     
     func configureTopBar() {
-        view.addViews(topBarView)
-        topBarView.addViews(melodifayLabel, notificationButton, messageBoxButton)
-                
-        topBarView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: view.bounds.size.height * 0.12)
-        melodifayLabel.anchor(bottom: topBarView.bottomAnchor, centerX: topBarView.centerXAnchor, paddingBottom: 15)
-        messageBoxButton.anchor(right: topBarView.rightAnchor, bottom: topBarView.bottomAnchor, paddingRight: 20, paddingBottom: 15)
-        notificationButton.anchor(right: messageBoxButton.leftAnchor, bottom: topBarView.bottomAnchor, paddingRight: 20, paddingBottom: 15)
+        topBar.delegate = self
+        view.addViews(topBar)
+        
+        topBar.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: view.bounds.size.height * 0.12)
     }
     
     func configureBottomBar() {
@@ -165,7 +133,7 @@ extension FeedViewController {
     func configureWithExt() {
         view.addViews(tableView)
         
-        tableView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
+        tableView.anchor(top: topBar.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
         
         view.bringSubviewToFront(bottomBar)
     }
@@ -273,5 +241,15 @@ extension FeedViewController: FeedTableViewCellDelegate {
 extension FeedViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         return BottomSheetPresentationController(presentedViewController: presented, presenting: presenting)
+    }
+}
+
+extension FeedViewController: TopBarViewDelegate {
+    func didTapNotificationButton() {
+        
+    }
+    
+    func didTapMessageBoxButton() {
+        
     }
 }

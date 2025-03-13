@@ -11,6 +11,7 @@ import Firebase
 protocol ServiceUserDetailsProtocol {
     func fetchUserPosts(userID: String, completion: @escaping ([MusicModel]) -> Void)
     func fetchUserInfo(userID: String, completion: @escaping (UserModel?) -> Void)
+    func fetchPlaylist(userID: String, completion: @escaping ([PlaylistModel]) -> Void)
 }
 
 class ServiceUserDetails: ServiceUserDetailsProtocol {
@@ -73,6 +74,36 @@ class ServiceUserDetails: ServiceUserDetailsProtocol {
             
             let userModel = UserModel(userID: userID, name: name, surname: surname, username: username, imageUrl: imageUrl)
             completion(userModel)
+        }
+    }
+    
+    func fetchPlaylist(userID: String, completion: @escaping ([PlaylistModel]) -> Void) {
+        DispatchQueue.global(qos: .background).async {
+            self.firestore.collection("Playlists").whereField("userID", isEqualTo: userID).getDocuments { snapshot, error in
+                if error != nil {
+                    print(error?.localizedDescription ?? "")
+                    completion([])
+                } else if let documents = snapshot?.documents {
+                    var playlists = [PlaylistModel]()
+                    
+                    for document in documents {
+                        let data = document.data()
+                        
+                        guard let playlistID = data["playlistID"] as? String,
+                              let name = data["name"] as? String,
+                              let musicIDs = data["musicIDs"] as? [String],
+                              let imageUrl = data["imageURL"] as? String,
+                              let userID = data["userID"] as? String else { return }
+                        
+                        let playlistModel = PlaylistModel(playlistID: playlistID, name: name, musicIDs: musicIDs, imageUrl: imageUrl, userID: userID)
+                        playlists.append(playlistModel)
+                    }
+                    
+                    DispatchQueue.main.async {
+                        completion(playlists)
+                    }
+                }
+            }
         }
     }
 }

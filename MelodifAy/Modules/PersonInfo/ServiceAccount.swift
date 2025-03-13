@@ -11,6 +11,7 @@ import Firebase
 protocol ServiceAccountProtocol {
     func fetchUserInfo(completion: @escaping (UserModel) -> Void)
     func fetchMusicInfo(completion: @escaping ([MusicModel]) -> Void)
+    func fetchPlaylist(completion: @escaping ([PlaylistModel]) -> Void)
 }
 
 class ServiceAccount: ServiceAccountProtocol {
@@ -68,6 +69,36 @@ class ServiceAccount: ServiceAccountProtocol {
                     
                     DispatchQueue.main.async {
                         completion(musics)
+                    }
+                }
+            }
+        }
+    }
+    
+    func fetchPlaylist(completion: @escaping ([PlaylistModel]) -> Void) {
+        DispatchQueue.global(qos: .background).async {
+            guard let user = Auth.auth().currentUser else { return }
+            let currentUserID = user.uid
+            
+            self.firestore.collection("Playlists").whereField("userID", isEqualTo: currentUserID).getDocuments { snapshot, error in
+                if let documents = snapshot?.documents {
+                    var playlists = [PlaylistModel]()
+                    
+                    for document in documents {
+                        let data = document.data()
+                        
+                        guard let playlistID = data["playlistID"] as? String,
+                              let name = data["name"] as? String,
+                              let musicIDs = data["musicIDs"] as? [String],
+                              let imageUrl = data["imageURL"] as? String,
+                              let userID = data["userID"] as? String else { return }
+                        
+                        let playlistModel = PlaylistModel(playlistID: playlistID, name: name, musicIDs: musicIDs, imageUrl: imageUrl, userID: userID)
+                        playlists.append(playlistModel)
+                    }
+                    
+                    DispatchQueue.main.async {
+                        completion(playlists)
                     }
                 }
             }

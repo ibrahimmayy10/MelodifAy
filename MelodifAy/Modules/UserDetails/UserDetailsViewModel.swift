@@ -11,6 +11,7 @@ import Firebase
 protocol UserDetailsViewModelProtocol {
     func getDataMusic(userID: String, completion: @escaping (Bool) -> Void)
     func getDataUser(userID: String)
+    func getDataPlaylist(userID: String)
     
     var serviceUserDetails: ServiceUserDetailsProtocol { get }
 }
@@ -20,9 +21,20 @@ class UserDetailsViewModel: UserDetailsViewModelProtocol {
     weak var view: UserDetailsViewControllerProtocol?
     
     var musics = [MusicModel]()
+    var playlists = [PlaylistModel]()
+    var user: UserModel?
     
     init(view: UserDetailsViewControllerProtocol) {
         self.view = view
+    }
+    
+    func getDataPlaylist(userID: String) {
+        serviceUserDetails.fetchPlaylist(userID: userID) { playlists in
+            DispatchQueue.main.async {
+                self.playlists = playlists
+                self.view?.reloadDataTableView()
+            }
+        }
     }
     
     func getDataMusic(userID: String, completion: @escaping (Bool) -> Void) {
@@ -34,7 +46,7 @@ class UserDetailsViewModel: UserDetailsViewModelProtocol {
             
             DispatchQueue.main.async {
                 self.musics = musics
-                self.view?.reloadDataTableView()
+                self.view?.reloadDataCollectionView()
                 completion(true)
             }
         }
@@ -46,6 +58,7 @@ class UserDetailsViewModel: UserDetailsViewModelProtocol {
             
             DispatchQueue.main.async {
                 self.view?.setUserInfo(user: user)
+                self.user = user
             }
         }
     }

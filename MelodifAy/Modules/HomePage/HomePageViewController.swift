@@ -16,9 +16,9 @@ protocol HomePageViewControllerProtocol: AnyObject {
 class HomePageViewController: BaseViewController {
     
     private let bottomBar = BottomBarView()
+    private let topBar = TopBarView()
     
     private let recommendedLabel = Labels(textLabel: "Senin için önerilenler", fontLabel: .boldSystemFont(ofSize: 20), textColorLabel: .white)
-    private let melodifayLabel = Labels(textLabel: "MelodifAy", fontLabel: .monospacedDigitSystemFont(ofSize: 20, weight: .heavy), textColorLabel: .white)
     private let playlistsForYouLabel = Labels(textLabel: "Senin için derlendi", fontLabel: .boldSystemFont(ofSize: 20), textColorLabel: .white)
     private let singerYouLikeLabel = Labels(textLabel: "Beğendiğin şarkıcılar", fontLabel: .boldSystemFont(ofSize: 20), textColorLabel: .white)
     private let listenToMostLabel = Labels(textLabel: "Dinlemeye doyamadıkların", fontLabel: .boldSystemFont(ofSize: 20), textColorLabel: .white)
@@ -34,26 +34,6 @@ class HomePageViewController: BaseViewController {
         return button
     }()
     
-    private let notificationButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold, scale: .medium)
-        let largeImage = UIImage(systemName: "bell.fill", withConfiguration: largeConfig)
-        button.setImage(largeImage, for: .normal)
-        button.tintColor = .white
-        return button
-    }()
-    
-    private let messageBoxButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold, scale: .medium)
-        let largeImage = UIImage(systemName: "envelope.fill", withConfiguration: largeConfig)
-        button.setImage(largeImage, for: .normal)
-        button.tintColor = .white
-        return button
-    }()
-    
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -66,13 +46,6 @@ class HomePageViewController: BaseViewController {
         return view
     }()
     
-    private let topBarView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 0.108, green: 0.108, blue: 0.108, alpha: 1.0)
-        return view
-    }()
-    
     private let recommendedCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -81,7 +54,7 @@ class HomePageViewController: BaseViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
-        collectionView.register(RecommendedCollectionViewCell.self, forCellWithReuseIdentifier: RecommendedCollectionViewCell.cellID)
+        collectionView.register(HomePageCollectionViewCell.self, forCellWithReuseIdentifier: HomePageCollectionViewCell.cellID)
         return collectionView
     }()
     
@@ -130,7 +103,7 @@ class HomePageViewController: BaseViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
-        collectionView.register(ListenToMostCollectionViewCell.self, forCellWithReuseIdentifier: ListenToMostCollectionViewCell.cellID)
+        collectionView.register(HomePageCollectionViewCell.self, forCellWithReuseIdentifier: HomePageCollectionViewCell.cellID)
         return collectionView
     }()
     
@@ -270,13 +243,10 @@ extension HomePageViewController {
     }
     
     func configureTopBar() {
-        view.addViews(topBarView)
-        topBarView.addViews(melodifayLabel, notificationButton, messageBoxButton)
-                
-        topBarView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: view.bounds.size.height * 0.12)
-        melodifayLabel.anchor(bottom: topBarView.bottomAnchor, centerX: topBarView.centerXAnchor, paddingBottom: 15)
-        messageBoxButton.anchor(right: topBarView.rightAnchor, bottom: topBarView.bottomAnchor, paddingRight: 20, paddingBottom: 15)
-        notificationButton.anchor(right: messageBoxButton.leftAnchor, bottom: topBarView.bottomAnchor, paddingRight: 20, paddingBottom: 15)
+        topBar.delegate = self
+        view.addViews(topBar)
+        
+        topBar.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: view.bounds.size.height * 0.12)
     }
     
     func configureBottomBar() {
@@ -296,7 +266,7 @@ extension HomePageViewController {
         
         newPostButton.anchor(right: view.rightAnchor, bottom: bottomBar.topAnchor, paddingRight: 10, paddingBottom: 10, width: 50, height: 50)
         
-        scrollView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
+        scrollView.anchor(top: topBar.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
         contentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, right: scrollView.rightAnchor, bottom: scrollView.bottomAnchor, width: view.bounds.size.width, height: 1600)
         
         view.bringSubviewToFront(newPostButton)
@@ -376,7 +346,7 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
         } else if collectionView == singerYouLikeCollectionView {
             return viewModel?.users.count ?? 1
         } else if collectionView == listenToMostCollectionView {
-            return viewModel?.musics.count ?? 1
+            return viewModel?.users.count ?? 1
         } else if collectionView == newlyReleasedSongCollectionView {
             return viewModel?.musics.count ?? 1
         } else {
@@ -386,7 +356,7 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == recommendedCollectionView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendedCollectionViewCell.cellID, for: indexPath) as! RecommendedCollectionViewCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomePageCollectionViewCell.cellID, for: indexPath) as! HomePageCollectionViewCell
             let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
             cell.configure(music: music)
             return cell
@@ -406,9 +376,9 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
             cell.configure(user: user)
             return cell
         } else if collectionView == listenToMostCollectionView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ListenToMostCollectionViewCell.cellID, for: indexPath) as! ListenToMostCollectionViewCell
-            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
-            cell.configure(music: music)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomePageCollectionViewCell.cellID, for: indexPath) as! HomePageCollectionViewCell
+            let user = viewModel?.users[indexPath.row] ?? UserModel(userID: "", name: "", surname: "", username: "", imageUrl: "")
+            cell.configure(user: user)
             return cell
         } else if collectionView == newlyReleasedSongCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewlyReleasedSongCollectionViewCell.cellID, for: indexPath) as! NewlyReleasedSongCollectionViewCell
@@ -501,5 +471,15 @@ extension HomePageViewController: NewlyReleasedSongCollectionViewCellProtocol {
 extension HomePageViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         return BottomSheetPresentationController(presentedViewController: presented, presenting: presenting)
+    }
+}
+
+extension HomePageViewController: TopBarViewDelegate {
+    func didTapNotificationButton() {
+        
+    }
+    
+    func didTapMessageBoxButton() {
+        
     }
 }
