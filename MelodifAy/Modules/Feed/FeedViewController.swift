@@ -17,6 +17,8 @@ class FeedViewController: BaseViewController {
     private let bottomBar = BottomBarView()
     private let topBar = TopBarView()
     
+    private let emptyLabel = Labels(textLabel: "Henüz takip ettiğiniz kullanıcı yok", fontLabel: .systemFont(ofSize: 17), textColorLabel: .white)
+    
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -31,6 +33,8 @@ class FeedViewController: BaseViewController {
     private var viewModel: FeedViewModel?
     
     private var tableViewBottomConstraint: NSLayoutConstraint?
+    
+    private var musicLikeStatus = [String: Bool]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -97,12 +101,39 @@ extension FeedViewController {
             guard let self = self else { return }
             
             self.viewModel?.getDataMusicOfFollowed(completion: { success in
-                if success {
-                    DispatchQueue.main.async {
-                        self.toggleUIElementsVisibility(isHidden: !success)
-                        self.animationView.stop()
-                        self.animationView.isHidden = true
+                guard let musics = self.viewModel?.musics else { return }
+                
+                if !musics.isEmpty {
+                    if success {
+                        DispatchQueue.main.async {
+                            let dispatchGroup = DispatchGroup()
+                                    
+                            guard let musics = self.viewModel?.musics else { return }
+                            for music in musics {
+                                dispatchGroup.enter()
+                                self.viewModel?.getDataIsLikedTheMusic(music: music) { isLiked in
+                                    self.musicLikeStatus[music.musicID] = isLiked
+                                    dispatchGroup.leave()
+                                }
+                            }
+                                        
+                            dispatchGroup.notify(queue: .main) {
+                                self.tableView.reloadData()
+                                self.toggleUIElementsVisibility(isHidden: !success)
+                                self.animationView.stop()
+                                self.animationView.isHidden = true
+                                
+                                self.emptyLabel.isHidden = true
+                                self.tableView.isHidden = false
+                            }
+                        }
                     }
+                } else {
+                    self.animationView.stop()
+                    self.animationView.isHidden = true
+                    
+                    self.emptyLabel.isHidden = false
+                    self.tableView.isHidden = true
                 }
             })
         }
@@ -131,9 +162,12 @@ extension FeedViewController {
     }
     
     func configureWithExt() {
-        view.addViews(tableView)
+        view.addViews(tableView, emptyLabel)
+        
+        emptyLabel.isHidden = true
         
         tableView.anchor(top: topBar.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
+        emptyLabel.anchor(centerX: view.centerXAnchor, centerY: view.centerYAnchor)
         
         view.bringSubviewToFront(bottomBar)
     }
@@ -181,28 +215,33 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: FeedTableViewCell.cellID, for: indexPath) as! FeedTableViewCell
-        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
-        let user = viewModel?.users.first(where: { $0.userID == music.userID }) ?? UserModel(userID: "", name: "", surname: "", username: "", imageUrl: "")
-        cell.configure(music: music, user: user)
-        cell.delegate = self 
+        cell.delegate = self
+        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
+        
+        let user = viewModel?.users.first(where: { $0.userID == music.userID }) ?? UserModel(userID: "", name: "", surname: "", username: "", imageUrl: "", followers: [], following: [])
+        
+        let isLiked = musicLikeStatus[music.musicID] ?? false
+        
+        cell.configure(music: music, user: user, isLiked: isLiked)
+        
         return cell
     }
     
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
-//        
-//        if let cell = tableView.cellForRow(at: indexPath) {
-//            AnimationHelper.animateCell(cell: cell, in: self.view) {
-//                let vc = MusicDetailsViewController()
-//                vc.music = music
-//                vc.musics = self.viewModel?.musics ?? []
-//                vc.delegate = self
-//                vc.modalPresentationStyle = .overFullScreen
-//                vc.modalTransitionStyle = .crossDissolve
-//                self.present(vc, animated: true)
-//            }
-//        }
-//    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
+        
+        if let cell = tableView.cellForRow(at: indexPath) {
+            AnimationHelper.animateCell(cell: cell, in: self.view) {
+                let vc = MusicDetailsViewController()
+                vc.music = music
+                vc.musics = self.viewModel?.musics ?? []
+                vc.delegate = self
+                vc.modalPresentationStyle = .overFullScreen
+                vc.modalTransitionStyle = .crossDissolve
+                self.present(vc, animated: true)
+            }
+        }
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
@@ -235,6 +274,13 @@ extension FeedViewController: FeedTableViewCellDelegate {
         navController.transitioningDelegate = self
         vc.music = music
         self.present(navController, animated: true)
+    }
+    
+    func didTapLikeButton(music: MusicModel) {
+        let isCurrentlyLiked = musicLikeStatus[music.musicID] ?? false
+        musicLikeStatus[music.musicID] = !isCurrentlyLiked
+        
+        viewModel?.likeTheMusic(musicID: music.musicID)
     }
 }
 

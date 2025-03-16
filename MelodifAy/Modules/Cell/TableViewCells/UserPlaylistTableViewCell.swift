@@ -70,8 +70,7 @@ class UserPlaylistTableViewCell: UITableViewCell {
                                  paddingTop: 7,
                                  paddingLeft: 10)
         
-        downloadImageView.anchor(top:
-                                    playlistNameLabel.bottomAnchor,
+        downloadImageView.anchor(top: playlistNameLabel.bottomAnchor,
                                  left: playlistImageView.rightAnchor,
                                  paddingTop: 5, paddingLeft: 10,
                                  width: 16,
@@ -93,6 +92,20 @@ class UserPlaylistTableViewCell: UITableViewCell {
         playlistImageView.sd_setImage(with: URL(string: music.coverPhotoURL))
         playlistNameLabel.text = music.songName
         nameLabel.text = music.name
+    }
+    
+    func configure(user: UserModel) {
+        playlistImageView.sd_setImage(with: URL(string: user.imageUrl))
+        playlistNameLabel.text = user.name + " " + user.surname
+        nameLabel.text = user.username
+        
+        downloadImageView.isHidden = true
+        
+        nameLabel.anchor(top: playlistNameLabel.bottomAnchor,
+                         left: playlistImageView.rightAnchor,
+                         paddingTop: 5, paddingLeft: 9)
+        nameLabel.font = .systemFont(ofSize: 14)
+        nameLabel.needsUpdateConstraints()
     }
 
 }

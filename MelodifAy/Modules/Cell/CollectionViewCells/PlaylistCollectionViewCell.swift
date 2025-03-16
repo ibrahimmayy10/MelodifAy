@@ -19,7 +19,7 @@ class PlaylistCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     
-    private let playlistNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 12), textColorLabel: .white)
+    private let playlistNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
     
     private var gradientLayer: CAGradientLayer?
         
@@ -75,8 +75,8 @@ class PlaylistCollectionViewCell: UICollectionViewCell {
         playlistNameLabel.anchor(top: contentView.topAnchor, left: playlistImageView.rightAnchor, right: contentView.rightAnchor, bottom: contentView.bottomAnchor, paddingLeft: 5)
     }
     
-    func configure(music: MusicModel) {
-        playlistImageView.sd_setImage(with: URL(string: music.coverPhotoURL))
-        playlistNameLabel.text = music.songName
+    func configure(playlist: PlaylistModel) {
+        playlistImageView.sd_setImage(with: URL(string: playlist.imageUrl))
+        playlistNameLabel.text = playlist.name
     }
 }

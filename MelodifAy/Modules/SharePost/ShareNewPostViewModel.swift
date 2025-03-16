@@ -51,7 +51,7 @@ class ShareNewPostViewModel {
                                     let firestore = Firestore.firestore()
                                                                     
                                     let sharePostRef = firestore.collection("Musics").document()
-                                    let firestoreMusic = ["userID": currentUserID, "musicUrl": postUrl, "musicID": sharePostRef.documentID, "songName": songName, "lyrics": lyrics, "coverPhotoURL": imageUrl, "name": name, "musicFileType": musicFileType] as [String: Any]
+                                    let firestoreMusic = ["userID": currentUserID, "musicUrl": postUrl, "musicID": sharePostRef.documentID, "songName": songName, "lyrics": lyrics, "coverPhotoURL": imageUrl, "name": name, "musicFileType": musicFileType, "time": FieldValue.serverTimestamp()] as [String: Any]
                                     
                                     sharePostRef.setData(firestoreMusic) { error in
                                         if error != nil {
