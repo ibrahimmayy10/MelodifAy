@@ -13,4 +13,6 @@ struct UserModel: Codable {
     let surname: String
     let username: String
     let imageUrl: String
+    let followers: [String]?
+    let following: [String]?
 }

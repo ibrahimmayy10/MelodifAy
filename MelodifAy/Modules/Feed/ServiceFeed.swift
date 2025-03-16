@@ -13,10 +13,28 @@ protocol ServiceFeedProtocol {
     func fetchFollowingUserIDs(completion: @escaping ([String]?, Error?) -> Void)
     func fetchMusicPosts(for userIDs: [String], completion: @escaping ([MusicModel], Error?) -> Void)
     func fetchFollowedUsers(for userIDs: [String], completion: @escaping ([UserModel], Error?) -> Void)
+    func isLikedTheMusic(music: MusicModel, completion: @escaping (Bool) -> Void)
 }
 
 class ServiceFeed: ServiceFeedProtocol {
     let firestore = Firestore.firestore()
+    
+    func isLikedTheMusic(music: MusicModel, completion: @escaping (Bool) -> Void) {
+        DispatchQueue.global(qos: .background).async {
+            guard let user = Auth.auth().currentUser else { return }
+            let currentUserID = user.uid
+            
+            let firestore = Firestore.firestore()
+            
+            firestore.collection("Musics").document(music.musicID).getDocument { document, error in
+                if let data = document?.data(), let likes = data["likes"] as? [String] {
+                    completion(likes.contains(currentUserID))
+                } else {
+                    completion(false)
+                }
+            }
+        }
+    }
     
     func fetchFollowingMusic(completion: @escaping ([MusicModel], [UserModel]) -> Void) {
         DispatchQueue.global(qos: .background).async {
@@ -53,6 +71,11 @@ class ServiceFeed: ServiceFeedProtocol {
     }
     
     func fetchMusicPosts(for userIDs: [String], completion: @escaping ([MusicModel], Error?) -> Void) {
+        guard !userIDs.isEmpty else {
+            completion([], nil)
+            return
+        }
+        
         firestore.collection("Musics")
             .whereField("userID", in: userIDs)
             .getDocuments { snapshot, error in
@@ -73,8 +96,13 @@ class ServiceFeed: ServiceFeedProtocol {
                 completion(musicPosts, nil)
             }
     }
-    
+
     func fetchFollowedUsers(for userIDs: [String], completion: @escaping ([UserModel], Error?) -> Void) {
+        guard !userIDs.isEmpty else {
+            completion([], nil)
+            return
+        }
+        
         firestore.collection("Users")
             .whereField("userID", in: userIDs)
             .getDocuments { snapshot, error in

@@ -43,7 +43,7 @@ class SeeAllPlaylistsViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setMiniPlayerBottomPadding(0)
+        setMiniPlayerBottomPadding(10)
         
         setup()
         configureTopBar()
@@ -75,6 +75,7 @@ class SeeAllPlaylistsViewController: BaseViewController {
 extension SeeAllPlaylistsViewController {
     func setup() {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
+        navigationController?.navigationBar.isHidden = true
     }
     
     func toggleUIElementsVisibility(isHidden: Bool) {

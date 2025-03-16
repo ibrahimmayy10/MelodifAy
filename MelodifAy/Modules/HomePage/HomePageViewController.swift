@@ -212,6 +212,20 @@ extension HomePageViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             guard let self = self else { return }
             
+            self.viewModel?.getDataPlaylists(completion: { success in
+                if success {
+                    DispatchQueue.main.async {
+                        self.toggleUIElementsVisibility(isHidden: !success)
+                        self.animationView.stop()
+                        self.animationView.isHidden = true
+                    }
+                }
+            })
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            guard let self = self else { return }
+            
             self.viewModel?.getDataMusicInfo(completion: { success in
                 if success {
                     DispatchQueue.main.async {
@@ -227,6 +241,20 @@ extension HomePageViewController {
             guard let self = self else { return }
             
             self.viewModel?.getDataSingersLike(completion: { success in
+                if success {
+                    DispatchQueue.main.async {
+                        self.toggleUIElementsVisibility(isHidden: !success)
+                        self.animationView.stop()
+                        self.animationView.isHidden = true
+                    }
+                }
+            })
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            guard let self = self else { return }
+            
+            self.viewModel?.getDataLatestMusic(completion: { success in
                 if success {
                     DispatchQueue.main.async {
                         self.toggleUIElementsVisibility(isHidden: !success)
@@ -267,7 +295,7 @@ extension HomePageViewController {
         newPostButton.anchor(right: view.rightAnchor, bottom: bottomBar.topAnchor, paddingRight: 10, paddingBottom: 10, width: 50, height: 50)
         
         scrollView.anchor(top: topBar.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
-        contentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, right: scrollView.rightAnchor, bottom: scrollView.bottomAnchor, width: view.bounds.size.width, height: 1600)
+        contentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, right: scrollView.rightAnchor, bottom: scrollView.bottomAnchor, width: view.bounds.size.width, height: 1520)
         
         view.bringSubviewToFront(newPostButton)
         view.bringSubviewToFront(bottomBar)
@@ -276,7 +304,7 @@ extension HomePageViewController {
     func configureCollectionViews() {
         contentView.addViews(recommendedLabel, recommendedCollectionView, playlistCollectionView, playlistsForYouLabel, playlistsForYouCollectionView, singerYouLikeLabel, singerYouLikeCollectionView, listenToMostLabel, listenToMostCollectionView, newlyReleasedSongsLabel, newlyReleasedSongCollectionView)
         
-        playlistCollectionView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 5, paddingRight: 5, height: 280)
+        playlistCollectionView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 5, paddingRight: 5, height: 200)
         
         recommendedLabel.anchor(top: playlistCollectionView.bottomAnchor, left: contentView.leftAnchor, paddingTop: 20, paddingLeft: 10)
         recommendedCollectionView.anchor(top: recommendedLabel.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 5, paddingRight: 5, height: 190)
@@ -340,13 +368,13 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
         if collectionView == recommendedCollectionView {
             return viewModel?.musics.count ?? 1
         } else if collectionView == playlistCollectionView {
-            return viewModel?.musics.count ?? 1
+            return min(viewModel?.playlists.count ?? 1, 6)
         } else if collectionView == playlistsForYouCollectionView {
             return viewModel?.musics.count ?? 1
         } else if collectionView == singerYouLikeCollectionView {
             return viewModel?.users.count ?? 1
         } else if collectionView == listenToMostCollectionView {
-            return viewModel?.users.count ?? 1
+            return viewModel?.musics.count ?? 1
         } else if collectionView == newlyReleasedSongCollectionView {
             return viewModel?.musics.count ?? 1
         } else {
@@ -357,32 +385,32 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == recommendedCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomePageCollectionViewCell.cellID, for: indexPath) as! HomePageCollectionViewCell
-            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
             cell.configure(music: music)
             return cell
         } else if collectionView == playlistCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaylistCollectionViewCell.cellID, for: indexPath) as! PlaylistCollectionViewCell
-            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
-            cell.configure(music: music)
+            let playlist = viewModel?.playlists[indexPath.row] ?? PlaylistModel(playlistID: "", name: "", musicIDs: [], imageUrl: "", userID: "")
+            cell.configure(playlist: playlist)
             return cell
         } else if collectionView == playlistsForYouCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaylistsForYouCollectionViewCell.cellID, for: indexPath) as! PlaylistsForYouCollectionViewCell
-            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
             cell.configure(music: music)
             return cell
         } else if collectionView == singerYouLikeCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SingerYouLikeCollectionViewCell.cellID, for: indexPath) as! SingerYouLikeCollectionViewCell
-            let user = viewModel?.users[indexPath.row] ?? UserModel(userID: "", name: "", surname: "", username: "", imageUrl: "")
+            let user = viewModel?.users[indexPath.row] ?? UserModel(userID: "", name: "", surname: "", username: "", imageUrl: "", followers: [], following: [])
             cell.configure(user: user)
             return cell
         } else if collectionView == listenToMostCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomePageCollectionViewCell.cellID, for: indexPath) as! HomePageCollectionViewCell
-            let user = viewModel?.users[indexPath.row] ?? UserModel(userID: "", name: "", surname: "", username: "", imageUrl: "")
-            cell.configure(user: user)
+            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
+            cell.configure(music: music)
             return cell
         } else if collectionView == newlyReleasedSongCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewlyReleasedSongCollectionViewCell.cellID, for: indexPath) as! NewlyReleasedSongCollectionViewCell
-            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
             cell.delegate = self
             cell.configure(music: music)
             return cell
@@ -393,7 +421,7 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == recommendedCollectionView {
-            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
             
             if let cell = collectionView.cellForItem(at: indexPath) {
                 AnimationHelper.animateCell(cell: cell, in: self.view) {
@@ -407,7 +435,7 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
                 }
             }
         } else if collectionView == singerYouLikeCollectionView {
-            let user = viewModel?.users[indexPath.row] ?? UserModel(userID: "", name: "", surname: "", username: "", imageUrl: "")
+            let user = viewModel?.users[indexPath.row] ?? UserModel(userID: "", name: "", surname: "", username: "", imageUrl: "", followers: [], following: [])
             
             if let cell = collectionView.cellForItem(at: indexPath) {
                 AnimationHelper.animateCell(cell: cell, in: self.view) {
@@ -416,6 +444,12 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
                     self.navigationController?.pushViewController(vc, animated: true)
                 }
             }
+        } else if collectionView == playlistCollectionView {
+            let vc = PlaylistMusicsViewController()
+            let playlist = viewModel?.playlists[indexPath.row] ?? PlaylistModel(playlistID: "", name: "", musicIDs: [], imageUrl: "", userID: "")
+            vc.musicIDs = playlist.musicIDs
+            vc.text = playlist.name
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
     
@@ -465,6 +499,12 @@ extension HomePageViewController: NewlyReleasedSongCollectionViewCellProtocol {
         navController.transitioningDelegate = self
         vc.music = music
         self.present(navController, animated: true)
+    }
+    
+    func didTapAddToLibraryButton(music: MusicModel) {
+        let vc = NewPlaylistViewController()
+        vc.music = music
+        present(vc, animated: true)
     }
 }
 

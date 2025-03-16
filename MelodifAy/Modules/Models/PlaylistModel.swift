@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PlaylistModel {
+struct PlaylistModel: Codable {
     let playlistID: String
     let name: String
     var musicIDs: [String]

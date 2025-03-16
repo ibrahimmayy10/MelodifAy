@@ -12,6 +12,7 @@ protocol UserDetailsViewModelProtocol {
     func getDataMusic(userID: String, completion: @escaping (Bool) -> Void)
     func getDataUser(userID: String)
     func getDataPlaylist(userID: String)
+    func getDataLikeMusic(userID: String)
     
     var serviceUserDetails: ServiceUserDetailsProtocol { get }
 }
@@ -21,11 +22,21 @@ class UserDetailsViewModel: UserDetailsViewModelProtocol {
     weak var view: UserDetailsViewControllerProtocol?
     
     var musics = [MusicModel]()
+    var likeMusics = [MusicModel]()
     var playlists = [PlaylistModel]()
     var user: UserModel?
     
     init(view: UserDetailsViewControllerProtocol) {
         self.view = view
+    }
+    
+    func getDataLikeMusic(userID: String) {
+        serviceUserDetails.fetchLikeMusic(userID: userID) { musics in
+            DispatchQueue.main.async {
+                self.likeMusics = musics
+                self.view?.reloadDataCollectionView()
+            }
+        }
     }
     
     func getDataPlaylist(userID: String) {

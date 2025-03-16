@@ -11,6 +11,7 @@ protocol AccountViewModelProtocol {
     func getDataUserInfo(completion: @escaping (Bool) -> Void)
     func getDataMusicInfo(completion: @escaping (Bool) -> Void)
     func getDataPlaylist(completion: @escaping (Bool) -> Void)
+    func getDataLikeMusic()
     var serviceAccount: ServiceAccountProtocol { get }
 }
 
@@ -19,11 +20,23 @@ class AccountViewModel: AccountViewModelProtocol {
     weak var view: AccountViewControllerProtocol?
     
     var musics = [MusicModel]()
+    var likeMusics = [MusicModel]()
     var playlists = [PlaylistModel]()
     var user: UserModel?
     
     init(view: AccountViewControllerProtocol) {
         self.view = view
+    }
+    
+    func getDataLikeMusic() {
+        serviceAccount.fetchLikeMusic { musics in
+            guard !musics.isEmpty else { return }
+            
+            DispatchQueue.main.async {
+                self.likeMusics = musics
+                self.view?.reloadDataCollectionView()
+            }
+        }
     }
     
     func getDataPlaylist(completion: @escaping (Bool) -> Void) {
@@ -43,7 +56,7 @@ class AccountViewModel: AccountViewModelProtocol {
     
     func getDataUserInfo(completion: @escaping (Bool) -> Void) {
         serviceAccount.fetchUserInfo { user in
-            guard !user.imageUrl.isEmpty else {
+            guard !user.name.isEmpty else {
                 completion(false)
                 return
             }

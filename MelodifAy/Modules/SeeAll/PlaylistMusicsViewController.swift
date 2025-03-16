@@ -44,13 +44,17 @@ class PlaylistMusicsViewController: BaseViewController {
     private let animationView = LottieAnimationView(name: "loadingAnimation")
     
     var text = String()
+    var userID = String()
     var musics = [MusicModel]()
+    var users = [UserModel]()
     var musicIDs = [String]()
     
     private var viewModel: PlaylistMusicsViewModel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setMiniPlayerBottomPadding(10)
         
         viewModel = PlaylistMusicsViewModel(view: self)
         
@@ -102,15 +106,33 @@ extension PlaylistMusicsViewController {
     func getData() {
         animationView.play()
         
-        viewModel?.getDataPlaylistMusics(musicIDs: musicIDs, completion: { success in
-            if success {
+        if musicIDs.isEmpty {
+            if text == "Takipçiler" {
+                viewModel?.getDataFollowerUsers(userID: userID, completion: { success in
+                    DispatchQueue.main.async {
+                        self.toggleUIElementsVisibility(isHidden: !success)
+                        self.animationView.stop()
+                        self.animationView.isHidden = true
+                    }
+                })
+            } else if text == "Takip edilenler" {
+                viewModel?.getDataFollowingUsers(userID: userID, completion: { success in
+                    DispatchQueue.main.async {
+                        self.toggleUIElementsVisibility(isHidden: !success)
+                        self.animationView.stop()
+                        self.animationView.isHidden = true
+                    }
+                })
+            }
+        } else {
+            viewModel?.getDataPlaylistMusics(musicIDs: musicIDs, completion: { success in
                 DispatchQueue.main.async {
                     self.toggleUIElementsVisibility(isHidden: !success)
                     self.animationView.stop()
                     self.animationView.isHidden = true
                 }
-            }
-        })
+            })
+        }
     }
     
     func toggleUIElementsVisibility(isHidden: Bool) {
@@ -147,6 +169,10 @@ extension PlaylistMusicsViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if !musics.isEmpty {
             return musics.count
+        } else if let followers = viewModel?.followers, text == "Takipçiler" {
+            return followers.count
+        } else if let following = viewModel?.following, text == "Takip edilenler" {
+            return following.count
         } else {
             return viewModel?.musics.count ?? 1
         }
@@ -158,9 +184,19 @@ extension PlaylistMusicsViewController: UITableViewDelegate, UITableViewDataSour
             let music = musics[indexPath.row]
             cell.configure(music: music)
             return cell
+        } else if let followers = viewModel?.followers, text == "Takipçiler" {
+            let cell = tableView.dequeueReusableCell(withIdentifier: UserPlaylistTableViewCell.cellID, for: indexPath) as! UserPlaylistTableViewCell
+            let follower = followers[indexPath.row]
+            cell.configure(user: follower)
+            return cell
+        } else if let following = viewModel?.following, text == "Takip edilenler" {
+            let cell = tableView.dequeueReusableCell(withIdentifier: UserPlaylistTableViewCell.cellID, for: indexPath) as! UserPlaylistTableViewCell
+            let follow = following[indexPath.row]
+            cell.configure(user: follow)
+            return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: UserPlaylistTableViewCell.cellID, for: indexPath) as! UserPlaylistTableViewCell
-            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
             cell.configure(music: music)
             return cell
         }
@@ -181,7 +217,7 @@ extension PlaylistMusicsViewController: UITableViewDelegate, UITableViewDataSour
                 }
             }
         } else {
-            let music = self.viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+            let music = self.viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
             if let cell = tableView.cellForRow(at: indexPath) {
                 AnimationHelper.animateCell(cell: cell, in: self.view) {
                     let vc = MusicDetailsViewController()

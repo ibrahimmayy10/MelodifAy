@@ -29,7 +29,7 @@ class UserCollectionViewCell: UICollectionViewCell {
     
     private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 12), textColorLabel: .white)
     private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 12), textColorLabel: .lightGray)
-    private let likeCountLabel = Labels(textLabel: "250", fontLabel: .systemFont(ofSize: 12), textColorLabel: .white)
+    private let likeCountLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 12), textColorLabel: .white)
     
     private var gradientLayer: CAGradientLayer?
     
@@ -94,6 +94,7 @@ class UserCollectionViewCell: UICollectionViewCell {
         nameLabel.text = music.name
         postImageView.sd_setImage(with: URL(string: music.coverPhotoURL))
         songNameLabel.text = music.songName
+        likeCountLabel.text = "\(music.likes?.count ?? 0)"
     }
     
     func configure(playlist: PlaylistModel) {

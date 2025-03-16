@@ -23,12 +23,41 @@ class UserDetailsViewController: BaseViewController {
     private let myLikesLabel = Labels(textLabel: "Beğendiklerim", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
     private let playlistLabel = Labels(textLabel: "Çalma listelerim", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
     
+    private let playlistEmptyLabel = Labels(textLabel: "Henüz çalma listesi mevcut değil", fontLabel: .boldSystemFont(ofSize: 16), textColorLabel: .white)
+    private let postsEmptyLabel = Labels(textLabel: "Henüz paylaşım yapılmamış", fontLabel: .boldSystemFont(ofSize: 16), textColorLabel: .white)
+    private let likesEmptyLabel = Labels(textLabel: "Henüz beğenilen içerik yok", fontLabel: .boldSystemFont(ofSize: 16), textColorLabel: .white)
+    private let allEmptyLabel = Labels(textLabel: "Henüz herhangi bir hareket yok", fontLabel: .boldSystemFont(ofSize: 16), textColorLabel: .white)
+    
     private let followingLabel = Labels(textLabel: "Takip", fontLabel: .systemFont(ofSize: 14), textColorLabel: .white)
-    private let followingCountLabel = Labels(textLabel: "200", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
+    private let followingCountLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
     private let followerLabel = Labels(textLabel: "Takipçi", fontLabel: .systemFont(ofSize: 14), textColorLabel: .white)
-    private let followerCountLabel = Labels(textLabel: "300", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
+    private let followerCountLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
     private let musicLabel = Labels(textLabel: "Şarkı", fontLabel: .systemFont(ofSize: 14), textColorLabel: .white)
-    private let musicCountLabel = Labels(textLabel: "10", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
+    private let musicCountLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
+    
+    private lazy var followingStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [followingLabel, followingCountLabel])
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 2
+        return stackView
+    }()
+
+    private lazy var followerStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [followerLabel, followerCountLabel])
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 2
+        return stackView
+    }()
+
+    private lazy var musicStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [musicLabel, musicCountLabel])
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 2
+        return stackView
+    }()
     
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
@@ -153,7 +182,7 @@ class UserDetailsViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setMiniPlayerBottomPadding(0)
+        setMiniPlayerBottomPadding(10)
         
         viewModel = UserDetailsViewModel(view: self)
         
@@ -203,6 +232,59 @@ class UserDetailsViewController: BaseViewController {
     func addTargetButtons() {
         backButton.addTarget(self, action: #selector(backButton_Clicked), for: .touchUpInside)
         followButton.addTarget(self, action: #selector(followButton_Clicked), for: .touchUpInside)
+        seeAllPostsButton.addTarget(self, action: #selector(seeAllPostsButton_Clicked), for: .touchUpInside)
+        seeAllLikesButton.addTarget(self, action: #selector(seeAllLikesButton_Clicked), for: .touchUpInside)
+        seeAllPlaylistButton.addTarget(self, action: #selector(seeAllPlaylistButton_Clicked), for: .touchUpInside)
+        
+        let followerStackViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(followerStackView_Clicked))
+        followerStackView.addGestureRecognizer(followerStackViewTapGesture)
+        
+        let followingStackViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(followingStackView_Clicked))
+        followingStackView.addGestureRecognizer(followingStackViewTapGesture)
+    }
+    
+    @objc func followerStackView_Clicked() {
+        if let follower = viewModel?.user?.followers, !follower.isEmpty {
+            let vc = PlaylistMusicsViewController()
+            vc.text = "Takipçiler"
+            vc.userID = userID
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
+    @objc func followingStackView_Clicked() {
+        if let following = viewModel?.user?.following, !following.isEmpty {
+            let vc = PlaylistMusicsViewController()
+            vc.text = "Takip edilenler"
+            vc.userID = userID
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
+    @objc func seeAllPostsButton_Clicked() {
+        guard let musics = viewModel?.musics else { return }
+        let vc = PlaylistMusicsViewController()
+        vc.musics = musics
+        vc.text = "Paylaşılanlar"
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func seeAllPlaylistButton_Clicked() {
+        guard let playlists = viewModel?.playlists, let user = viewModel?.user else { return }
+        let vc = SeeAllPlaylistsViewController()
+        vc.playlists = playlists
+        vc.name = user.name + " " + user.surname
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .fullScreen
+        present(navController, animated: true)
+    }
+    
+    @objc func seeAllLikesButton_Clicked() {
+        guard let musics = viewModel?.likeMusics else { return }
+        let vc = PlaylistMusicsViewController()
+        vc.musics = musics
+        vc.text = "Beğenilenler"
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     private func checkFollowingStatus() {
@@ -255,26 +337,19 @@ extension UserDetailsViewController {
             guard let self = self else { return }
             
             viewModel?.getDataMusic(userID: userID, completion: { success in
-                guard let musics = self.viewModel?.musics else { return }
-                if !musics.isEmpty {
-                    if success {
-                        DispatchQueue.main.async {
-                            self.toggleUIElementsVisibility(isHidden: !success)
-                            self.animationView.stop()
-                            self.animationView.isHidden = true
-                        }
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.toggleUIElementsVisibility(isHidden: false)
-                        self.animationView.stop()
-                        self.animationView.isHidden = true
-                    }
+                DispatchQueue.main.async {
+                    self.toggleUIElementsVisibility(isHidden: false)
+                    self.animationView.stop()
+                    self.animationView.isHidden = true
+                    
+                    self.reloadDataCollectionView()
+                    self.reloadDataTableView()
                 }
             })
         }
         
         viewModel?.getDataPlaylist(userID: userID)
+        viewModel?.getDataLikeMusic(userID: userID)
     }
     
     func toggleUIElementsVisibility(isHidden: Bool) {
@@ -293,28 +368,25 @@ extension UserDetailsViewController {
     func configureWithExt() {
         view.addViews(scrollView)
         scrollView.addSubview(contentView)
-        contentView.addViews(profileImageView, nameLabel, followerLabel, followerCountLabel, followingLabel, followingCountLabel, musicLabel, musicCountLabel, followButton)
+        contentView.addViews(profileImageView, nameLabel, followerStackView, followingStackView, musicStackView, followButton)
         
         scrollView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
-        contentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, right: scrollView.rightAnchor, bottom: scrollView.bottomAnchor, width: view.bounds.size.width, height: 1300)
+        contentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, right: scrollView.rightAnchor, bottom: scrollView.bottomAnchor, width: view.bounds.size.width, height: 1050)
         
         profileImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 10, paddingLeft: 20, width: 100, height: 100)
         nameLabel.anchor(top: profileImageView.bottomAnchor, left: contentView.leftAnchor, paddingTop: 20, paddingLeft: 20)
         
-        musicLabel.anchor(bottom: musicCountLabel.topAnchor, centerX: musicCountLabel.centerXAnchor, paddingBottom: 5)
-        musicCountLabel.anchor(left: profileImageView.rightAnchor, centerY: profileImageView.centerYAnchor, paddingLeft: 20)
+        musicStackView.anchor(left: profileImageView.rightAnchor, centerY: profileImageView.centerYAnchor, paddingLeft: 20)
         
-        followerLabel.anchor(bottom: followerCountLabel.topAnchor, centerX: followerCountLabel.centerXAnchor, paddingBottom: 5)
-        followerCountLabel.anchor(left: musicLabel.rightAnchor, centerY: profileImageView.centerYAnchor, paddingLeft: 50)
+        followerStackView.anchor(left: musicStackView.rightAnchor, centerY: profileImageView.centerYAnchor, paddingLeft: 50)
         
-        followingLabel.anchor(bottom: followingCountLabel.topAnchor, centerX: followingCountLabel.centerXAnchor, paddingBottom: 5)
-        followingCountLabel.anchor(left: followerLabel.rightAnchor, centerY: profileImageView.centerYAnchor, paddingLeft: 50)
+        followingStackView.anchor(left: followerStackView.rightAnchor, centerY: profileImageView.centerYAnchor, paddingLeft: 50)
         
         followButton.anchor(top: followerCountLabel.bottomAnchor, left: musicLabel.leftAnchor, right: followingLabel.rightAnchor, paddingTop: 20, height: 30)
     }
     
     func configureCollectionView() {
-        contentView.addViews(postCollectionView, myPostLabel, seeAllPostsButton, likesCollectionView, myLikesLabel, seeAllLikesButton, playlistLabel, seeAllPlaylistButton, playlistTableView)
+        contentView.addViews(postCollectionView, myPostLabel, seeAllPostsButton, likesCollectionView, myLikesLabel, seeAllLikesButton, playlistLabel, seeAllPlaylistButton, playlistTableView, playlistEmptyLabel, postsEmptyLabel, likesEmptyLabel, allEmptyLabel)
         
         playlistLabel.anchor(top: nameLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 20, paddingLeft: 10)
         seeAllPlaylistButton.anchor(top: nameLabel.bottomAnchor, right: contentView.rightAnchor, paddingTop: 15, paddingRight: 10)
@@ -327,6 +399,18 @@ extension UserDetailsViewController {
         myLikesLabel.anchor(top: postCollectionView.bottomAnchor, left: contentView.leftAnchor, paddingTop: 20, paddingLeft: 10)
         seeAllLikesButton.anchor(top: postCollectionView.bottomAnchor, right: contentView.rightAnchor, paddingTop: 15, paddingRight: 10)
         likesCollectionView.anchor(top: myLikesLabel.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 5, paddingLeft: 5, paddingRight: 5, height: 220)
+        
+        playlistEmptyLabel.anchor(top: playlistLabel.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, bottom: myPostLabel.topAnchor, paddingLeft: 20, paddingRight: 20)
+        playlistEmptyLabel.textAlignment = .center
+        
+        postsEmptyLabel.anchor(top: myPostLabel.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, bottom: myLikesLabel.topAnchor, paddingLeft: 20, paddingRight: 20)
+        postsEmptyLabel.textAlignment = .center
+        
+        likesEmptyLabel.anchor(top: myLikesLabel.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, bottom: contentView.bottomAnchor, paddingLeft: 20, paddingRight: 20)
+        likesEmptyLabel.textAlignment = .center
+        
+        allEmptyLabel.anchor(centerX: view.centerXAnchor, centerY: view.centerYAnchor)
+        allEmptyLabel.isHidden = true
     }
     
     func configureAnimationView() {
@@ -344,12 +428,86 @@ extension UserDetailsViewController: UserDetailsViewControllerProtocol {
         DispatchQueue.main.async {
             self.postCollectionView.reloadData()
             self.likesCollectionView.reloadData()
+            
+            self.musicCountLabel.text = "\(self.viewModel?.musics.count ?? 0)"
+            
+            if let viewModel = self.viewModel {
+                let isMusicsEmpty = viewModel.musics.isEmpty
+                let isLikeMusicsEmpty = viewModel.likeMusics.isEmpty
+                let isPlaylistsEmpty = viewModel.playlists.isEmpty
+                
+                self.postCollectionView.isHidden = isMusicsEmpty
+                self.likesCollectionView.isHidden = isLikeMusicsEmpty
+                self.postsEmptyLabel.isHidden = !isMusicsEmpty
+                self.likesEmptyLabel.isHidden = !isLikeMusicsEmpty
+                
+                self.seeAllPostsButton.isHidden = isMusicsEmpty
+                self.seeAllLikesButton.isHidden = isLikeMusicsEmpty
+                
+                if isMusicsEmpty && isLikeMusicsEmpty && isPlaylistsEmpty {
+                    self.myPostLabel.isHidden = true
+                    self.myLikesLabel.isHidden = true
+                    self.playlistLabel.isHidden = true
+                    self.seeAllLikesButton.isHidden = true
+                    self.seeAllPostsButton.isHidden = true
+                    self.seeAllPlaylistButton.isHidden = true
+                    self.postsEmptyLabel.isHidden = true
+                    self.likesEmptyLabel.isHidden = true
+                    self.playlistEmptyLabel.isHidden = true
+                    self.allEmptyLabel.isHidden = false
+                    self.scrollView.isScrollEnabled = false
+                } else {
+                    self.myPostLabel.isHidden = false
+                    self.myLikesLabel.isHidden = false
+                    self.playlistLabel.isHidden = false
+                    self.allEmptyLabel.isHidden = true
+                    self.scrollView.isScrollEnabled = true
+                    
+                    self.postsEmptyLabel.isHidden = !isMusicsEmpty
+                    self.likesEmptyLabel.isHidden = !isLikeMusicsEmpty
+                    self.playlistEmptyLabel.isHidden = !isPlaylistsEmpty
+                }
+            }
         }
     }
     
     func reloadDataTableView() {
         DispatchQueue.main.async {
             self.playlistTableView.reloadData()
+            
+            if let viewModel = self.viewModel {
+                let isPlaylistsEmpty = viewModel.playlists.isEmpty
+                self.playlistTableView.isHidden = isPlaylistsEmpty
+                self.playlistEmptyLabel.isHidden = !isPlaylistsEmpty
+                self.seeAllPlaylistButton.isHidden = isPlaylistsEmpty
+            }
+            
+            self.updateAllEmptyState()
+        }
+    }
+    
+    private func updateAllEmptyState() {
+        if let viewModel = self.viewModel {
+            let isMusicsEmpty = viewModel.musics.isEmpty
+            let isLikeMusicsEmpty = viewModel.likeMusics.isEmpty
+            let isPlaylistsEmpty = viewModel.playlists.isEmpty
+            
+            if isMusicsEmpty && isLikeMusicsEmpty && isPlaylistsEmpty {
+                self.myPostLabel.isHidden = true
+                self.myLikesLabel.isHidden = true
+                self.playlistLabel.isHidden = true
+                self.seeAllLikesButton.isHidden = true
+                self.seeAllPostsButton.isHidden = true
+                self.seeAllPlaylistButton.isHidden = true
+                self.postsEmptyLabel.isHidden = true
+                self.likesEmptyLabel.isHidden = true
+                self.playlistEmptyLabel.isHidden = true
+                self.allEmptyLabel.isHidden = false
+                self.scrollView.isScrollEnabled = false
+            } else {
+                self.allEmptyLabel.isHidden = true
+                self.scrollView.isScrollEnabled = true
+            }
         }
     }
     
@@ -364,6 +522,8 @@ extension UserDetailsViewController: UserDetailsViewControllerProtocol {
         
         usernameLabel.text = user.username
         nameLabel.text = user.name + " " + user.surname
+        followerCountLabel.text = "\(user.followers?.count ?? 0)"
+        followingCountLabel.text = "\(user.following?.count ?? 0)"
     }
 }
 
@@ -380,6 +540,14 @@ extension UserDetailsViewController: UITableViewDelegate, UITableViewDataSource 
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = PlaylistMusicsViewController()
+        let playlist = viewModel?.playlists[indexPath.row] ?? PlaylistModel(playlistID: "", name: "", musicIDs: [], imageUrl: "", userID: "")
+        vc.musicIDs = playlist.musicIDs
+        vc.text = playlist.name
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
@@ -390,7 +558,7 @@ extension UserDetailsViewController: UICollectionViewDelegate, UICollectionViewD
         if collectionView == postCollectionView {
             return viewModel?.musics.count ?? 1
         } else if collectionView == likesCollectionView {
-            return viewModel?.musics.count ?? 1
+            return min(viewModel?.likeMusics.count ?? 1, 5)
         } else {
             return 1
         }
@@ -399,16 +567,48 @@ extension UserDetailsViewController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == postCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserCollectionViewCell.cellID, for: indexPath) as! UserCollectionViewCell
-            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
             cell.configure(music: music)
             return cell
         } else if collectionView == likesCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserCollectionViewCell.cellID, for: indexPath) as! UserCollectionViewCell
-            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "")
+            let music = viewModel?.likeMusics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
             cell.configure(music: music)
             return cell
         } else {
             return UICollectionViewCell()
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == postCollectionView  {
+            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
+            
+            if let cell = collectionView.cellForItem(at: indexPath) {
+                AnimationHelper.animateCell(cell: cell, in: self.view) {
+                    let vc = MusicDetailsViewController()
+                    vc.music = music
+                    vc.musics = self.viewModel?.musics ?? []
+                    vc.delegate = self
+                    vc.modalPresentationStyle = .overFullScreen
+                    vc.modalTransitionStyle = .crossDissolve
+                    self.present(vc, animated: true)
+                }
+            }
+        } else if collectionView == likesCollectionView {
+            let music = viewModel?.likeMusics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
+            
+            if let cell = collectionView.cellForItem(at: indexPath) {
+                AnimationHelper.animateCell(cell: cell, in: self.view) {
+                    let vc = MusicDetailsViewController()
+                    vc.music = music
+                    vc.musics = self.viewModel?.musics ?? []
+                    vc.delegate = self
+                    vc.modalPresentationStyle = .overFullScreen
+                    vc.modalTransitionStyle = .crossDissolve
+                    self.present(vc, animated: true)
+                }
+            }
         }
     }
     
