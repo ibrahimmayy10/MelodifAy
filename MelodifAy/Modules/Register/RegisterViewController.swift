@@ -105,6 +105,8 @@ class RegisterViewController: UIViewController {
         nameTextField.delegate = self
         surnameTextField.delegate = self
         usernameTextField.delegate = self
+        
+        scrollView.delegate = self
     }
     
     func addTargetOnButton() {
@@ -279,5 +281,11 @@ extension RegisterViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+}
+
+extension RegisterViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        view.endEditing(true)
     }
 }

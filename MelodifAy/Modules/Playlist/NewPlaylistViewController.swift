@@ -103,7 +103,7 @@ class NewPlaylistViewController: UIViewController {
             viewModel?.addMusicToPlaylist(playlistID: playlistID, musicID: musicID)
         }
         
-        presentingViewController?.presentingViewController?.dismiss(animated: true)
+        dismiss(animated: true)
     }
     
     @objc func newPlaylistButton_Clicked() {

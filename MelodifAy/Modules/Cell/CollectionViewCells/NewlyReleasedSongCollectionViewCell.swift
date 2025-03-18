@@ -10,6 +10,7 @@ import UIKit
 protocol NewlyReleasedSongCollectionViewCellProtocol: AnyObject {
     func didTapOptionsButton(music: MusicModel)
     func didTapAddToLibraryButton(music: MusicModel)
+    func didTapPlayTheSongButton(music: MusicModel)
 }
 
 class NewlyReleasedSongCollectionViewCell: UICollectionViewCell {
@@ -105,6 +106,12 @@ class NewlyReleasedSongCollectionViewCell: UICollectionViewCell {
     func addTargetButtons() {
         optionsButton.addTarget(self, action: #selector(optionsButton_Clicked), for: .touchUpInside)
         addToLibraryButton.addTarget(self, action: #selector(addToLibraryButton_Clicked), for: .touchUpInside)
+        playTheSongButton.addTarget(self, action: #selector(playTheSongButton_Clicked), for: .touchUpInside)
+    }
+    
+    @objc func playTheSongButton_Clicked() {
+        guard let music = music else { return }
+        delegate?.didTapPlayTheSongButton(music: music)
     }
     
     @objc func optionsButton_Clicked() {

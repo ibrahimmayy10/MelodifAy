@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol UserPlaylistTableViewCellProtocol: AnyObject {
+    func didTapOptionsButton(music: MusicModel)
+}
+
 class UserPlaylistTableViewCell: UITableViewCell {
     
     static let cellID = "userPlaylistCell"
@@ -28,17 +32,33 @@ class UserPlaylistTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    private let optionsButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium, scale: .large)
+        let largeImage = UIImage(systemName: "ellipsis", withConfiguration: largeConfig)
+        button.setImage(largeImage, for: .normal)
+        button.tintColor = .white
+        return button
+    }()
+    
     private let playlistNameLabel = Labels(textLabel: "Daily Mix 01", fontLabel: .boldSystemFont(ofSize: 14), textColorLabel: .white)
     private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 12), textColorLabel: .lightGray)
+    
+    var music: MusicModel?
+    
+    weak var delegate: UserPlaylistTableViewCellProtocol?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureWithExt()
+        addTargetButtons()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         configureWithExt()
+        addTargetButtons()
     }
 
     override func awakeFromNib() {
@@ -52,8 +72,17 @@ class UserPlaylistTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    func addTargetButtons() {
+        optionsButton.addTarget(self, action: #selector(optionsButton_Clicked), for: .touchUpInside)
+    }
+    
+    @objc func optionsButton_Clicked() {
+        guard let music = music else { return }
+        delegate?.didTapOptionsButton(music: music)
+    }
+    
     func configureWithExt() {
-        contentView.addViews(playlistImageView, playlistNameLabel, downloadImageView, nameLabel)
+        contentView.addViews(playlistImageView, playlistNameLabel, downloadImageView, nameLabel, optionsButton)
         
         contentView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         
@@ -80,18 +109,27 @@ class UserPlaylistTableViewCell: UITableViewCell {
                                left: downloadImageView.rightAnchor,
                                paddingTop: 5,
                                paddingLeft: 3)
+        
+        optionsButton.anchor(top: contentView.topAnchor,
+                             right: contentView.rightAnchor,
+                             bottom: contentView.bottomAnchor,
+                             paddingRight: 10)
     }
     
     func configure(playlist: PlaylistModel, name: String) {
         playlistImageView.sd_setImage(with: URL(string: playlist.imageUrl))
         playlistNameLabel.text = playlist.name
         nameLabel.text = "Çalma Listesi - \(name)"
+        
+        optionsButton.isHidden = true
     }
     
     func configure(music: MusicModel) {
         playlistImageView.sd_setImage(with: URL(string: music.coverPhotoURL))
         playlistNameLabel.text = music.songName
         nameLabel.text = music.name
+        
+        self.music = music
     }
     
     func configure(user: UserModel) {
@@ -100,6 +138,7 @@ class UserPlaylistTableViewCell: UITableViewCell {
         nameLabel.text = user.username
         
         downloadImageView.isHidden = true
+        optionsButton.isHidden = true
         
         nameLabel.anchor(top: playlistNameLabel.bottomAnchor,
                          left: playlistImageView.rightAnchor,

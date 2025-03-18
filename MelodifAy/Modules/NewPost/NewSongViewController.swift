@@ -383,6 +383,8 @@ class NewSongViewController: UIViewController {
 extension NewSongViewController {
     func configureTopBar() {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        
         view.addViews(backButton, newPostLabel, seperatorView, uploadRecordedButton)
         
         backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 10, paddingLeft: 10)

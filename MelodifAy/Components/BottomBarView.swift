@@ -11,7 +11,7 @@ import Foundation
 enum BottomBarTab: Equatable {
     case home(isSelected: Bool)
     case feed(isSelected: Bool)
-    case search(isSelected: Bool)
+    case ai(isSelected: Bool)
     case account(isSelected: Bool)
 
     var homeIcon: UIImage? {
@@ -34,10 +34,10 @@ enum BottomBarTab: Equatable {
     
     var searchIcon: UIImage? {
         switch self {
-        case .search(let isSelected):
-            return isSelected ? UIImage(systemName: "magnifyingglass") : UIImage(systemName: "magnifyingglass")
+        case .ai(let isSelected):
+            return isSelected ? UIImage(systemName: "brain.head.profile.fill") : UIImage(systemName: "brain.head.profile")
         default:
-            return UIImage(systemName: "magnifyingglass")
+            return UIImage(systemName: "brain.head.profile")
         }
     }
     
@@ -56,8 +56,8 @@ enum BottomBarTab: Equatable {
             return isSelected ? "Anasayfa" : nil
         case .feed(let isSeledted):
             return isSeledted ? "Akış" : nil
-        case .search(let isSelected):
-            return isSelected ? "Keşfet" : nil
+        case .ai(let isSelected):
+            return isSelected ? "Yarat" : nil
         case .account(let isSelected):
             return isSelected ? "Hesap" : nil
         }
@@ -67,7 +67,7 @@ enum BottomBarTab: Equatable {
         switch self {
         case .home(let isSelected),
              .feed(let isSelected),
-             .search(let isSelected),
+             .ai(let isSelected),
              .account(let isSelected):
             return isSelected ? UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0) : .clear
         }
@@ -91,7 +91,7 @@ enum BottomBarTab: Equatable {
             return lSelected == rSelected
         case (.feed(let lSelected), .feed(let rSelected)):
             return lSelected == rSelected
-        case (.search(let lSelected), .search(let rSelected)):
+        case (.ai(let lSelected), .ai(let rSelected)):
             return lSelected == rSelected
         case (.account(let lSelected), .account(let rSelected)):
             return lSelected == rSelected
@@ -116,7 +116,7 @@ class BottomBarViewModel {
         return selectedTab.feedIcon
     }
 
-    var searchIcon: UIImage? {
+    var aiIcon: UIImage? {
         return selectedTab.searchIcon
     }
 
@@ -132,8 +132,8 @@ class BottomBarViewModel {
         return selectedTab == .feed(isSelected: true) ? selectedTab.title : nil
     }
 
-    var searchTitle: String? {
-        return selectedTab == .search(isSelected: true) ? selectedTab.title : nil
+    var aiTitle: String? {
+        return selectedTab == .ai(isSelected: true) ? selectedTab.title : nil
     }
 
     var accountTitle: String? {
@@ -148,8 +148,8 @@ class BottomBarViewModel {
         return selectedTab == .feed(isSelected: true) ? selectedTab.expandedWidth : selectedTab.normalWidth
     }
 
-    var searchWidth: CGFloat {
-        return selectedTab == .search(isSelected: true) ? selectedTab.expandedWidth : selectedTab.normalWidth
+    var aiWidth: CGFloat {
+        return selectedTab == .ai(isSelected: true) ? selectedTab.expandedWidth : selectedTab.normalWidth
     }
 
     var accountWidth: CGFloat {
@@ -160,7 +160,7 @@ class BottomBarViewModel {
 protocol BottomBarViewProtocol: AnyObject {
     func didTapHomeButton()
     func didTapFeedButton()
-    func didTapSearchButton()
+    func didTapAiButton()
     func didTapAccountButton()
 }
 
@@ -170,29 +170,29 @@ class BottomBarView: UIView {
     
     private let homeButton = UIButton(type: .system)
     private let feedButton = UIButton(type: .system)
-    private let searchButton = UIButton(type: .system)
+    private let aiButton = UIButton(type: .system)
     private let accountButton = UIButton(type: .system)
 
     private let homeImageView = UIImageView()
     private let feedImageView = UIImageView()
-    private let searchImageView = UIImageView()
+    private let aiImageView = UIImageView()
     private let accountImageView = UIImageView()
 
     private let homeLabel = UILabel()
     private let feedLabel = UILabel()
-    private let searchLabel = UILabel()
+    private let aiLabel = UILabel()
     private let accountLabel = UILabel()
     
     private let homeStackView = UIStackView()
     private let feedStackView = UIStackView()
-    private let searchStackView = UIStackView()
+    private let aiStackView = UIStackView()
     private let accountStackView = UIStackView()
     
     weak var delegate: BottomBarViewProtocol?
     
     var homeButtonWidthConstraint: NSLayoutConstraint!
     var feedButtonWidthConstraint: NSLayoutConstraint!
-    var searchButtonWidthConstraint: NSLayoutConstraint!
+    var aiButtonWidthConstraint: NSLayoutConstraint!
     var accountButtonWidthConstraint: NSLayoutConstraint!
     
     var viewModel: BottomBarViewModel? {
@@ -217,29 +217,29 @@ class BottomBarView: UIView {
         
         setupButton(homeButton, imageView: homeImageView, label: homeLabel, stackView: homeStackView, axis: .horizontal)
         setupButton(feedButton, imageView: feedImageView, label: feedLabel, stackView: feedStackView, axis: .vertical)
-        setupButton(searchButton, imageView: searchImageView, label: searchLabel, stackView: searchStackView, axis: .vertical)
+        setupButton(aiButton, imageView: aiImageView, label: aiLabel, stackView: aiStackView, axis: .vertical)
         setupButton(accountButton, imageView: accountImageView, label: accountLabel, stackView: accountStackView, axis: .horizontal, isReversed: true)
 
-        addViews(homeButton, feedButton, searchButton, accountButton)
+        addViews(homeButton, feedButton, aiButton, accountButton)
 
-        [homeButton, feedButton, searchButton, accountButton].forEach {
+        [homeButton, feedButton, aiButton, accountButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
 
         homeButtonWidthConstraint = homeButton.widthAnchor.constraint(equalToConstant: 45)
         feedButtonWidthConstraint = feedButton.widthAnchor.constraint(equalToConstant: 45)
-        searchButtonWidthConstraint = searchButton.widthAnchor.constraint(equalToConstant: 45)
+        aiButtonWidthConstraint = aiButton.widthAnchor.constraint(equalToConstant: 45)
         accountButtonWidthConstraint = accountButton.widthAnchor.constraint(equalToConstant: 45)
 
         NSLayoutConstraint.activate([
             homeButtonWidthConstraint,
             feedButtonWidthConstraint,
-            searchButtonWidthConstraint,
+            aiButtonWidthConstraint,
             accountButtonWidthConstraint,
 
             homeButton.heightAnchor.constraint(equalToConstant: 55),
             feedButton.heightAnchor.constraint(equalToConstant: 55),
-            searchButton.heightAnchor.constraint(equalToConstant: 55),
+            aiButton.heightAnchor.constraint(equalToConstant: 55),
             accountButton.heightAnchor.constraint(equalToConstant: 55),
             
             homeButton.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -247,16 +247,16 @@ class BottomBarView: UIView {
             feedButton.leadingAnchor.constraint(equalTo: homeButton.trailingAnchor, constant: 30),
             feedButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             
-            searchButton.leadingAnchor.constraint(equalTo: feedButton.trailingAnchor, constant: 30),
-            searchButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            aiButton.leadingAnchor.constraint(equalTo: feedButton.trailingAnchor, constant: 30),
+            aiButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             
-            accountButton.leadingAnchor.constraint(equalTo: searchButton.trailingAnchor, constant: 30),
+            accountButton.leadingAnchor.constraint(equalTo: aiButton.trailingAnchor, constant: 30),
             accountButton.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
 
         homeButton.addTarget(self, action: #selector(didTapHomeButton), for: .touchUpInside)
         feedButton.addTarget(self, action: #selector(didTapFeedButton), for: .touchUpInside)
-        searchButton.addTarget(self, action: #selector(didTapSearchButton), for: .touchUpInside)
+        aiButton.addTarget(self, action: #selector(didTapAiButton), for: .touchUpInside)
         accountButton.addTarget(self, action: #selector(didTapAccountButton), for: .touchUpInside)
     }
     
@@ -305,29 +305,29 @@ class BottomBarView: UIView {
 
         homeImageView.image = viewModel.homeIcon
         feedImageView.image = viewModel.feedIcon
-        searchImageView.image = viewModel.searchIcon
+        aiImageView.image = viewModel.aiIcon
         accountImageView.image = viewModel.accountIcon
 
         homeLabel.text = "Anasayfa"
         feedLabel.text = "Akış"
-        searchLabel.text = "Ara"
+        aiLabel.text = "Yarat"
         accountLabel.text = "Profil"
 
         let selectedTab = viewModel.selectedTab
 
         homeButton.backgroundColor = selectedTab == .home(isSelected: true) ? UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0) : .clear
         feedButton.backgroundColor = selectedTab == .feed(isSelected: true) ? UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0) : .clear
-        searchButton.backgroundColor = selectedTab == .search(isSelected: true) ? UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0) : .clear
+        aiButton.backgroundColor = selectedTab == .ai(isSelected: true) ? UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0) : .clear
         accountButton.backgroundColor = selectedTab == .account(isSelected: true) ? UIColor(red: 31/255, green: 84/255, blue: 147/255, alpha: 1.0) : .clear
 
         homeButtonWidthConstraint.constant = selectedTab == .home(isSelected: true) ? 120 : 50
         feedButtonWidthConstraint.constant = selectedTab == .feed(isSelected: true) ? 120 : 50
-        searchButtonWidthConstraint.constant = selectedTab == .search(isSelected: true) ? 120 : 50
+        aiButtonWidthConstraint.constant = selectedTab == .ai(isSelected: true) ? 120 : 50
         accountButtonWidthConstraint.constant = selectedTab == .account(isSelected: true) ? 120 : 50
 
         homeLabel.isHidden = selectedTab != .home(isSelected: true)
         feedLabel.isHidden = selectedTab != .feed(isSelected: true)
-        searchLabel.isHidden = selectedTab != .search(isSelected: true)
+        aiLabel.isHidden = selectedTab != .ai(isSelected: true)
         accountLabel.isHidden = selectedTab != .account(isSelected: true)
 
         UIView.animate(withDuration: 0.3) {
@@ -345,9 +345,9 @@ class BottomBarView: UIView {
         delegate?.didTapFeedButton()
     }
 
-    @objc private func didTapSearchButton() {
-        viewModel = BottomBarViewModel(selectedTab: .search(isSelected: true))
-        delegate?.didTapSearchButton()
+    @objc private func didTapAiButton() {
+        viewModel = BottomBarViewModel(selectedTab: .ai(isSelected: true))
+        delegate?.didTapAiButton()
     }
 
     @objc private func didTapAccountButton() {

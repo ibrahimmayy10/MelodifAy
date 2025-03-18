@@ -89,6 +89,7 @@ class PlaylistMusicsViewController: BaseViewController {
 extension PlaylistMusicsViewController {
     func setup() {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         navigationController?.navigationBar.isHidden = true
         
         topLabel.text = text
@@ -179,27 +180,23 @@ extension PlaylistMusicsViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: UserPlaylistTableViewCell.cellID, for: indexPath) as! UserPlaylistTableViewCell
         if !musics.isEmpty {
-            let cell = tableView.dequeueReusableCell(withIdentifier: UserPlaylistTableViewCell.cellID, for: indexPath) as! UserPlaylistTableViewCell
             let music = musics[indexPath.row]
             cell.configure(music: music)
-            return cell
         } else if let followers = viewModel?.followers, text == "Takipçiler" {
-            let cell = tableView.dequeueReusableCell(withIdentifier: UserPlaylistTableViewCell.cellID, for: indexPath) as! UserPlaylistTableViewCell
             let follower = followers[indexPath.row]
             cell.configure(user: follower)
-            return cell
         } else if let following = viewModel?.following, text == "Takip edilenler" {
-            let cell = tableView.dequeueReusableCell(withIdentifier: UserPlaylistTableViewCell.cellID, for: indexPath) as! UserPlaylistTableViewCell
             let follow = following[indexPath.row]
             cell.configure(user: follow)
-            return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: UserPlaylistTableViewCell.cellID, for: indexPath) as! UserPlaylistTableViewCell
             let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
             cell.configure(music: music)
-            return cell
         }
+        
+        cell.delegate = self
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -259,5 +256,22 @@ extension PlaylistMusicsViewController: MusicDetailsDelegate {
         let largePlayImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
         let buttonImage = MusicPlayerService.shared.isPlaying ? largePauseImage : largePlayImage
         MiniMusicPlayerViewController.shared.miniPlayButton.setImage(buttonImage, for: .normal)
+    }
+}
+
+extension PlaylistMusicsViewController: UserPlaylistTableViewCellProtocol {
+    func didTapOptionsButton(music: MusicModel) {
+        let vc = OptionsViewController()
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = self
+        vc.music = music
+        self.present(navController, animated: true)
+    }
+}
+
+extension PlaylistMusicsViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return BottomSheetPresentationController(presentedViewController: presented, presenting: presenting)
     }
 }

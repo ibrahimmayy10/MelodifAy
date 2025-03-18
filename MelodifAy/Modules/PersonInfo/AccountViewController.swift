@@ -414,8 +414,8 @@ extension AccountViewController: BottomBarViewProtocol {
         navigationController?.pushViewController(FeedViewController(), animated: false)
     }
     
-    func didTapSearchButton() {
-        navigationController?.pushViewController(SearchViewController(), animated: false)
+    func didTapAiButton() {
+        navigationController?.pushViewController(CreateSongWithAIViewController(), animated: false)
     }
     
     func didTapAccountButton() {
@@ -546,11 +546,13 @@ extension AccountViewController: UICollectionViewDelegate, UICollectionViewDataS
         if collectionView == postCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserCollectionViewCell.cellID, for: indexPath) as! UserCollectionViewCell
             let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
+            cell.delegate = self
             cell.configure(music: music)
             return cell
         } else if collectionView == myLikesCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserCollectionViewCell.cellID, for: indexPath) as! UserCollectionViewCell
             let music = viewModel?.likeMusics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
+            cell.delegate = self
             cell.configure(music: music)
             return cell
         } else {
@@ -675,5 +677,13 @@ extension AccountViewController {
         } else {
             present(vc, animated: true)
         }
+    }
+}
+
+extension AccountViewController: UserCollectionViewCellProtocol {
+    func didTapAddToLibraryButton(music: MusicModel) {
+        let vc = NewPlaylistViewController()
+        vc.music = music
+        present(vc, animated: true)
     }
 }

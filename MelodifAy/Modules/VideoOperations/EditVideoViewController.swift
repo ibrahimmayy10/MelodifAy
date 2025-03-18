@@ -331,6 +331,7 @@ extension EditVideoViewController {
     func configureTopBar() {
         view.backgroundColor = .white
         navigationController?.navigationBar.isHidden = true
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         
         view.addViews(dismissButton, shareButton, playButton, forwardButton, backwardButton, videoSlider, backgroundOverlay, nextButton, saveDraftButton, activityIndicator)
         

@@ -12,10 +12,10 @@ protocol SearchViewControllerProtocol: AnyObject {
     func reloadDataTableView()
 }
 
-enum SearchResult {
-    case music(MusicModel)
-    case user(UserModel)
-}
+//enum SearchResult {
+//    case music(MusicModel)
+//    case user(UserModel)
+//}
 
 class SearchViewController: BaseViewController {
     
@@ -146,7 +146,7 @@ extension SearchViewController {
     }
     
     func configureBottomBar() {
-        let searchViewModel = BottomBarViewModel(selectedTab: .search(isSelected: true))
+        let searchViewModel = BottomBarViewModel(selectedTab: .ai(isSelected: true))
         bottomBar.viewModel = searchViewModel
         bottomBar.delegate = self
         
@@ -185,7 +185,7 @@ extension SearchViewController: BottomBarViewProtocol {
         navigationController?.pushViewController(FeedViewController(), animated: false)
     }
     
-    func didTapSearchButton() {
+    func didTapAiButton() {
         
     }
     
@@ -242,6 +242,10 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             cell.configure(music: nil, user: user)
         }
         return cell
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        searchBar.resignFirstResponder()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

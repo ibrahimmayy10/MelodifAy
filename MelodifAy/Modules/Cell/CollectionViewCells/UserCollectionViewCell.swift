@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol UserCollectionViewCellProtocol: AnyObject {
+    func didTapAddToLibraryButton(music: MusicModel)
+}
+
 class UserCollectionViewCell: UICollectionViewCell {
     static let cellID = "userPostCell"
     
@@ -27,22 +31,38 @@ class UserCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     
+    private let addToLibraryButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 14, weight: .medium, scale: .large)
+        let largeImage = UIImage(systemName: "plus.circle", withConfiguration: largeConfig)
+        button.setImage(largeImage, for: .normal)
+        button.tintColor = .lightGray
+        return button
+    }()
+    
     private let songNameLabel = Labels(textLabel: "", fontLabel: .boldSystemFont(ofSize: 12), textColorLabel: .white)
     private let nameLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 12), textColorLabel: .lightGray)
     private let likeCountLabel = Labels(textLabel: "", fontLabel: .systemFont(ofSize: 12), textColorLabel: .white)
     
     private var gradientLayer: CAGradientLayer?
     
+    weak var delegate: UserCollectionViewCellProtocol?
+    
+    var music: MusicModel?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         configureWithExt()
+        addTargetButtons()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         
         configureWithExt()
+        addTargetButtons()
     }
     
     override func layoutSubviews() {
@@ -77,17 +97,27 @@ class UserCollectionViewCell: UICollectionViewCell {
         nameLabel.text = ""
     }
     
+    func addTargetButtons() {
+        addToLibraryButton.addTarget(self, action: #selector(addToLibraryButton_Clicked), for: .touchUpInside)
+    }
+    
+    @objc func addToLibraryButton_Clicked() {
+        guard let music = music else { return }
+        delegate?.didTapAddToLibraryButton(music: music)
+    }
+    
     func configureWithExt() {
-        contentView.addViews(postImageView, heartImageView, songNameLabel, nameLabel, likeCountLabel)
+        contentView.addViews(postImageView, heartImageView, songNameLabel, nameLabel, likeCountLabel, addToLibraryButton)
         
         contentView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         contentView.layer.cornerRadius = 10
         
         postImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 5, paddingLeft: 5, paddingRight: 5, height: 130)
         songNameLabel.anchor(top: postImageView.bottomAnchor, left: contentView.leftAnchor, paddingTop: 10, paddingLeft: 10)
-        nameLabel.anchor(top: songNameLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 5, paddingLeft: 10)
-        heartImageView.anchor(top: songNameLabel.bottomAnchor, right: contentView.rightAnchor, paddingTop: 5, paddingRight: 10, width: 15, height: 15)
+        nameLabel.anchor(top: songNameLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 7, paddingLeft: 10)
+        heartImageView.anchor(top: postImageView.bottomAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingRight: 10, width: 15, height: 15)
         likeCountLabel.anchor(right: heartImageView.leftAnchor, centerY: heartImageView.centerYAnchor)
+        addToLibraryButton.anchor(top: heartImageView.bottomAnchor, right: contentView.rightAnchor, paddingTop: 5, paddingRight: 10)
     }
     
     func configure(music: MusicModel) {
@@ -95,11 +125,7 @@ class UserCollectionViewCell: UICollectionViewCell {
         postImageView.sd_setImage(with: URL(string: music.coverPhotoURL))
         songNameLabel.text = music.songName
         likeCountLabel.text = "\(music.likes?.count ?? 0)"
-    }
-    
-    func configure(playlist: PlaylistModel) {
-        nameLabel.text = playlist.name
-        postImageView.sd_setImage(with: URL(string: playlist.imageUrl))
-        songNameLabel.text = playlist.playlistID
+        
+        self.music = music
     }
 }

@@ -85,6 +85,8 @@ class SignInViewController: UIViewController {
     func setDelegate() {
         emailTextField.delegate = self
         passwordTextField.delegate = self
+        
+        scrollView.delegate = self
     }
     
     func addTargetOnButton() {
@@ -221,5 +223,11 @@ extension SignInViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+}
+
+extension SignInViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        view.endEditing(true)
     }
 }
