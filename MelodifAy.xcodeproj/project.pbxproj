@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		170258312D08ACAB002D16EB /* MiniMusicPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170258302D08ACAB002D16EB /* MiniMusicPlayerViewController.swift */; };
 		1703E9622CEE1466008E6BEB /* ShareNewPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1703E9612CEE1466008E6BEB /* ShareNewPostViewModel.swift */; };
+		1706C7222D88790000DD06EB /* MusicDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1706C7212D88790000DD06EB /* MusicDetailsViewModel.swift */; };
 		1714CB202D0066B600C4930B /* MusicPlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1714CB1F2D0066B600C4930B /* MusicPlayerService.swift */; };
 		1717D5EB2D73C5D3009FF96E /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1717D5EA2D73C5D3009FF96E /* FeedViewController.swift */; };
 		171DF00B2CC1333600523459 /* EditPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171DF00A2CC1333600523459 /* EditPostViewController.swift */; };
@@ -22,6 +23,8 @@
 		1746CD4E2CB0346E00B3701A /* CreateSongWithAIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */; };
 		1746CD512CB034BC00B3701A /* MusicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746CD502CB034BC00B3701A /* MusicModel.swift */; };
 		174DAC7A2D0C823300AE558D /* UserDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174DAC792D0C823300AE558D /* UserDetailsViewController.swift */; };
+		175335C42D89FA0F006C3F31 /* SongResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175335C32D89FA0F006C3F31 /* SongResultViewController.swift */; };
+		175335C72D8A06C9006C3F31 /* CreateMelodyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175335C62D8A06C9006C3F31 /* CreateMelodyViewController.swift */; };
 		175365D82D80AD1F00C6FE66 /* UserPlaylistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175365D72D80AD1F00C6FE66 /* UserPlaylistTableViewCell.swift */; };
 		176499A52CB1654E004D38A9 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 176499A42CB1654E004D38A9 /* GoogleGenerativeAI */; };
 		176706112D64A6B3009CB390 /* AudioRecordingPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176706102D64A6B3009CB390 /* AudioRecordingPreviewViewController.swift */; };
@@ -93,6 +96,7 @@
 /* Begin PBXFileReference section */
 		170258302D08ACAB002D16EB /* MiniMusicPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniMusicPlayerViewController.swift; sourceTree = "<group>"; };
 		1703E9612CEE1466008E6BEB /* ShareNewPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNewPostViewModel.swift; sourceTree = "<group>"; };
+		1706C7212D88790000DD06EB /* MusicDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicDetailsViewModel.swift; sourceTree = "<group>"; };
 		1714CB1F2D0066B600C4930B /* MusicPlayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerService.swift; sourceTree = "<group>"; };
 		1717D5EA2D73C5D3009FF96E /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		171DF00A2CC1333600523459 /* EditPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPostViewController.swift; sourceTree = "<group>"; };
@@ -107,6 +111,8 @@
 		1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSongWithAIViewModel.swift; sourceTree = "<group>"; };
 		1746CD502CB034BC00B3701A /* MusicModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicModel.swift; sourceTree = "<group>"; };
 		174DAC792D0C823300AE558D /* UserDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailsViewController.swift; sourceTree = "<group>"; };
+		175335C32D89FA0F006C3F31 /* SongResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongResultViewController.swift; sourceTree = "<group>"; };
+		175335C62D8A06C9006C3F31 /* CreateMelodyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMelodyViewController.swift; sourceTree = "<group>"; };
 		175365D72D80AD1F00C6FE66 /* UserPlaylistTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPlaylistTableViewCell.swift; sourceTree = "<group>"; };
 		176706102D64A6B3009CB390 /* AudioRecordingPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecordingPreviewViewController.swift; sourceTree = "<group>"; };
 		176BFC732D74AF860005D777 /* FeedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewCell.swift; sourceTree = "<group>"; };
@@ -288,6 +294,14 @@
 			path = UserDetails;
 			sourceTree = "<group>";
 		};
+		175335C52D8A069A006C3F31 /* CreateMelody */ = {
+			isa = PBXGroup;
+			children = (
+				175335C62D8A06C9006C3F31 /* CreateMelodyViewController.swift */,
+			);
+			path = CreateMelody;
+			sourceTree = "<group>";
+		};
 		176B6A832CB5847C003CAA0F /* Animations */ = {
 			isa = PBXGroup;
 			children = (
@@ -322,6 +336,7 @@
 			children = (
 				1746CD472CB0245A00B3701A /* CreateSongWithAIViewController.swift */,
 				1746CD4D2CB0346E00B3701A /* CreateSongWithAIViewModel.swift */,
+				175335C32D89FA0F006C3F31 /* SongResultViewController.swift */,
 			);
 			path = CreateSongWithAI;
 			sourceTree = "<group>";
@@ -390,6 +405,7 @@
 			children = (
 				17A66F4C2CF89FDB005898D3 /* MusicDetailsViewController.swift */,
 				1714CB1F2D0066B600C4930B /* MusicPlayerService.swift */,
+				1706C7212D88790000DD06EB /* MusicDetailsViewModel.swift */,
 			);
 			path = MusicDetails;
 			sourceTree = "<group>";
@@ -463,6 +479,7 @@
 		17D8E1832CAEC881008F06CD /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				175335C52D8A069A006C3F31 /* CreateMelody */,
 				176D11F52D8350FE00432B81 /* SeeAll */,
 				1774764D2D7A0A0500E53025 /* Playlist */,
 				17DCD9432D791A520079A22E /* Options */,
@@ -660,6 +677,7 @@
 				17BD0ED82D3919D1004966B4 /* ServiceUserDetails.swift in Sources */,
 				17D8E18A2CAECBBB008F06CD /* ImageViews.swift in Sources */,
 				17A32AAC2CAFEF680010A7DC /* AccountViewController.swift in Sources */,
+				175335C42D89FA0F006C3F31 /* SongResultViewController.swift in Sources */,
 				17A696B42D68D3A000A73C32 /* ButtonExtensions.swift in Sources */,
 				1746CD512CB034BC00B3701A /* MusicModel.swift in Sources */,
 				17DCD9472D791B7C0079A22E /* Options.swift in Sources */,
@@ -673,6 +691,7 @@
 				1717D5EB2D73C5D3009FF96E /* FeedViewController.swift in Sources */,
 				17912D042CC5529200ED572B /* BottomSheetPresentationController.swift in Sources */,
 				17BD0EDE2D3939FC004966B4 /* DraftModel.swift in Sources */,
+				1706C7222D88790000DD06EB /* MusicDetailsViewModel.swift in Sources */,
 				176BFC762D74E4A60005D777 /* ServiceFeed.swift in Sources */,
 				17A436652CAEE4FC001DEF62 /* RegisterViewModel.swift in Sources */,
 				176706112D64A6B3009CB390 /* AudioRecordingPreviewViewController.swift in Sources */,
@@ -722,6 +741,7 @@
 				1746CD482CB0245A00B3701A /* CreateSongWithAIViewController.swift in Sources */,
 				17EB246D2CF5E3F30048D58B /* AccountViewModel.swift in Sources */,
 				17EB24712CF5E4B50048D58B /* UserModel.swift in Sources */,
+				175335C72D8A06C9006C3F31 /* CreateMelodyViewController.swift in Sources */,
 				17ABFCD92D72815A004128D7 /* NewlyReleasedSongCollectionViewCell.swift in Sources */,
 				176D11FD2D83820000432B81 /* PlaylistMusicsViewModel.swift in Sources */,
 			);

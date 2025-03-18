@@ -232,6 +232,7 @@ class ShareNewPostViewController: UIViewController {
 extension ShareNewPostViewController {
     func configureWithExt() {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         
         lyricsTextView.delegate = self
         imageView.contentMode = .scaleAspectFit

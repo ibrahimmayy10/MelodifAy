@@ -324,6 +324,7 @@ extension UserDetailsViewController {
     func setup() {
         view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         navigationController?.navigationBar.isHidden = true
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         
         viewModel?.getDataUser(userID: self.userID)
         toggleUIElementsVisibility(isHidden: true)
@@ -568,11 +569,13 @@ extension UserDetailsViewController: UICollectionViewDelegate, UICollectionViewD
         if collectionView == postCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserCollectionViewCell.cellID, for: indexPath) as! UserCollectionViewCell
             let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
+            cell.delegate = self
             cell.configure(music: music)
             return cell
         } else if collectionView == likesCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserCollectionViewCell.cellID, for: indexPath) as! UserCollectionViewCell
             let music = viewModel?.likeMusics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
+            cell.delegate = self
             cell.configure(music: music)
             return cell
         } else {
@@ -636,5 +639,13 @@ extension UserDetailsViewController: MusicDetailsDelegate {
         let largePlayImage = UIImage(systemName: "play.fill", withConfiguration: largeConfig)
         let buttonImage = MusicPlayerService.shared.isPlaying ? largePauseImage : largePlayImage
         MiniMusicPlayerViewController.shared.miniPlayButton.setImage(buttonImage, for: .normal)
+    }
+}
+
+extension UserDetailsViewController: UserCollectionViewCellProtocol {
+    func didTapAddToLibraryButton(music: MusicModel) {
+        let vc = NewPlaylistViewController()
+        vc.music = music
+        present(vc, animated: true)
     }
 }

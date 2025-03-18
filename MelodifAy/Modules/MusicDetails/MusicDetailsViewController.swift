@@ -141,6 +141,8 @@ class MusicDetailsViewController: UIViewController {
     var musics = [MusicModel]()
     
     weak var delegate: MusicDetailsDelegate?
+    
+    private let viewModel = MusicDetailsViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -191,6 +193,7 @@ class MusicDetailsViewController: UIViewController {
         } else {
             MusicPlayerService.shared.playMusic(from: musicUrl)
             MusicPlayerService.shared.music = music
+            viewModel.saveListeningHistory(musicID: music.musicID)
         }
     }
     

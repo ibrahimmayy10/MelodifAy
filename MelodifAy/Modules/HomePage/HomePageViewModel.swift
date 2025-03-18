@@ -12,13 +12,17 @@ protocol HomePageViewModelProtocol {
     func getDataSingersLike(completion: @escaping (Bool) -> Void)
     func getDataPlaylists(completion: @escaping (Bool) -> Void)
     func getDataLatestMusic(completion: @escaping (Bool) -> Void)
+    func getDataTopListenedSongs(completion: @escaping (Bool) -> Void)
+    func getDataTopLikedArtists()
     var serviceHomePage: ServiceHomePageProtocol { get }
 }
 
 class HomePageViewModel: HomePageViewModelProtocol {
     var serviceHomePage: ServiceHomePageProtocol = ServiceHomePage()
     var musics = [MusicModel]()
+    var topListenedMusics = [MusicModel]()
     var users = [UserModel]()
+    var likedArtists = [UserModel]()
     var playlists = [PlaylistModel]()
     var latestMusic: MusicModel?
     
@@ -26,6 +30,25 @@ class HomePageViewModel: HomePageViewModelProtocol {
     
     init(view: HomePageViewControllerProtocol) {
         self.view = view
+    }
+    
+    func getDataTopLikedArtists() {
+        serviceHomePage.fetchTopLikedArtists { users in
+            DispatchQueue.main.async {
+                self.likedArtists = users
+                self.view?.reloadDataCollectionView()
+            }
+        }
+    }
+    
+    func getDataTopListenedSongs(completion: @escaping (Bool) -> Void) {
+        serviceHomePage.fetchTopListenedSongs { musics in
+            DispatchQueue.main.async {
+                self.topListenedMusics = musics
+                self.view?.reloadDataCollectionView()
+                completion(true)
+            }
+        }
     }
     
     func getDataLatestMusic(completion: @escaping (Bool) -> Void) {
@@ -58,6 +81,7 @@ class HomePageViewModel: HomePageViewModelProtocol {
             DispatchQueue.main.async {
                 self.musics = musics
                 self.view?.reloadDataCollectionView()
+                self.view?.reloadDataTableViewView()
                 completion(true)
             }
         }
@@ -73,6 +97,7 @@ class HomePageViewModel: HomePageViewModelProtocol {
             DispatchQueue.main.async {
                 self.users = users
                 self.view?.reloadDataCollectionView()
+                self.view?.reloadDataTableViewView()
                 completion(true)
             }
         }

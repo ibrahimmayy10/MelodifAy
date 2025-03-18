@@ -59,3 +59,34 @@ class TextFields: UITextField, UITextFieldDelegate {
     }
 
 }
+
+class CustomTextField: UITextField {
+    init(placeholder: String) {
+        super.init(frame: .zero)
+        self.placeholder = placeholder
+        setupTextField()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupTextField()
+    }
+    
+    private func setupTextField() {
+        self.borderStyle = .none
+        self.backgroundColor = UIColor(white: 0.2, alpha: 1.0)
+        self.textColor = .white
+        self.attributedPlaceholder = NSAttributedString(
+            string: self.placeholder ?? "",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray]
+        )
+    }
+    
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.insetBy(dx: 10, dy: 0)
+    }
+    
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.insetBy(dx: 10, dy: 0)
+    }
+}

@@ -199,8 +199,8 @@ extension FeedViewController: BottomBarViewProtocol {
         
     }
     
-    func didTapSearchButton() {
-        navigationController?.pushViewController(SearchViewController(), animated: false)
+    func didTapAiButton() {
+        navigationController?.pushViewController(CreateSongWithAIViewController(), animated: false)
     }
     
     func didTapAccountButton() {

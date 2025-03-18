@@ -9,13 +9,32 @@ import Foundation
 import GoogleGenerativeAI
 
 protocol CreateSongWithAIViewModelProtocol {
-    func generateSong(theme: String, mood: String, genre: String, tempo: String, instrument: String, songLength: Int, mainMessage: String, completion: @escaping (String) -> Void)
+    func generateSong(theme: String, mood: String, genre: String, tempo: String, instrument: String, songLength: String, mainMessage: String, completion: @escaping (String) -> Void)
 }
 
 final class CreateSongWithAIViewModel: CreateSongWithAIViewModelProtocol {
-    func generateSong(theme: String, mood: String, genre: String, tempo: String, instrument: String, songLength: Int, mainMessage: String, completion: @escaping (String) -> Void) {
-        let model = GenerativeModel(name: "gemini-pro", apiKey: "AIzaSyCjN0gdHqtXq_9Bcu0oy19LXlC9cjukTTo")
-        let textInput = "Lütfen \(songLength) tane kelime uzunluğunda, \(mood) ruh haline sahip bir \(genre) şarkı oluşturun. Şarkının ana teması \(theme) olacak ve temposu \(tempo) olmalıdır. Şarkıda ağırlıklı olarak \(instrument) enstrümanı kullanılacak. Şarkının ana mesajı şu şekilde olmalı: \(mainMessage). Bu bilgilere göre şarkı sözü ve nota oluşturur musun?"
+    func generateSong(theme: String, mood: String, genre: String, tempo: String, instrument: String, songLength: String, mainMessage: String, completion: @escaping (String) -> Void) {
+        let model = GenerativeModel(name: "gemini-2.0-flash", apiKey: "AIzaSyCto_9Z6CZz_w52aYOqttQ4x3CZYXuKYKM")
+        let textInput = """
+        Bir şarkı bestele ve söz yaz. Şarkının özellikleri şunlardır:
+
+        Ana tema: \(theme)
+        Ruh hali: \(mood)
+        Müzik türü: \(genre)
+        Tempo: \(tempo)
+        Ana enstrüman: \(instrument)
+        Şarkı yapısı: \(songLength)
+        Ana mesaj: \(mainMessage)
+
+        Lütfen aşağıdaki formatta cevap ver:
+        Şarkı Adı (Şarkı adı burada yazmalı, ancak "Şarkı Adı" şeklinde bir ibare olmamalıdır.)
+        Şarkı sözleri (Şarkı sözleri buraya yazılmalı, ancak "Şarkı Sözleri" başlığı olmamalıdır.)
+        Enstrüman notaları (Burada enstrümana göre notalar olmalıdır, ancak "Enstrüman notaları" başlığı olmamalıdır.)
+        Cevap verirken cevaplarına başlık koyma ve senden istediklerim dışında hiçbir şey yazma.
+
+        Şarkı sözleri özgün ve anlamlı olmalı, \(mainMessage) mesajını iletmeli. Şarkı yapısı \(songLength) olarak belirtilmiş şekilde olmalı.
+        Sadece yukarıdaki formatı uygula.
+        """
         var aiResponse = ""
         
         Task {

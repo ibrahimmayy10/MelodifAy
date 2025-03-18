@@ -11,12 +11,17 @@ import Lottie
 
 protocol HomePageViewControllerProtocol: AnyObject {
     func reloadDataCollectionView()
+    func reloadDataTableViewView()
+}
+
+enum SearchResult {
+    case music(MusicModel)
+    case user(UserModel)
 }
 
 class HomePageViewController: BaseViewController {
     
     private let bottomBar = BottomBarView()
-    private let topBar = TopBarView()
     
     private let recommendedLabel = Labels(textLabel: "Senin için önerilenler", fontLabel: .boldSystemFont(ofSize: 20), textColorLabel: .white)
     private let playlistsForYouLabel = Labels(textLabel: "Senin için derlendi", fontLabel: .boldSystemFont(ofSize: 20), textColorLabel: .white)
@@ -120,6 +125,52 @@ class HomePageViewController: BaseViewController {
         return collectionView
     }()
     
+    private let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.isHidden = true
+        tableView.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
+        tableView.register(SearchTableViewCell.self, forCellReuseIdentifier: SearchTableViewCell.cellID)
+        return tableView
+    }()
+    
+    lazy var notificationButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold, scale: .medium)
+        let largeImage = UIImage(systemName: "bell.fill", withConfiguration: largeConfig)
+        button.setImage(largeImage, for: .normal)
+        button.tintColor = .white
+        return button
+    }()
+    
+    lazy var messageBoxButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold, scale: .medium)
+        let largeImage = UIImage(systemName: "envelope.fill", withConfiguration: largeConfig)
+        button.setImage(largeImage, for: .normal)
+        button.tintColor = .white
+        return button
+    }()
+    
+    lazy var searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.placeholder = "Şarkı veya sanatçı ara"
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.barTintColor = UIColor(red: 0.108, green: 0.108, blue: 0.108, alpha: 1.0)
+        searchBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
+        searchBar.setValue("İptal", forKey: "cancelButtonText")
+        return searchBar
+    }()
+    
+    private let topBar: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(red: 0.108, green: 0.108, blue: 0.108, alpha: 1.0)
+        return view
+    }()
+    
     private let logoImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "melodifaylogo"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -132,6 +183,7 @@ class HomePageViewController: BaseViewController {
     private let animationView = LottieAnimationView(name: "loadingAnimation")
     
     private var viewModel: HomePageViewModel?
+    var searchResults = [SearchResult]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -184,10 +236,23 @@ class HomePageViewController: BaseViewController {
         
         newlyReleasedSongCollectionView.delegate = self
         newlyReleasedSongCollectionView.dataSource = self
+        
+        scrollView.delegate = self
+        searchBar.delegate = self
+        
+        tableView.delegate = self
+        tableView.dataSource = self
     }
     
     func addTargetButtons() {
         newPostButton.addTarget(self, action: #selector(newPostButton_Clicked), for: .touchUpInside)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     @objc func newPostButton_Clicked() {
@@ -264,6 +329,20 @@ extension HomePageViewController {
                 }
             })
         }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            guard let self = self else { return }
+            
+            self.viewModel?.getDataTopListenedSongs(completion: { success in
+                DispatchQueue.main.async {
+                    self.toggleUIElementsVisibility(isHidden: !success)
+                    self.animationView.stop()
+                    self.animationView.isHidden = true
+                }
+            })
+        }
+        
+        viewModel?.getDataTopLikedArtists()
     }
     
     func toggleUIElementsVisibility(isHidden: Bool) {
@@ -271,10 +350,14 @@ extension HomePageViewController {
     }
     
     func configureTopBar() {
-        topBar.delegate = self
-        view.addViews(topBar)
+        view.addViews(topBar, tableView)
+        topBar.addViews(searchBar, notificationButton, messageBoxButton)
         
         topBar.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: view.bounds.size.height * 0.12)
+        messageBoxButton.anchor(right: topBar.rightAnchor, bottom: topBar.bottomAnchor, paddingRight: 20, paddingBottom: 15)
+        notificationButton.anchor(right: messageBoxButton.leftAnchor, bottom: topBar.bottomAnchor, paddingRight: 20, paddingBottom: 15)
+        searchBar.anchor(left: topBar.leftAnchor, right: notificationButton.leftAnchor, bottom: topBar.bottomAnchor, height: 50)
+        tableView.anchor(top: topBar.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
     }
     
     func configureBottomBar() {
@@ -299,6 +382,7 @@ extension HomePageViewController {
         
         view.bringSubviewToFront(newPostButton)
         view.bringSubviewToFront(bottomBar)
+        view.bringSubviewToFront(tableView)
     }
     
     func configureCollectionViews() {
@@ -341,8 +425,8 @@ extension HomePageViewController: BottomBarViewProtocol {
         navigationController?.pushViewController(FeedViewController(), animated: false)
     }
     
-    func didTapSearchButton() {
-        navigationController?.pushViewController(SearchViewController(), animated: false)
+    func didTapAiButton() {
+        navigationController?.pushViewController(CreateSongWithAIViewController(), animated: false)
     }
     
     func didTapAccountButton() {
@@ -361,6 +445,10 @@ extension HomePageViewController: HomePageViewControllerProtocol {
             self.newlyReleasedSongCollectionView.reloadData()
         }
     }
+    
+    func reloadDataTableViewView() {
+        self.tableView.reloadData()
+    }
 }
 
 extension HomePageViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -372,9 +460,9 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
         } else if collectionView == playlistsForYouCollectionView {
             return viewModel?.musics.count ?? 1
         } else if collectionView == singerYouLikeCollectionView {
-            return viewModel?.users.count ?? 1
+            return viewModel?.likedArtists.count ?? 1
         } else if collectionView == listenToMostCollectionView {
-            return viewModel?.musics.count ?? 1
+            return viewModel?.topListenedMusics.count ?? 1
         } else if collectionView == newlyReleasedSongCollectionView {
             return viewModel?.musics.count ?? 1
         } else {
@@ -400,12 +488,12 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
             return cell
         } else if collectionView == singerYouLikeCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SingerYouLikeCollectionViewCell.cellID, for: indexPath) as! SingerYouLikeCollectionViewCell
-            let user = viewModel?.users[indexPath.row] ?? UserModel(userID: "", name: "", surname: "", username: "", imageUrl: "", followers: [], following: [])
+            let user = viewModel?.likedArtists[indexPath.row] ?? UserModel(userID: "", name: "", surname: "", username: "", imageUrl: "", followers: [], following: [])
             cell.configure(user: user)
             return cell
         } else if collectionView == listenToMostCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomePageCollectionViewCell.cellID, for: indexPath) as! HomePageCollectionViewCell
-            let music = viewModel?.musics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
+            let music = viewModel?.topListenedMusics[indexPath.row] ?? MusicModel(coverPhotoURL: "", lyrics: "", musicID: "", musicUrl: "", songName: "", name: "", userID: "", musicFileType: "", likes: [])
             cell.configure(music: music)
             return cell
         } else if collectionView == newlyReleasedSongCollectionView {
@@ -473,6 +561,48 @@ extension HomePageViewController: UICollectionViewDelegate, UICollectionViewData
     
 }
 
+extension HomePageViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searchResults.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableViewCell.cellID, for: indexPath) as! SearchTableViewCell
+        let result = searchResults[indexPath.row]
+        
+        switch result {
+        case .music(let music):
+            cell.configure(music: music, user: nil)
+        case .user(let user):
+            cell.configure(music: nil, user: user)
+        }
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let result = searchResults[indexPath.row]
+        
+        switch result {
+        case .music(let music):
+            let vc = MusicDetailsViewController()
+            vc.music = music
+            vc.delegate = self
+            let navController = UINavigationController(rootViewController: vc)
+            navController.modalPresentationStyle = .fullScreen
+            present(navController, animated: true)
+            
+        case .user(let user):
+            let vc = UserDetailsViewController()
+            vc.userID = user.userID
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
+    }
+}
+
 extension HomePageViewController: MusicDetailsDelegate {
     func updateMiniPlayer(with music: MusicModel, isPlaying: Bool) {
         MusicPlayerService.shared.music = music
@@ -506,6 +636,16 @@ extension HomePageViewController: NewlyReleasedSongCollectionViewCellProtocol {
         vc.music = music
         present(vc, animated: true)
     }
+    
+    func didTapPlayTheSongButton(music: MusicModel) {
+        let vc = MusicDetailsViewController()
+        vc.music = music
+        vc.musics = self.viewModel?.musics ?? []
+        vc.delegate = self
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
+        self.present(vc, animated: true)
+    }
 }
 
 extension HomePageViewController: UIViewControllerTransitioningDelegate {
@@ -514,12 +654,73 @@ extension HomePageViewController: UIViewControllerTransitioningDelegate {
     }
 }
 
-extension HomePageViewController: TopBarViewDelegate {
-    func didTapNotificationButton() {
+extension HomePageViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        guard !searchText.isEmpty else {
+            searchResults.removeAll()
+            tableView.reloadData()
+            return
+        }
         
+        let filteredMusics = viewModel?.musics.filter {
+            $0.songName.lowercased().contains(searchText.lowercased()) ||
+            $0.name.lowercased().contains(searchText.lowercased())
+        } ?? []
+        
+        let filteredUsers = viewModel?.users.filter {
+            $0.name.lowercased().contains(searchText.lowercased()) ||
+            $0.surname.lowercased().contains(searchText.lowercased()) ||
+            $0.username.lowercased().contains(searchText.lowercased())
+        } ?? []
+        
+        searchResults = filteredMusics.map { .music($0) } + filteredUsers.map { .user($0) }
+        tableView.reloadData()
     }
     
-    func didTapMessageBoxButton() {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        searchResults.removeAll()
+        tableView.reloadData()
         
+        UIView.animate(withDuration: 0.3) {
+            self.tableView.alpha = 0.0
+            self.scrollView.alpha = 1.0
+        } completion: { _ in
+            self.tableView.isHidden = true
+            self.scrollView.isHidden = false
+        }
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+        UIView.animate(withDuration: 0.3) {
+            self.tableView.alpha = 1.0
+            self.scrollView.alpha = 0.0
+        } completion: { _ in
+            self.tableView.isHidden = false
+            self.scrollView.isHidden = true
+        }
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(false, animated: true)
+        if searchBar.text?.isEmpty ?? true {
+            UIView.animate(withDuration: 0.3) {
+                self.tableView.alpha = 0.0
+                self.scrollView.alpha = 1.0
+            } completion: { _ in
+                self.tableView.isHidden = true
+                self.scrollView.isHidden = false
+            }
+        }
+    }
+}
+
+extension HomePageViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if searchBar.isFirstResponder {
+            searchBar.endEditing(true)
+        }
     }
 }

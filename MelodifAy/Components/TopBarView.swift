@@ -14,11 +14,13 @@ protocol TopBarViewDelegate: AnyObject {
 
 class TopBarView: UIView {
     
+    static let shared = TopBarView()
+    
     weak var delegate: TopBarViewDelegate?
     
     private let melodifayLogoImageView = ImageViews(imageName: "topBarIcon")
     
-    private lazy var notificationButton: UIButton = {
+    lazy var notificationButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold, scale: .medium)
@@ -29,7 +31,7 @@ class TopBarView: UIView {
         return button
     }()
     
-    private lazy var messageBoxButton: UIButton = {
+    lazy var messageBoxButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold, scale: .medium)
